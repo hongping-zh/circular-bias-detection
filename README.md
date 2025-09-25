@@ -173,7 +173,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Hongping Zhang**
 - ORCID: [0009-0000-2529-4613](https://orcid.org/0009-0000-2529-4613)
-- Email: [Contact via GitHub]
+- Email: yujjam@uest.edu.gr
 
 ## 🙏 Acknowledgments
 
