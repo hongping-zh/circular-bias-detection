@@ -18,13 +18,51 @@ Circular reasoning bias occurs when evaluation protocols are iteratively modifie
 
 ## 📊 Dataset
 
-The accompanying dataset contains 2,000+ AI algorithm evaluation records across multiple domains:
+### Full Dataset (Zenodo)
+
+The complete dataset contains 200K+ AI algorithm evaluation records across multiple domains:
 - **Computer Vision**: ImageNet classification evaluations
 - **NLP**: GLUE benchmark sequences
 - **Recommender Systems**: MovieLens-100K protocols
 - **Monte Carlo Simulations**: 13 controlled bias scenarios
 
-**Access**: [Zenodo Dataset](https://doi.org/10.5281/zenodo.17196639)
+**Access**: [Zenodo Dataset (DOI: 10.5281/zenodo.17196639)](https://doi.org/10.5281/zenodo.17196639)
+
+### Data Format
+
+The framework expects two input matrices:
+
+#### Performance Matrix (T × K)
+- **Rows**: Time periods (evaluation iterations)
+- **Columns**: Algorithms being evaluated
+- **Values**: Performance metrics (e.g., accuracy, F1-score)
+
+#### Constraint Matrix (T × p)
+- **Rows**: Time periods (evaluation iterations)
+- **Columns**: Constraint specifications
+- **Values**: Resource limits or evaluation settings
+
+**Example constraint types:**
+- Computational budget (FLOPs, GPU hours)
+- Memory limits (RAM, VRAM)
+- Dataset size (number of training samples)
+- Evaluation time limits
+
+### Sample Data
+
+A sample dataset is provided in `data/sample_data.csv` with the following fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `time_period` | int | Sequential evaluation period (1, 2, 3, ...) |
+| `algorithm` | str | Algorithm name |
+| `performance` | float | Performance metric (0-1 scale) |
+| `constraint_compute` | float | Computational resource limit |
+| `constraint_memory` | float | Memory limit (GB) |
+| `constraint_dataset_size` | int | Training dataset size |
+| `evaluation_protocol` | str | Protocol version identifier |
+
+See `data/README.md` for detailed usage instructions.
 
 ## 🚀 Quick Start
 
@@ -39,20 +77,52 @@ pip install -r requirements.txt
 ### Basic Usage
 
 ```python
+import numpy as np
+import pandas as pd
 from circular_bias_detector import BiasDetector
 
-# Load your evaluation data
+# Option 1: Load from CSV file
+df = pd.read_csv('data/sample_data.csv')
+
+# Prepare performance matrix (T x K)
+performance_matrix = df.pivot(
+    index='time_period',
+    columns='algorithm',
+    values='performance'
+).values
+
+# Prepare constraint matrix (T x p)
+constraint_matrix = df.groupby('time_period')[[
+    'constraint_compute',
+    'constraint_memory',
+    'constraint_dataset_size'
+]].first().values
+
+algorithms = df['algorithm'].unique().tolist()
+
+# Option 2: Use your own numpy arrays
+# performance_matrix = np.array([...])  # Shape: (T, K)
+# constraint_matrix = np.array([...])    # Shape: (T, p)
+# algorithms = ['ResNet', 'VGG', 'DenseNet']
+
+# Run bias detection
 detector = BiasDetector()
 results = detector.detect_bias(
-    performance_matrix=P,
-    constraint_matrix=C,
-    algorithms=['A1', 'A2', 'A3']
+    performance_matrix=performance_matrix,
+    constraint_matrix=constraint_matrix,
+    algorithm_names=algorithms
 )
 
+# Display results
 print(f"PSI Score: {results['psi_score']:.4f}")
 print(f"CCS Score: {results['ccs_score']:.4f}")
-print(f"ρ_PC Correlation: {results['rho_pc']:.4f}")
-print(f"Bias Detected: {results['bias_detected']}")
+print(f"ρ_PC Score: {results['rho_pc_score']:+.4f}")
+print(f"Bias Detected: {results['overall_bias']}")
+print(f"Confidence: {results['confidence']:.1%}")
+
+# Generate detailed report
+report = detector.generate_report(results)
+print(report)
 ```
 
 ## 📁 Repository Structure
@@ -77,44 +147,145 @@ circular-bias-detection/
 └── README.md                   # This file
 ```
 
-## 🔬 Core Algorithms
+## 📖 API Documentation
 
-### Performance-Structure Independence (PSI)
-Measures parameter stability across evaluation periods:
+### BiasDetector Class
 
+The main interface for bias detection.
+
+#### `__init__(psi_threshold=0.15, ccs_threshold=0.85, rho_pc_threshold=0.5)`
+
+Initialize the bias detector with custom thresholds.
+
+**Parameters:**
+- `psi_threshold` (float): Threshold for PSI score (default: 0.15). Higher values indicate instability.
+- `ccs_threshold` (float): Threshold for CCS score (default: 0.85). Lower values indicate inconsistency.
+- `rho_pc_threshold` (float): Threshold for ρ_PC correlation (default: 0.5). Higher absolute values indicate dependency.
+
+#### `detect_bias(performance_matrix, constraint_matrix, algorithm_names=None)`
+
+Detect circular reasoning bias in evaluation data.
+
+**Parameters:**
+- `performance_matrix` (np.ndarray): Performance values, shape (T, K) where T = time periods, K = algorithms
+- `constraint_matrix` (np.ndarray): Constraint specifications, shape (T, p) where p = number of constraints
+- `algorithm_names` (list, optional): Names of algorithms for reporting
+
+**Returns:**
+- `dict`: Dictionary containing:
+  - `psi_score` (float): Performance-Structure Independence score
+  - `ccs_score` (float): Constraint-Consistency score
+  - `rho_pc_score` (float): Performance-Constraint correlation
+  - `overall_bias` (bool): Whether bias is detected
+  - `confidence` (float): Detection confidence (0-1)
+  - `details` (dict): Additional diagnostic information
+
+**Example:**
 ```python
-def compute_psi(theta_matrix):
-    """
-    Compute PSI score for parameter stability detection
-    """
-    T, K = theta_matrix.shape
-    psi_scores = []
-    
-    for k in range(K):
-        differences = np.diff(theta_matrix[:, k])
-        psi_k = np.mean(np.abs(differences))
-        psi_scores.append(psi_k)
-    
-    return np.mean(psi_scores)
+detector = BiasDetector(psi_threshold=0.2)
+results = detector.detect_bias(perf_matrix, const_matrix, ['A1', 'A2'])
 ```
 
-### Constraint-Consistency Score (CCS)
-Evaluates consistency in constraint specifications:
+#### `generate_report(results)`
+
+Generate a human-readable report from detection results.
+
+**Parameters:**
+- `results` (dict): Output from `detect_bias()`
+
+**Returns:**
+- `str`: Formatted text report
+
+### Core Functions
+
+#### `compute_psi(theta_matrix)`
+
+Compute Performance-Structure Independence score.
+
+**Parameters:**
+- `theta_matrix` (np.ndarray): Parameter matrix, shape (T, K)
+
+**Returns:**
+- `float`: PSI score (higher = more unstable)
+
+**Interpretation:**
+- PSI < 0.1: Stable parameters (good)
+- 0.1 ≤ PSI < 0.15: Moderate stability
+- PSI ≥ 0.15: Unstable parameters (potential bias)
 
 ```python
-def compute_ccs(constraint_matrix):
-    """
-    Compute CCS score for constraint consistency
-    """
-    T, p = constraint_matrix.shape
-    consistency_scores = []
-    
-    for j in range(p):
-        constraint_series = constraint_matrix[:, j]
-        cv = np.std(constraint_series) / np.mean(constraint_series)
-        consistency_scores.append(1 / (1 + cv))
-    
-    return np.mean(consistency_scores)
+from circular_bias_detector.core import compute_psi
+import numpy as np
+
+theta = np.array([[0.7, 0.8], [0.71, 0.81], [0.72, 0.79]])
+psi_score = compute_psi(theta)
+```
+
+#### `compute_ccs(constraint_matrix)`
+
+Compute Constraint-Consistency Score.
+
+**Parameters:**
+- `constraint_matrix` (np.ndarray): Constraint values, shape (T, p)
+
+**Returns:**
+- `float`: CCS score (0-1, higher = more consistent)
+
+**Interpretation:**
+- CCS > 0.85: Consistent constraints (good)
+- 0.7 ≤ CCS ≤ 0.85: Moderate consistency
+- CCS < 0.7: Inconsistent constraints (potential bias)
+
+```python
+from circular_bias_detector.core import compute_ccs
+
+constraints = np.array([[100, 8], [102, 8.1], [101, 8.2]])
+ccs_score = compute_ccs(constraints)
+```
+
+#### `compute_rho_pc(performance_matrix, constraint_matrix)`
+
+Compute Performance-Constraint correlation.
+
+**Parameters:**
+- `performance_matrix` (np.ndarray): Performance values, shape (T, K)
+- `constraint_matrix` (np.ndarray): Constraint values, shape (T, p)
+
+**Returns:**
+- `float`: Correlation coefficient (-1 to 1)
+
+**Interpretation:**
+- |ρ_PC| > 0.5: Strong dependency (potential bias)
+- 0.3 ≤ |ρ_PC| ≤ 0.5: Moderate dependency
+- |ρ_PC| < 0.3: Weak dependency (good)
+
+### Utility Functions
+
+#### `create_synthetic_data(n_time_periods, n_algorithms, n_constraints, bias_intensity, random_seed=None)`
+
+Generate synthetic evaluation data for testing.
+
+**Parameters:**
+- `n_time_periods` (int): Number of evaluation periods
+- `n_algorithms` (int): Number of algorithms
+- `n_constraints` (int): Number of constraint types
+- `bias_intensity` (float): Bias level (0=none, 1=high)
+- `random_seed` (int, optional): Random seed for reproducibility
+
+**Returns:**
+- `tuple`: (performance_matrix, constraint_matrix)
+
+**Example:**
+```python
+from circular_bias_detector.utils import create_synthetic_data
+
+perf, const = create_synthetic_data(
+    n_time_periods=20,
+    n_algorithms=5,
+    n_constraints=3,
+    bias_intensity=0.7,
+    random_seed=42
+)
 ```
 
 ## 📈 Experimental Results
@@ -125,18 +296,38 @@ Our framework successfully detected bias in:
 - **NLP**: 87% detection rate in metric cherry-picking  
 - **Recommender Systems**: 91% detection rate in dataset curation
 
+## 🧪 Running Tests
+
+Run the test suite to verify installation:
+
+```bash
+# Run all tests
+python -m pytest tests/
+
+# Run with verbose output
+python -m pytest tests/ -v
+
+# Run specific test file
+python tests/test_basic.py
+```
+
+**Expected output:** All tests should pass, confirming that core functionality works correctly.
+
 ## 🏃‍♂️ Reproduction Scripts
 
 Reproduce all paper results:
 
 ```bash
+# Run basic usage example
+python examples/basic_usage_example.py
+
 # Monte Carlo simulations
 python examples/reproduce_simulations.py
 
 # Real-world case studies
 python examples/reproduce_case_studies.py
 
-# Generate figures and tables
+# Generate figures and tables (if available)
 python examples/generate_paper_figures.py
 ```
 
@@ -163,7 +354,26 @@ If you use this framework in your research, please cite:
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Here's how you can help:
+
+**Reporting Issues:**
+- Use the [GitHub issue tracker](https://github.com/hongping-zh/circular-bias-detection/issues)
+- Provide a clear description and reproducible example
+- Include system information and error messages
+
+**Contributing Code:**
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and add tests
+4. Ensure all tests pass (`python -m pytest tests/`)
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to your branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+**Seeking Support:**
+- Check existing issues and documentation
+- Open a new issue with the `question` label
+- Email: yujjam@uest.edu.gr
 
 ## 📄 License
 
