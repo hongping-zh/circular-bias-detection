@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 A comprehensive statistical framework for detecting circular reasoning bias in AI algorithm evaluation. This repository provides the implementation of the methodology described in:
 
@@ -73,7 +73,7 @@ circular-bias-detection/
 ├── data/                       # Sample datasets
 │   └── sample_data.csv
 ├── requirements.txt            # Dependencies
-├── LICENSE                     # MIT License
+├── LICENSE                     # CC-BY-4.0 License
 └── README.md                   # This file
 ```
 
@@ -167,7 +167,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0) - see the [LICENSE](LICENSE) file for details.
 
 ## 👤 Author
 
