@@ -6,7 +6,7 @@ This document provides detailed specifications for all fields in the Algorithm B
 
 **Dataset Version:** 2.0.0  
 **Last Updated:** October 13, 2024  
-**DOI:** [10.5281/zenodo.17196639](https://doi.org/10.5281/zenodo.17196639)
+**DOI:** [10.5281/zenodo.17201032](https://doi.org/10.5281/zenodo.17201032)
 
 ---
 
@@ -312,8 +312,8 @@ print(results)
   year = {2024},
   publisher = {Zenodo},
   version = {2.0.0},
-  doi = {10.5281/zenodo.17196639},
-  url = {https://doi.org/10.5281/zenodo.17196639}
+  doi = {10.5281/zenodo.17201032},
+  url = {https://doi.org/10.5281/zenodo.17201032}
 }
 ```
 

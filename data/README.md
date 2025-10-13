@@ -110,7 +110,7 @@ This will create 10 CSV files with various bias and noise configurations.
 ## 📊 Full Dataset
 
 The complete Algorithm Benchmark Suite v2.0 is available on Zenodo:
-- **DOI**: [10.5281/zenodo.17196639](https://doi.org/10.5281/zenodo.17196639)
+- **DOI**: [10.5281/zenodo.17201032](https://doi.org/10.5281/zenodo.17201032)
 - **Version**: 2.0.0
 - **Files**: 10 CSV files (algorithm_benchmark_suite.csv + 9 scenarios)
 - **Total Records**: 500+
@@ -137,7 +137,7 @@ The complete Algorithm Benchmark Suite v2.0 is available on Zenodo:
   year = {2024},
   publisher = {Zenodo},
   version = {2.0.0},
-  doi = {10.5281/zenodo.17196639}
+  doi = {10.5281/zenodo.17201032}
 }
 ```
 

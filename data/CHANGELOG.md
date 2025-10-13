@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Zenodo DOI link
 
 ### Metadata
-- Published on Zenodo with DOI: 10.5281/zenodo.17196639
+- Published on Zenodo with DOI: 10.5281/zenodo.17201032
 - License: Creative Commons Attribution 4.0 International (CC BY 4.0)
 - Author: Hongping Zhang (ORCID: 0009-0000-2529-4613)
 
@@ -104,7 +104,7 @@ If you find data quality issues or have suggestions:
 
 1. **GitHub Issues**: https://github.com/hongping-zh/circular-bias-detection/issues
 2. **Email**: yujjam@uest.edu.gr
-3. **Zenodo Comments**: https://zenodo.org/records/17196639
+3. **Zenodo Comments**: https://zenodo.org/records/17201032
 
 Please include:
 - Dataset version
@@ -127,7 +127,7 @@ When citing specific versions:
   year = {2024},
   publisher = {Zenodo},
   version = {2.0.0},
-  doi = {10.5281/zenodo.17196639}
+  doi = {10.5281/zenodo.17201032}
 }
 ```
 
@@ -147,7 +147,7 @@ When citing specific versions:
 
 ## Links
 
-- **Zenodo Repository**: https://doi.org/10.5281/zenodo.17196639
+- **Zenodo Repository**: https://doi.org/10.5281/zenodo.17201032
 - **GitHub Repository**: https://github.com/hongping-zh/circular-bias-detection
 - **Software Framework**: See main repository README
 - **License**: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)

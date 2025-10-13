@@ -26,14 +26,16 @@ Circular reasoning bias in algorithm evaluation occurs when evaluation protocols
 
 Algorithm evaluation is fundamental to machine learning research, yet existing methods lack systematic approaches to detect **circular reasoning bias**—when evaluation constraints are retroactively adjusted to favor certain algorithms. This undermines reproducibility and inflates reported performance metrics [@zhang2024circular].
 
-Current bias detection toolkits (e.g., AIF360, Fairlearn) focus on *model outputs* rather than *evaluation protocol integrity*. `circular-bias-detection` fills this gap by providing:
+Current bias detection toolkits (e.g., AIF360 [@bellamy2019ai], Fairlearn [@bird2020fairlearn]) focus on *model outputs* (demographic parity, equalized odds) rather than *evaluation protocol integrity*. These tools detect bias in **what models predict**, while our framework detects bias in **how models are evaluated**—a fundamentally different problem space.
+
+`circular-bias-detection` fills this methodological gap by providing:
 
 - **Automated detection** of parameter instability (PSI), constraint inconsistency (CCS), and performance-constraint dependencies (ρ_PC)
 - **Quantitative thresholds** for bias classification with confidence scores
 - **Reproducible evaluation** of published case studies across computer vision, NLP, and recommender systems
 - **Open datasets** with 200K+ evaluation records archived on Zenodo [@zhang2024dataset]
 
-The framework is designed for researchers conducting algorithm comparisons, reviewers auditing evaluation protocols, and educators teaching research methodology.
+The framework is designed for researchers conducting algorithm comparisons, peer reviewers auditing evaluation protocols, and educators teaching research methodology. Unlike fairness-focused libraries, our toolkit specifically targets the evaluation process layer—ensuring that performance improvements reflect genuine algorithmic advances rather than evaluation protocol manipulation.
 
 # Key Features
 
@@ -52,7 +54,7 @@ Monte Carlo simulations demonstrate **93.2% detection accuracy** on syntheticall
 - **NLP**: 87% detection rate in GLUE benchmark cherry-picking
 - **Recommender Systems**: 91% detection rate in MovieLens dataset curation
 
-The accompanying dataset (Zenodo DOI: [`10.5281/zenodo.17196639`](https://doi.org/10.5281/zenodo.17196639)) enables reproducible benchmarking of bias detection methods.
+The accompanying dataset (Zenodo DOI: [`10.5281/zenodo.17201032`](https://doi.org/10.5281/zenodo.17201032)) enables reproducible benchmarking of bias detection methods.
 
 # Acknowledgments
 

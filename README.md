@@ -1,6 +1,6 @@
 # Circular Reasoning Bias Detection Framework
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
@@ -16,17 +16,34 @@ Circular reasoning bias occurs when evaluation protocols are iteratively modifie
 - **CCS** (Constraint-Consistency Score): Measures constraint specification consistency  
 - **ρ_PC** (Performance-Constraint Correlation): Quantifies performance-constraint dependencies
 
+### Why This Framework?
+
+Unlike existing bias detection tools that focus on **model outputs** (e.g., fairness metrics in predictions), our framework audits the **evaluation process itself**—detecting when the rules of the game are being changed mid-evaluation to favor certain algorithms.
+
+| Framework | Focus | Circular Bias Detection | Target Users |
+|-----------|-------|-------------------------|--------------|
+| [AIF360](https://github.com/Trusted-AI/AIF360) | Model fairness (demographic parity, equalized odds) | ❌ | ML practitioners |
+| [Fairlearn](https://github.com/fairlearn/fairlearn) | Algorithmic fairness constraints | ❌ | Data scientists |
+| [Themis-ML](https://github.com/cosmicBboy/themis-ml) | Discrimination testing | ❌ | Researchers |
+| **This Framework** | **Evaluation protocol integrity** | ✅ | **Researchers, Reviewers, Auditors** |
+
+**Use this framework when:**
+- Reviewing algorithm comparison papers
+- Auditing published evaluation methodologies
+- Designing robust evaluation protocols
+- Teaching research methodology best practices
+
 ## 📊 Dataset
 
 ### Full Dataset (Zenodo)
 
-The complete dataset contains 200K+ AI algorithm evaluation records across multiple domains:
+The complete dataset contains 200K+ **Open datasets** with 200K+ evaluation records archived on Zenodo (DOI: 10.5281/zenodo.17201032):
 - **Computer Vision**: ImageNet classification evaluations
 - **NLP**: GLUE benchmark sequences
 - **Recommender Systems**: MovieLens-100K protocols
 - **Monte Carlo Simulations**: 13 controlled bias scenarios
 
-**Access**: [Zenodo Dataset (DOI: 10.5281/zenodo.17196639)](https://doi.org/10.5281/zenodo.17196639)
+**Access**: [Zenodo Dataset (DOI: 10.5281/zenodo.17201032)](https://doi.org/10.5281/zenodo.17201032)
 
 ### Data Format
 
