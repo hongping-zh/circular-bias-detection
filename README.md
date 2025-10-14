@@ -3,6 +3,9 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
 [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![GitHub stars](https://img.shields.io/github/stars/hongping-zh/circular-bias-detection?style=social)](https://github.com/hongping-zh/circular-bias-detection)
+[![Web App](https://img.shields.io/badge/Web%20App-Live-brightgreen)](https://hongping-zh.github.io/circular-bias-detection/)
+[![CLI](https://img.shields.io/badge/CLI-Available-blue)](https://github.com/hongping-zh/circular-bias-detection#cli-tool)
 
 A comprehensive statistical framework for detecting circular reasoning bias in AI algorithm evaluation. This repository provides the implementation of the methodology described in:
 
@@ -32,6 +35,44 @@ Unlike existing bias detection tools that focus on **model outputs** (e.g., fair
 - Auditing published evaluation methodologies
 - Designing robust evaluation protocols
 - Teaching research methodology best practices
+
+---
+
+## 🚀 Quick Access
+
+### 🌐 **Web App** - Try it in 30 seconds (No installation required!)
+
+**[🔍 Launch Bias Scanner](https://hongping-zh.github.io/circular-bias-detection/)**
+
+- ✅ Upload your data or use examples
+- ✅ Get instant bias detection results
+- ✅ Download JSON reports
+- ✅ 100% privacy-preserving (runs in your browser)
+
+### 💻 **CLI Tool** - For researchers and automation
+
+```bash
+# Install
+pip install circular-bias-detector[cli]
+
+# Detect bias in your data
+circular-bias detect data.csv
+
+# See all options
+circular-bias --help
+```
+
+**[📖 Full CLI Documentation](#cli-tool)**
+
+### 📦 **Python Library** - For integration
+
+```bash
+pip install circular-bias-detector
+```
+
+**[📖 API Documentation](#api-documentation)**
+
+---
 
 ## 📊 Dataset
 
@@ -150,7 +191,14 @@ circular-bias-detection/
 │   ├── __init__.py
 │   ├── core.py                 # PSI, CCS, ρ_PC algorithms
 │   ├── detection.py            # Main detection framework
-│   └── utils.py               # Utility functions
+│   └── utils.py                # Utility functions
+├── circular_bias_cli/          # CLI tool
+│   ├── main.py                 # CLI entry point
+│   ├── adapters/               # Bridge to core library
+│   └── utils/                  # Zenodo loader, etc.
+├── web-app/                    # Web application
+│   ├── src/                    # React components
+│   └── public/                 # Static assets
 ├── examples/                   # Usage examples
 │   ├── reproduce_simulations.py
 │   ├── reproduce_case_studies.py
@@ -160,9 +208,144 @@ circular-bias-detection/
 ├── data/                       # Sample datasets
 │   └── sample_data.csv
 ├── requirements.txt            # Dependencies
+├── setup.py                    # Package installation
 ├── LICENSE                     # CC-BY-4.0 License
 └── README.md                   # This file
 ```
+
+---
+
+## 💻 CLI Tool
+
+### Installation
+
+```bash
+# Install with CLI dependencies
+pip install circular-bias-detector[cli]
+
+# Or install from source
+git clone https://github.com/hongping-zh/circular-bias-detection.git
+cd circular-bias-detection
+pip install -e .[cli]
+```
+
+### Quick Start
+
+```bash
+# Analyze local CSV file
+circular-bias detect data/sample_data.csv
+
+# Use Zenodo dataset (automatic download & caching)
+circular-bias detect zenodo://17201032
+
+# Specify algorithm and thresholds
+circular-bias detect data.csv --algorithm psi --psi-threshold 0.2
+
+# Export results as JSON
+circular-bias detect data.csv --format json --output results.json
+```
+
+### Available Commands
+
+#### `detect` - Run bias detection
+
+```bash
+circular-bias detect <data-source> [options]
+
+# Data sources:
+#   - Local file: data/my_data.csv
+#   - Zenodo: zenodo://17201032
+#   - Zenodo specific file: zenodo://17201032/scenario_high_bias.csv
+
+# Options:
+#   --algorithm {psi,ccs,rho_pc,decision}  Algorithm to run (default: decision)
+#   --psi-threshold FLOAT                   PSI threshold (default: 0.15)
+#   --ccs-threshold FLOAT                   CCS threshold (default: 0.85)
+#   --rho-threshold FLOAT                   ρ_PC threshold (default: 0.5)
+#   --format {text,json,csv}                Output format (default: text)
+#   --output FILE                           Save results to file
+```
+
+**Example:**
+```bash
+circular-bias detect zenodo://17201032 \
+    --algorithm decision \
+    --psi-threshold 0.15 \
+    --format json \
+    --output results.json
+```
+
+#### `info` - Show dataset information
+
+```bash
+circular-bias info <source>
+
+# Examples:
+circular-bias info zenodo://17201032
+circular-bias info data/sample_data.csv
+```
+
+#### `cache` - Manage cached data
+
+```bash
+# List cached datasets
+circular-bias cache list
+
+# Clear all cache
+circular-bias cache clear
+
+# Clear specific dataset
+circular-bias cache clear --record-id 17201032
+```
+
+#### `list-algorithms` - Show available algorithms
+
+```bash
+circular-bias list-algorithms
+```
+
+### CLI Output Example
+
+```
+============================================================
+CIRCULAR BIAS DETECTION RESULTS
+============================================================
+
+PSI Score:  0.0158
+CCS Score:  0.9422
+ρ_PC Score: +0.9921
+
+Overall Bias Detected: NO ✓
+Confidence: 33.3%
+
+Interpretation:
+No circular bias detected (confidence: 33.3%). 
+Evaluation appears sound.
+
+Details:
+  algorithms_evaluated: ['ResNet', 'VGG', 'DenseNet', 'EfficientNet']
+  time_periods: 5
+  indicators_triggered: 1
+============================================================
+```
+
+### Data Format Requirements
+
+CSV file must contain these columns:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `time_period` | int | Evaluation period (1, 2, 3, ...) |
+| `algorithm` | str | Algorithm name |
+| `performance` | float | Performance metric [0-1] |
+| `constraint_compute` | float | Computational constraint |
+| `constraint_memory` | float | Memory constraint (GB) |
+| `constraint_dataset_size` | int | Dataset size |
+| `evaluation_protocol` | str | Protocol version |
+
+**See `data/sample_data.csv` for example.**
+
+---
 
 ## 📖 API Documentation
 
