@@ -167,6 +167,29 @@ No circular bias detected (confidence: 33.3%).
 Evaluation appears sound.
 ```
 
+#### 📈 NEW: Statistical Significance (Bootstrap Confidence Intervals)
+
+**Enhanced version includes:**
+- **Confidence Intervals:** 95% CI computed via bootstrap resampling (n=1000)
+- **P-values:** Statistical significance testing
+- **Adaptive Thresholds:** Data-driven threshold selection
+
+**Example enhanced output:**
+```
+PSI Score:  0.0238 [0.0113-0.0676], p=0.355
+CCS Score:  0.8860 [0.8723-0.9530], p=0.342
+ρ_PC Score: +0.9983 [+0.9972-+1.0000], p=0.772
+```
+
+**Interpretation:**
+- **[Lower-Upper]:** 95% confidence interval
+- **p-value:** Statistical significance (p < 0.05 = significant)
+- Narrower intervals = more precise estimates
+- p < 0.05 = statistically significant bias
+
+**Adaptive Thresholds:**
+Instead of fixed thresholds (PSI=0.15, CCS=0.85, ρ_PC=0.5), the system can compute data-specific thresholds at the 95th percentile of null distributions, reducing false positives.
+
 ---
 
 ### Step 5: Export & Share
@@ -284,6 +307,63 @@ confidence = (indicators_triggered / 3) × 100%
 - Include all constraint types
 - Document any protocol changes
 - Archive raw data for reproducibility
+
+---
+
+## 🤖 LLM Evaluation Use Cases
+
+### Detecting Bias in Large Language Model Benchmarking
+
+The tool now supports detecting circular bias in LLM evaluations where prompt engineering and sampling parameters are iteratively tuned.
+
+### LLM-Specific Data Format
+
+In addition to standard columns, include LLM-specific constraints:
+
+| Column | Type | Description | Example |
+|--------|------|-------------|---------|
+| `max_tokens` | int | Maximum generation length | 512, 1024, 2048 |
+| `temperature` | float | Sampling temperature | 0.7, 0.8, 0.9 |
+| `top_p` | float | Nucleus sampling | 0.9, 0.95, 1.0 |
+| `prompt_variant` | str | Prompting technique | vanilla, few-shot, chain-of-thought |
+
+### Example LLM Dataset
+
+See `data/llm_eval_sample.csv` for a complete example with:
+- **Models:** GPT-3.5, Llama-2-7B, Claude-Instant, Mistral-7B
+- **Benchmark:** GLUE scores
+- **Prompt evolution:** vanilla → few-shot → chain-of-thought → role-play → system-prompt
+- **Parameter tuning:** Temperature increases from 0.7 to 0.9 over time
+
+### Interpretation for LLM Evaluations
+
+**High ρ_PC (>0.5) indicates:**
+- Sampling parameters (temperature, top_p) were adjusted based on performance
+- Prompt engineering strategies were iteratively refined to improve scores
+- Max token limits were tuned to favor certain models
+
+**Example warning:**
+```
+⚠️ High correlation detected (ρ_PC = 0.99)
+
+Sampling parameters and prompt strategies may have been iteratively 
+adjusted to inflate benchmark scores. This suggests potential circular 
+bias where the evaluation protocol was tailored to favor certain models.
+```
+
+### Best Practices for LLM Evaluation
+
+✅ **Do:**
+- Pre-register prompt templates before evaluation
+- Fix sampling parameters (temperature, top_p) across all runs
+- Document any protocol changes explicitly
+- Report all attempted prompting strategies (not just best-performing)
+
+❌ **Don't:**
+- Tune temperature based on preliminary results
+- Cherry-pick best-performing prompt variants
+- Adjust max_tokens to improve specific model scores
+- Iterate on prompts until target performance is reached
 
 ---
 

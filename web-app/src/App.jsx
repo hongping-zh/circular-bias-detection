@@ -42,17 +42,27 @@ function App() {
       await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing
       
       const mockResults = {
-        psi: 0.0158,
-        ccs: 0.9422,
-        rho_pc: 0.9921,
+        psi: 0.0238,
+        psi_ci_lower: 0.0113,
+        psi_ci_upper: 0.0676,
+        psi_p_value: 0.355,
+        ccs: 0.8860,
+        ccs_ci_lower: 0.8723,
+        ccs_ci_upper: 0.9530,
+        ccs_p_value: 0.342,
+        rho_pc: 0.9983,
+        rho_pc_ci_lower: 0.9972,
+        rho_pc_ci_upper: 1.0000,
+        rho_pc_p_value: 0.772,
         overall_bias: false,
         confidence: 0.333,
         interpretation: 'No circular bias detected (confidence: 33.3%). Evaluation appears sound.',
         details: {
-          algorithms_evaluated: ['ResNet', 'VGG', 'DenseNet', 'EfficientNet'],
+          algorithms_evaluated: ['GPT-3.5', 'Llama-2-7B', 'Claude-Instant', 'Mistral-7B'],
           time_periods: 5,
           indicators_triggered: 1
-        }
+        },
+        bootstrap_enabled: true
       };
       
       setResults(mockResults);

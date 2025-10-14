@@ -1,7 +1,7 @@
 import React from 'react';
 import './Dashboard.css';
 
-function MetricCard({ title, value, threshold, status, description }) {
+function MetricCard({ title, value, threshold, status, description, ciLower, ciUpper, pValue, showBootstrap }) {
   const getStatusColor = () => {
     switch (status) {
       case 'ok': return '#4caf50';
@@ -27,6 +27,19 @@ function MetricCard({ title, value, threshold, status, description }) {
         <span className="status-icon">{getStatusIcon()}</span>
       </div>
       <div className="metric-value">{value}</div>
+      {showBootstrap && ciLower !== undefined && ciUpper !== undefined && (
+        <div className="metric-ci">
+          95% CI: [{ciLower} - {ciUpper}]
+        </div>
+      )}
+      {showBootstrap && pValue !== undefined && (
+        <div className="metric-pvalue" style={{ 
+          color: pValue < 0.05 ? '#f44336' : '#666',
+          fontWeight: pValue < 0.05 ? 'bold' : 'normal'
+        }}>
+          p-value: {pValue} {pValue < 0.05 ? '(significant)' : ''}
+        </div>
+      )}
       <div className="metric-threshold">Threshold: {threshold}</div>
       <div className="metric-description">{description}</div>
     </div>
@@ -75,6 +88,12 @@ function Dashboard({ results, onReset }) {
         </div>
       </div>
 
+      {results.bootstrap_enabled && (
+        <div className="bootstrap-badge">
+          ✨ Enhanced with Bootstrap Statistical Analysis (n=1000)
+        </div>
+      )}
+
       <div className="metrics-grid">
         <MetricCard
           title="PSI Score"
@@ -82,6 +101,10 @@ function Dashboard({ results, onReset }) {
           threshold="0.15"
           status={results.psi ? getPSIStatus(results.psi) : 'default'}
           description="Parameter Stability Index"
+          ciLower={results.psi_ci_lower?.toFixed(4)}
+          ciUpper={results.psi_ci_upper?.toFixed(4)}
+          pValue={results.psi_p_value?.toFixed(3)}
+          showBootstrap={results.bootstrap_enabled}
         />
         
         <MetricCard
@@ -90,6 +113,10 @@ function Dashboard({ results, onReset }) {
           threshold="0.85"
           status={results.ccs ? getCCSStatus(results.ccs) : 'default'}
           description="Constraint Consistency Score"
+          ciLower={results.ccs_ci_lower?.toFixed(4)}
+          ciUpper={results.ccs_ci_upper?.toFixed(4)}
+          pValue={results.ccs_p_value?.toFixed(3)}
+          showBootstrap={results.bootstrap_enabled}
         />
         
         <MetricCard
@@ -98,6 +125,10 @@ function Dashboard({ results, onReset }) {
           threshold="±0.5"
           status={results.rho_pc !== undefined ? getRhoPCStatus(results.rho_pc) : 'default'}
           description="Performance-Constraint Correlation"
+          ciLower={results.rho_pc_ci_lower ? (results.rho_pc_ci_lower > 0 ? '+' : '') + results.rho_pc_ci_lower.toFixed(4) : undefined}
+          ciUpper={results.rho_pc_ci_upper ? (results.rho_pc_ci_upper > 0 ? '+' : '') + results.rho_pc_ci_upper.toFixed(4) : undefined}
+          pValue={results.rho_pc_p_value?.toFixed(3)}
+          showBootstrap={results.bootstrap_enabled}
         />
       </div>
 

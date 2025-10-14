@@ -122,6 +122,21 @@ A sample dataset is provided in `data/sample_data.csv` with the following fields
 
 See `data/README.md` for detailed usage instructions.
 
+### LLM Evaluation Data
+
+**NEW:** A sample LLM evaluation dataset is provided in `data/llm_eval_sample.csv` demonstrating bias detection in large language model benchmarking:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `algorithm` | str | LLM name (GPT-3.5, Llama-2-7B, Claude-Instant, Mistral-7B) |
+| `performance` | float | GLUE benchmark score |
+| `max_tokens` | int | Maximum generation length |
+| `temperature` | float | Sampling temperature |
+| `top_p` | float | Nucleus sampling parameter |
+| `prompt_variant` | str | Prompt engineering technique (vanilla, few-shot, chain-of-thought, etc.) |
+
+This dataset demonstrates how to detect circular bias when prompt engineering and sampling parameters are iteratively tuned to improve benchmark scores.
+
 ## 🚀 Quick Start
 
 ### Installation
@@ -181,6 +196,89 @@ print(f"Confidence: {results['confidence']:.1%}")
 # Generate detailed report
 report = detector.generate_report(results)
 print(report)
+```
+
+### Advanced Usage: Bootstrap Confidence Intervals
+
+**NEW:** Compute statistical significance with bootstrap resampling (n=1000):
+
+```python
+from circular_bias_detector.core import (
+    bootstrap_psi, 
+    bootstrap_ccs, 
+    bootstrap_rho_pc,
+    compute_adaptive_thresholds
+)
+
+# Bootstrap confidence intervals and p-values
+psi_results = bootstrap_psi(performance_matrix, n_bootstrap=1000)
+ccs_results = bootstrap_ccs(constraint_matrix, n_bootstrap=1000)
+rho_results = bootstrap_rho_pc(performance_matrix, constraint_matrix, n_bootstrap=1000)
+
+# Display with confidence intervals
+print(f"PSI = {psi_results['psi']:.4f} "
+      f"[{psi_results['ci_lower']:.4f}-{psi_results['ci_upper']:.4f}], "
+      f"p={psi_results['p_value']:.3f}")
+
+print(f"CCS = {ccs_results['ccs']:.4f} "
+      f"[{ccs_results['ci_lower']:.4f}-{ccs_results['ci_upper']:.4f}], "
+      f"p={ccs_results['p_value']:.3f}")
+
+print(f"ρ_PC = {rho_results['rho_pc']:+.4f} "
+      f"[{rho_results['ci_lower']:+.4f}-{rho_results['ci_upper']:+.4f}], "
+      f"p={rho_results['p_value']:.3f}")
+
+# Compute data-adaptive thresholds (95th percentile)
+adaptive = compute_adaptive_thresholds(
+    performance_matrix, 
+    constraint_matrix,
+    quantile=0.95
+)
+
+print(f"\nAdaptive Thresholds:")
+print(f"  PSI:  {adaptive['psi_threshold']:.4f}")
+print(f"  CCS:  {adaptive['ccs_threshold']:.4f}")
+print(f"  ρ_PC: {adaptive['rho_pc_threshold']:.4f}")
+```
+
+**Example output:**
+```
+PSI = 0.0238 [0.0113-0.0676], p=0.355
+CCS = 0.8860 [0.8723-0.9530], p=0.342
+ρ_PC = +0.9983 [+0.9972-+1.0000], p=0.772
+
+Adaptive Thresholds:
+  PSI:  0.0625
+  CCS:  0.8860
+  ρ_PC: 0.9983
+```
+
+See `examples/bootstrap_example.py` for a complete demonstration with LLM evaluation data.
+
+### LLM Evaluation Example
+
+Analyze bias in large language model benchmarking:
+
+```python
+# Load LLM evaluation data
+df = pd.read_csv('data/llm_eval_sample.csv')
+
+# Include LLM-specific constraints
+constraint_matrix = df.groupby('time_period')[[
+    'constraint_compute',
+    'constraint_memory', 
+    'constraint_dataset_size',
+    'max_tokens',           # LLM-specific
+    'temperature'           # LLM-specific
+]].first().values
+
+# Detect if prompt engineering inflated scores
+results = detector.detect_bias(performance_matrix, constraint_matrix)
+
+# High ρ_PC suggests sampling parameters were tuned to improve scores
+if abs(results['rho_pc_score']) > 0.5:
+    print("⚠️  High correlation detected: sampling parameters may have been "
+          "iteratively adjusted to inflate benchmark scores.")
 ```
 
 ## 📁 Repository Structure

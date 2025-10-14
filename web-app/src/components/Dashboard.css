@@ -53,6 +53,18 @@
   border-left: 6px solid #4caf50;
 }
 
+.bootstrap-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
 .status-icon-large {
   font-size: 3rem;
 }
@@ -113,6 +125,23 @@
 .metric-description {
   font-size: 0.95rem;
   color: #666;
+}
+
+.metric-ci {
+  font-size: 0.85rem;
+  color: #667eea;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  padding: 0.3rem 0.6rem;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.metric-pvalue {
+  font-size: 0.85rem;
+  margin: 0.3rem 0;
+  padding: 0.2rem 0;
 }
 
 .interpretation-section,
