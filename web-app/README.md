@@ -1,16 +1,101 @@
-# React + Vite
+# 🔍 Circular Bias Scanner - Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Single-page web application for detecting circular reasoning bias in algorithm evaluation.
 
-Currently, two official plugins are available:
+**🌐 Live Demo:** https://hongping-zh.github.io/circular-bias-detection/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📚 Documentation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **[Quick Start Guide](./QUICK_START.md)** - Get started in 2 minutes (EN/CN) | 2分钟快速入门（中英文）
+- **[Full User Guide (English)](./USER_GUIDE_EN.md)** - Complete documentation
+- **[完整用户指南（中文）](./USER_GUIDE_CN.md)** - 中文完整文档
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Features
+
+- ✅ **Upload CSV** - Analyze your own evaluation data
+- ✅ **Example Data** - Try with sample data from Zenodo
+- ✅ **Synthetic Data** - Generate test scenarios
+- ✅ **Instant Analysis** - Results in under 1 minute
+- ✅ **Privacy-First** - All computation in your browser (no server uploads)
+- ✅ **Open Source** - Free and transparent (CC BY 4.0)
+
+---
+
+## 🚀 Tech Stack
+
+- **React** - UI framework
+- **Vite** - Build tool
+- **PyOdide** - Python in the browser (planned)
+- **GitHub Pages** - Free hosting
+
+---
+
+## 💻 Development
+
+### Install dependencies
+```bash
+npm install
+```
+
+### Start dev server
+```bash
+npm run dev
+```
+
+Visit: http://localhost:5173/
+
+### Build for production
+```bash
+npm run build
+```
+
+### Deploy to GitHub Pages
+```bash
+npm run deploy
+```
+
+---
+
+## 📊 Data Format
+
+CSV file must contain these columns:
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `time_period` | int | Evaluation period (1, 2, 3, ...) |
+| `algorithm` | str | Algorithm name |
+| `performance` | float | Performance metric [0-1] |
+| `constraint_compute` | float | Computational constraint |
+| `constraint_memory` | float | Memory constraint (GB) |
+| `constraint_dataset_size` | int | Dataset size |
+| `evaluation_protocol` | str | Protocol version |
+
+**Example:**
+```csv
+time_period,algorithm,performance,constraint_compute,constraint_memory,constraint_dataset_size,evaluation_protocol
+1,ResNet,0.72,300,8.0,50000,ImageNet-v1.0
+1,VGG,0.68,450,12.0,50000,ImageNet-v1.0
+```
+
+---
+
+## 🔗 Links
+
+- **GitHub Repository:** https://github.com/hongping-zh/circular-bias-detection
+- **Dataset:** https://doi.org/10.5281/zenodo.17201032
+- **Paper:** (Submitted to JASA)
+
+---
+
+## 📝 License
+
+CC BY 4.0 - Free to use, share, and adapt with attribution.
+
+---
+
+**Version:** 1.0.0 (MVP - Test Mode)  
+**Updated:** October 2024
