@@ -1,0 +1,208 @@
+.dashboard {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.dashboard-header h2 {
+  color: #667eea;
+}
+
+.reset-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.reset-button:hover {
+  background: #764ba2;
+}
+
+.overall-status {
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.overall-status.detected {
+  background: #fff3cd;
+  border-left: 6px solid #ff9800;
+}
+
+.overall-status.clean {
+  background: #d4edda;
+  border-left: 6px solid #4caf50;
+}
+
+.status-icon-large {
+  font-size: 3rem;
+}
+
+.status-text h3 {
+  margin-bottom: 0.5rem;
+}
+
+.status-text p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: white;
+  border-top: 4px solid;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.metric-header h3 {
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.status-icon {
+  font-size: 1.5rem;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.metric-threshold {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.metric-description {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.interpretation-section,
+.details-section {
+  margin: 2rem 0;
+}
+
+.interpretation-section h3,
+.details-section h3 {
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.interpretation-box {
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  line-height: 1.6;
+  color: #333;
+}
+
+.details-section ul {
+  list-style: none;
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.details-section li {
+  padding: 0.5rem 0;
+  color: #333;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.download-button,
+.cite-button {
+  flex: 1;
+  min-width: 200px;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.download-button {
+  background: #667eea;
+  color: white;
+}
+
+.download-button:hover {
+  background: #764ba2;
+}
+
+.cite-button {
+  background: #f5f5f5;
+  color: #333;
+  border: 2px solid #667eea;
+}
+
+.cite-button:hover {
+  background: #667eea;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .download-button,
+  .cite-button {
+    width: 100%;
+  }
+}

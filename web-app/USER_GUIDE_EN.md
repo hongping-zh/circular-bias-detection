@@ -1,10 +1,12 @@
-# 🔍 Circular Bias Scanner - User Guide
+# 🔍 Sleuth - User Guide
+
+**AI Evaluation Bias Hunter**
 
 **Live Demo:** https://hongping-zh.github.io/circular-bias-detection/
 
-## 📖 What is Circular Bias Scanner?
+## 📖 What is Sleuth?
 
-Circular Bias Scanner is a free, browser-based tool for detecting circular reasoning bias in AI algorithm evaluation. It identifies when evaluation protocols have been manipulated to favor specific algorithms, ensuring research integrity and fair comparisons.
+Sleuth is a free, browser-based tool for detecting circular reasoning bias in AI algorithm evaluation. Think of it as your AI detective for spotting manipulated benchmarks. It identifies when evaluation protocols have been manipulated to favor specific algorithms, ensuring research integrity and fair comparisons.
 
 ### Why Use This Tool?
 

@@ -12,14 +12,18 @@ function App() {
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
 
-  // Skip Pyodide for testing - use mock detection
+  // Initialize Pyodide on mount
   useEffect(() => {
-    console.log('Testing mode: Pyodide disabled');
-    // Simulate Pyodide ready immediately
-    setTimeout(() => {
-      setPyodideReady(true);
-      console.log('UI ready (mock mode)');
-    }, 500);
+    console.log('Initializing Pyodide...');
+    initPyodide()
+      .then(() => {
+        console.log('Pyodide ready!');
+        setPyodideReady(true);
+      })
+      .catch(err => {
+        console.error('Pyodide initialization failed:', err);
+        setError('Failed to initialize Python engine');
+      });
   }, []);
 
   const handleDataLoad = (csvData) => {
@@ -38,35 +42,8 @@ function App() {
     setError(null);
 
     try {
-      // Mock detection results for testing
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing
-      
-      const mockResults = {
-        psi: 0.0238,
-        psi_ci_lower: 0.0113,
-        psi_ci_upper: 0.0676,
-        psi_p_value: 0.355,
-        ccs: 0.8860,
-        ccs_ci_lower: 0.8723,
-        ccs_ci_upper: 0.9530,
-        ccs_p_value: 0.342,
-        rho_pc: 0.9983,
-        rho_pc_ci_lower: 0.9972,
-        rho_pc_ci_upper: 1.0000,
-        rho_pc_p_value: 0.772,
-        overall_bias: false,
-        confidence: 0.333,
-        interpretation: 'No circular bias detected (confidence: 33.3%). Evaluation appears sound.',
-        details: {
-          algorithms_evaluated: ['GPT-3.5', 'Llama-2-7B', 'Claude-Instant', 'Mistral-7B'],
-          time_periods: 5,
-          indicators_triggered: 1
-        },
-        bootstrap_enabled: true
-      };
-      
-      setResults(mockResults);
-      console.log('Mock detection completed:', mockResults);
+      const detectionResults = await runBiasDetection(data);
+      setResults(detectionResults);
     } catch (err) {
       console.error('Detection failed:', err);
       setError(err.message || 'Detection failed');
@@ -78,18 +55,15 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>🔍 Sleuth</h1>
-        <p className="subtitle">AI Evaluation Bias Hunter</p>
-        <p className="subtitle" style={{color: '#ff9800', fontWeight: 'bold'}}>
-          🧪 TEST MODE - Using Mock Detection
-        </p>
+        <h1>🔍 Circular Bias Scanner</h1>
+        <p className="subtitle">Detect evaluation bias in 30 seconds</p>
       </header>
 
       <main className="App-main">
         {!pyodideReady && (
           <div className="loading-overlay">
             <div className="spinner"></div>
-            <p>🧪 Loading UI (Test Mode - Using Mock Data)</p>
+            <p>Loading Python engine... (first time only, ~30 seconds)</p>
           </div>
         )}
 

@@ -1,9 +1,11 @@
-# 🚀 Quick Start Guide | 快速入门指南
+# 🚀 Sleuth - Quick Start Guide
 
-## English | 英文
+**AI Evaluation Bias Hunter**
 
-### What is this? | 这是什么？
-A free web tool to detect circular reasoning bias in AI algorithm evaluation.
+## English
+
+### What is Sleuth?
+A free web tool to detect circular reasoning bias in AI algorithm evaluation. Your AI detective for spotting manipulated benchmarks.
 
 ### How to use? | 如何使用？
 1. **Visit:** https://hongping-zh.github.io/circular-bias-detection/

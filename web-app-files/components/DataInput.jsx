@@ -105,14 +105,8 @@ function DataInput({ onDataLoad }) {
           </span>
         </label>
         {selectedFile && (
-          <div className="features-list">
-            <h4>✨ Features</h4>
-            <ul>
-              <li>✓ No signup required</li>
-              <li>✓ Privacy-first: runs in your browser</li>
-              <li>✓ Results in &lt; 30 seconds</li>
-              <li>✓ Free and open source</li>
-            </ul>
+          <div className="selected-file">
+            ✓ {selectedFile}
           </div>
         )}
       </div>

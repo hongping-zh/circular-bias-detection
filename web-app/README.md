@@ -1,4 +1,4 @@
-# 🔍 Circular Bias Scanner - Web App
+# 🔍 Sleuth - AI Evaluation Bias Hunter
 
 Single-page web application for detecting circular reasoning bias in algorithm evaluation.
 
@@ -8,9 +8,9 @@ Single-page web application for detecting circular reasoning bias in algorithm e
 
 ## 📚 Documentation
 
-- **[Quick Start Guide](./QUICK_START.md)** - Get started in 2 minutes (EN/CN) | 2分钟快速入门（中英文）
-- **[Full User Guide (English)](./USER_GUIDE_EN.md)** - Complete documentation
-- **[完整用户指南（中文）](./USER_GUIDE_CN.md)** - 中文完整文档
+- **[Quick Start Guide](./QUICK_START.md)** - Get started in 2 minutes
+- **[Full User Guide](./USER_GUIDE_EN.md)** - Complete documentation
+- **[中文用户指南](./USER_GUIDE_CN.md)** - Chinese documentation
 
 ---
 
