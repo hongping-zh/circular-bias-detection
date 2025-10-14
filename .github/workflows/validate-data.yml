@@ -1,0 +1,95 @@
+name: Validate Dataset Quality
+
+on:
+  push:
+    paths:
+      - 'data/**/*.csv'
+      - 'data/schema.json'
+      - '.github/workflows/validate-data.yml'
+  pull_request:
+    paths:
+      - 'data/**/*.csv'
+      - 'data/schema.json'
+
+jobs:
+  validate-csv:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install pandas jsonschema numpy
+    
+    - name: Validate CSV integrity
+      run: |
+        python -c "
+        import pandas as pd
+        import os
+        import sys
+        
+        csv_files = [f for f in os.listdir('data') if f.endswith('.csv')]
+        errors = []
+        
+        for csv_file in csv_files:
+            try:
+                df = pd.read_csv(f'data/{csv_file}')
+                
+                # Check required columns
+                required_cols = ['time_period', 'algorithm', 'performance', 
+                                'constraint_compute', 'constraint_memory', 
+                                'constraint_dataset_size', 'evaluation_protocol']
+                missing = [col for col in required_cols if col not in df.columns]
+                if missing:
+                    errors.append(f'{csv_file}: Missing columns {missing}')
+                
+                # Check data types
+                if 'performance' in df.columns:
+                    if not df['performance'].between(0, 1).all():
+                        errors.append(f'{csv_file}: Performance values outside [0,1]')
+                
+                # Check for NaN
+                if df.isnull().any().any():
+                    errors.append(f'{csv_file}: Contains NaN values')
+                
+                print(f'✓ {csv_file}: Valid ({len(df)} records)')
+            except Exception as e:
+                errors.append(f'{csv_file}: {str(e)}')
+        
+        if errors:
+            print('\\n❌ Validation errors:')
+            for err in errors:
+                print(f'  - {err}')
+            sys.exit(1)
+        else:
+            print('\\n✅ All CSV files validated successfully!')
+        "
+    
+    - name: Validate JSON Schema
+      run: |
+        python -c "
+        import json
+        import jsonschema
+        
+        with open('data/schema.json') as f:
+            schema = json.load(f)
+        
+        # Validate schema is valid JSON Schema
+        jsonschema.Draft7Validator.check_schema(schema)
+        print('✓ JSON Schema is valid')
+        "
+    
+    - name: Check data reproducibility
+      run: |
+        if [ -f "data/generate_benchmark_data.py" ]; then
+          echo "✓ Data generation script found"
+        else
+          echo "⚠ Warning: No data generation script"
+        fi
