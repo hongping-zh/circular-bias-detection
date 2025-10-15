@@ -3,6 +3,7 @@ import './App.css';
 import DataInput from './components/DataInput';
 import ScanButton from './components/ScanButton';
 import Dashboard from './components/Dashboard';
+import ProgressBar from './components/ProgressBar';
 import { initPyodide, runBiasDetection } from './utils/pyodideRunner';
 
 function App() {
@@ -11,6 +12,17 @@ function App() {
   const [data, setData] = useState(null);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const analysisSteps = [
+    'Loading data',
+    'Computing PSI',
+    'Computing CCS',
+    'Computing ρ_PC',
+    'Bootstrap resampling',
+    'Generating report'
+  ];
 
   // Skip Pyodide for testing - use mock detection
   useEffect(() => {
@@ -36,10 +48,31 @@ function App() {
 
     setLoading(true);
     setError(null);
+    setProgress(0);
+    setCurrentStep(0);
 
     try {
-      // Mock detection results for testing
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing
+      // Simulate multi-step processing with progress updates
+      const stepDuration = 400; // ms per step
+      
+      for (let i = 0; i < analysisSteps.length; i++) {
+        setCurrentStep(i);
+        setProgress((i / analysisSteps.length) * 100);
+        
+        // Simulate processing time for each step
+        await new Promise(resolve => setTimeout(resolve, stepDuration));
+        
+        // Update progress within step
+        setProgress(((i + 0.5) / analysisSteps.length) * 100);
+        await new Promise(resolve => setTimeout(resolve, stepDuration / 2));
+      }
+      
+      // Final progress
+      setProgress(100);
+      setCurrentStep(analysisSteps.length);
+      
+      // Wait a bit before showing results
+      await new Promise(resolve => setTimeout(resolve, 300));
       
       const mockResults = {
         psi: 0.0238,
@@ -72,6 +105,8 @@ function App() {
       setError(err.message || 'Detection failed');
     } finally {
       setLoading(false);
+      setProgress(0);
+      setCurrentStep(0);
     }
   };
 
@@ -93,7 +128,7 @@ function App() {
           </div>
         )}
 
-        {pyodideReady && !results && (
+        {pyodideReady && !results && !loading && (
           <>
             <DataInput onDataLoad={handleDataLoad} />
             
@@ -119,6 +154,14 @@ function App() {
               </ul>
             </div>
           </>
+        )}
+
+        {pyodideReady && loading && (
+          <ProgressBar 
+            progress={progress}
+            currentStep={currentStep}
+            steps={analysisSteps}
+          />
         )}
 
         {results && (
