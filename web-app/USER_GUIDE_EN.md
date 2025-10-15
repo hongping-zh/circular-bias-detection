@@ -8,6 +8,63 @@
 
 Sleuth is a free, browser-based tool for detecting circular reasoning bias in AI algorithm evaluation. Think of it as your AI detective for spotting manipulated benchmarks. It identifies when evaluation protocols have been manipulated to favor specific algorithms, ensuring research integrity and fair comparisons.
 
+### 🔢 Circular Bias Score: Mathematical Definition
+
+The **Circular Bias Score (CBS)** is a composite metric ranging from 0 to 1, where:
+- **CBS = 0**: No circular bias detected (ideal)
+- **CBS = 1**: Maximum circular bias (highly problematic)
+
+**Formula:**
+
+```
+CBS = w₁ · ψ(PSI) + w₂ · ψ(CCS) + w₃ · ψ(ρ_PC)
+
+where:
+  ψ(x) = normalized indicator score [0, 1]
+  w₁, w₂, w₃ = weights (default: 1/3 each)
+```
+
+**Component Indicators:**
+
+1. **PSI (Performance-Structure Independence):**
+   ```
+   PSI = (1/T) Σᵢ₌₁ᵀ ||θᵢ - θᵢ₋₁||₂
+   
+   where:
+     θᵢ = parameter vector at time period i
+     T = total time periods
+     ||·||₂ = L2 norm
+   ```
+   
+   **Statistical Meaning:** Measures parameter drift. High PSI indicates parameters were adjusted between evaluations, suggesting iterative tuning.
+
+2. **CCS (Constraint-Consistency Score):**
+   ```
+   CCS = 1 - (1/p) Σⱼ₌₁ᵖ CV(cⱼ)
+   
+   where:
+     CV(cⱼ) = coefficient of variation for constraint j
+     p = number of constraints
+   ```
+   
+   **Statistical Meaning:** Measures constraint stability. Low CCS indicates inconsistent evaluation conditions.
+
+3. **ρ_PC (Performance-Constraint Correlation):**
+   ```
+   ρ_PC = Pearson(P, C̄)
+   
+   where:
+     P = performance vector across time
+     C̄ = mean constraint vector across time
+   ```
+   
+   **Statistical Meaning:** Correlation coefficient. High |ρ_PC| suggests constraints were adjusted to improve performance.
+
+**Interpretation:**
+- **CBS < 0.3:** Low risk - Evaluation likely sound
+- **0.3 ≤ CBS < 0.6:** Medium risk - Review methodology
+- **CBS ≥ 0.6:** High risk - Strong evidence of circular bias
+
 ### Why Use This Tool?
 
 **Traditional bias detection tools focus on model outputs** (e.g., fairness in predictions). **This tool focuses on the evaluation process itself** - detecting whether the rules of the game were changed mid-evaluation to produce desired results.
@@ -49,6 +106,114 @@ Sleuth is a free, browser-based tool for detecting circular reasoning bias in AI
 - Download results as JSON
 - Copy citation with one click
 - Share results with collaborators
+
+---
+
+## 📋 Data Preparation
+
+### Required Data Format
+
+Your CSV file must include these **required columns:**
+
+| Column | Type | Range | Description |
+|--------|------|-------|-------------|
+| `time_period` | integer | ≥ 1 | Sequential evaluation period |
+| `algorithm` | string | - | Algorithm name or identifier |
+| `performance` | float | [0, 1] | Normalized performance metric |
+
+### Optional Constraint Columns
+
+Include at least one constraint to enable full analysis:
+
+| Column | Type | Description | Example Values |
+|--------|------|-------------|----------------|
+| `constraint_compute` | float | Computational budget (FLOPs, GPU hours) | 100, 500, 1000 |
+| `constraint_memory` | float | Memory limit (GB) | 8.0, 16.0, 32.0 |
+| `constraint_dataset_size` | integer | Training dataset size | 10000, 50000, 100000 |
+| `evaluation_protocol` | string | Protocol version identifier | "v1.0", "baseline" |
+
+### LLM-Specific Columns (Optional)
+
+For LLM evaluation analysis:
+
+| Column | Type | Description | Example Values |
+|--------|------|-------------|----------------|
+| `max_tokens` | integer | Maximum generation length | 256, 512, 1024 |
+| `temperature` | float | Sampling temperature | 0.5, 0.7, 1.0 |
+| `top_p` | float | Nucleus sampling parameter | 0.9, 0.95, 1.0 |
+| `prompt_variant` | string | Prompting technique | "zero-shot", "few-shot", "CoT" |
+
+### Data Requirements
+
+**Minimum data size:**
+- ✅ At least **2 algorithms**
+- ✅ At least **3 time periods** (recommended: 5+)
+- ✅ At least **1 constraint column**
+
+**Data quality:**
+- ✅ No missing values in required columns
+- ✅ Performance values normalized to [0, 1]
+- ✅ Time periods are sequential (1, 2, 3, ...)
+- ✅ Consistent algorithm names across periods
+
+### Example CSV Format
+
+```csv
+time_period,algorithm,performance,constraint_compute,constraint_memory,constraint_dataset_size,evaluation_protocol
+1,ResNet,0.72,300,8.0,50000,ImageNet-v1.0
+1,VGG,0.68,450,12.0,50000,ImageNet-v1.0
+1,DenseNet,0.75,280,9.0,50000,ImageNet-v1.0
+2,ResNet,0.74,305,8.2,51000,ImageNet-v1.0
+2,VGG,0.70,455,12.1,51000,ImageNet-v1.0
+2,DenseNet,0.77,285,9.1,51000,ImageNet-v1.0
+3,ResNet,0.76,310,8.5,52000,ImageNet-v1.1
+3,VGG,0.72,460,12.3,52000,ImageNet-v1.1
+3,DenseNet,0.79,290,9.3,52000,ImageNet-v1.1
+```
+
+### Common Issues and Solutions
+
+**❌ Issue:** "Missing required columns: performance"
+- **Solution:** Rename your metric column to `performance`
+- If using accuracy/F1/AUC, normalize to [0, 1] range
+
+**❌ Issue:** "Row 5: 'performance' must be a number"
+- **Solution:** Remove non-numeric values (e.g., "N/A", "-", empty cells)
+- Replace missing values with interpolation or mean
+
+**❌ Issue:** "At least 2 different algorithms required"
+- **Solution:** Include evaluations of multiple algorithms
+- Each algorithm should appear in multiple time periods
+
+**⚠️ Warning:** "Minimum 3 time periods recommended"
+- **Impact:** Results may be less reliable with < 3 periods
+- **Recommendation:** Collect data from more evaluation iterations
+
+### Handling Sparse Data
+
+**Cold start problem:**
+- If some algorithms don't appear in early periods, use synthetic baseline values or skip those periods
+- Ensure at least 70% data completeness
+
+**Missing constraints:**
+- Tool can work with performance-only data, but constraint analysis will be limited
+- Include as many constraint columns as available
+
+### Sample Datasets
+
+Download ready-to-use example datasets:
+
+1. **Computer Vision** (ImageNet evaluation)
+   - `data/sample_data.csv`
+   - 4 algorithms, 5 time periods
+
+2. **LLM Benchmarking** (GLUE scores)
+   - `data/llm_eval_sample.csv`
+   - 4 models, 5 prompt variants
+
+3. **Synthetic Data** (Monte Carlo simulation)
+   - Generate within the tool
+   - Customizable parameters
 
 ---
 
@@ -123,7 +288,8 @@ The results dashboard displays three key indicators:
 
 #### 📊 PSI Score (Performance-Structure Independence)
 - **What it measures:** Parameter stability over time
-- **Threshold:** 0.15
+- **Default Threshold:** 0.15
+- **Recommended Range:** [0.10, 0.20]
 - **Interpretation:**
   - PSI < 0.10: ✅ Stable (Good)
   - 0.10 ≤ PSI < 0.15: ⚠️ Moderate
@@ -131,9 +297,21 @@ The results dashboard displays three key indicators:
 
 **Example:** PSI = 0.0158 → Parameters are very stable, evaluation is consistent.
 
+**Threshold Guidelines:**
+- **Strict (0.10):** Use for high-stakes evaluations (e.g., benchmark leaderboards)
+- **Standard (0.15):** Default for most research evaluations
+- **Lenient (0.20):** For exploratory or early-stage research
+
+**What causes high PSI?**
+- Hyperparameter changes between evaluations
+- Different random seeds affecting model initialization
+- Architecture modifications during evaluation
+- Training procedure adjustments
+
 #### 📊 CCS Score (Constraint-Consistency Score)
 - **What it measures:** Consistency of constraint specifications
-- **Threshold:** 0.85
+- **Default Threshold:** 0.85
+- **Recommended Range:** [0.80, 0.90]
 - **Interpretation:**
   - CCS ≥ 0.90: ✅ Highly Consistent (Good)
   - 0.85 ≤ CCS < 0.90: ⚠️ Moderate
@@ -141,15 +319,51 @@ The results dashboard displays three key indicators:
 
 **Example:** CCS = 0.9422 → Constraints are highly consistent across periods.
 
+**Threshold Guidelines:**
+- **Strict (0.90):** For controlled experiments requiring high reproducibility
+- **Standard (0.85):** Default for typical evaluation scenarios
+- **Lenient (0.80):** For evaluations with expected constraint variations
+
+**What causes low CCS?**
+- Computational budget changes between periods
+- Memory limit adjustments
+- Dataset size variations
+- Hardware upgrades/changes
+- Protocol version updates without documentation
+
+**Note:** Some variation is normal (e.g., dataset size growing over time). Focus on **systematic changes** that correlate with performance improvements.
+
 #### 📊 ρ_PC Score (Performance-Constraint Correlation)
 - **What it measures:** Correlation between performance and constraints
-- **Threshold:** ±0.5
+- **Default Threshold:** ±0.5
+- **Recommended Range:** [0.40, 0.60]
 - **Interpretation:**
   - |ρ_PC| < 0.3: ✅ Weak Correlation (Good)
   - 0.3 ≤ |ρ_PC| < 0.5: ⚠️ Moderate
   - |ρ_PC| ≥ 0.5: ❌ Strong Correlation (Potential Bias)
 
 **Example:** ρ_PC = +0.9921 → Very strong positive correlation, constraints may have been tuned to performance.
+
+**Threshold Guidelines:**
+- **Strict (0.40):** For high-impact publications
+- **Standard (0.50):** Default for most research
+- **Lenient (0.60):** For preliminary studies
+
+**Interpreting correlation sign:**
+- **Positive ρ_PC:** Performance increases as constraints loosen
+  - Could indicate: Resources were increased to improve scores
+  - Natural in some cases (more compute → better results)
+  - **Red flag:** If constraints increased *only* for best-performing models
+
+- **Negative ρ_PC:** Performance increases as constraints tighten
+  - **Strong red flag:** Suggests evaluation was gamed
+  - Could indicate: Cherry-picking favorable test conditions
+
+**What causes high |ρ_PC|?**
+- Adjusting computational budget based on preliminary results
+- Increasing dataset size after seeing performance plateau
+- Tuning memory limits to favor specific architectures
+- Protocol changes triggered by poor initial results
 
 #### 🎯 Overall Decision
 
