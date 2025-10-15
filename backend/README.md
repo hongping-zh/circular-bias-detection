@@ -21,20 +21,23 @@ pytest tests/test_psi.py -v
 backend/
 ├── core/                   # Core algorithms
 │   ├── psi_calculator.py   # ✅ Day 1: PSI implementation
-│   ├── ccs_calculator.py   # 🔜 Day 2: CCS implementation
-│   ├── rho_pc_calculator.py # 🔜 Day 2: ρ_PC implementation
+│   ├── ccs_calculator.py   # ✅ Day 2: CCS implementation
+│   ├── rho_pc_calculator.py # ✅ Day 2: ρ_PC implementation
 │   ├── bootstrap.py        # 🔜 Day 3: Bootstrap CI
 │   └── bias_scorer.py      # 🔜 Day 3: CBS composite score
 ├── utils/                  # Utilities
 │   ├── data_parser.py      # 🔜 CSV parsing
 │   └── validator.py        # 🔜 Data validation
 ├── tests/                  # Unit tests
-│   └── test_psi.py         # ✅ Day 1: PSI tests
+│   ├── test_psi.py         # ✅ Day 1: PSI tests
+│   ├── test_ccs.py         # ✅ Day 2: CCS tests
+│   └── test_rho_pc.py      # ✅ Day 2: ρ_PC tests
 ├── data/                   # Sample data
 │   └── sample_data.csv     # ✅ Day 1: Example dataset
 ├── app.py                  # 🔜 Day 3: Flask API
 ├── requirements.txt        # ✅ Dependencies
-└── run_psi_test.py         # ✅ Day 1: Quick test
+├── run_psi_test.py         # ✅ Day 1: Quick test
+└── run_day2_test.py        # ✅ Day 2: Comprehensive test
 ```
 
 ## Day 1 Progress ✅
@@ -44,6 +47,15 @@ backend/
 - [x] Sample data created
 - [x] Unit tests written
 - [x] Quick test script ready
+
+## Day 2 Progress ✅
+
+- [x] CCS calculator implemented
+- [x] ρ_PC calculator implemented
+- [x] CCS unit tests written
+- [x] ρ_PC unit tests written
+- [x] Mathematical correctness verified
+- [x] Comprehensive test script
 
 ## Algorithms
 
@@ -71,6 +83,52 @@ print(f"PSI Score: {result['psi_score']:.4f}")
 print(f"Exceeds Threshold: {result['exceeds_threshold']}")
 ```
 
+### CCS (Constraint-Consistency Score)
+
+**Formula:**
+```
+CCS = 1 - (1/p) Σⱼ₌₁ᵖ CV(cⱼ)
+where CV(cⱼ) = σⱼ / μⱼ
+```
+
+**Interpretation:**
+- CCS ≥ 0.90: Highly consistent (low risk)
+- 0.85 ≤ CCS < 0.90: Moderately consistent
+- CCS < 0.85: Inconsistent (high risk)
+
+**Usage:**
+```python
+from core.ccs_calculator import compute_ccs
+
+result = compute_ccs(df)
+
+print(f"CCS Score: {result['ccs_score']:.4f}")
+print(f"CV by Constraint: {result['cv_by_constraint']}")
+```
+
+### ρ_PC (Performance-Constraint Correlation)
+
+**Formula:**
+```
+ρ_PC = Pearson(P, C̄)
+```
+
+**Interpretation:**
+- |ρ_PC| < 0.3: Weak correlation (low risk)
+- 0.3 ≤ |ρ_PC| < 0.5: Moderate correlation
+- |ρ_PC| ≥ 0.5: Strong correlation (high risk)
+
+**Usage:**
+```python
+from core.rho_pc_calculator import compute_rho_pc
+
+result = compute_rho_pc(df)
+
+print(f"ρ_PC Score: {result['rho_pc']:.4f}")
+print(f"P-value: {result['p_value']:.4f}")
+print(f"Significant: {result['significant']}")
+```
+
 ## Testing
 
 ### Quick Test (No pytest required)
@@ -78,9 +136,20 @@ print(f"Exceeds Threshold: {result['exceeds_threshold']}")
 python run_psi_test.py
 ```
 
+### Day 2 Comprehensive Test
+```bash
+python run_day2_test.py
+```
+
 ### Full Unit Tests
 ```bash
+# Test all algorithms
+pytest tests/ -v
+
+# Test individually
 pytest tests/test_psi.py -v
+pytest tests/test_ccs.py -v
+pytest tests/test_rho_pc.py -v
 ```
 
 ### Expected Output
