@@ -23,21 +23,19 @@ backend/
 │   ├── psi_calculator.py   # ✅ Day 1: PSI implementation
 │   ├── ccs_calculator.py   # ✅ Day 2: CCS implementation
 │   ├── rho_pc_calculator.py # ✅ Day 2: ρ_PC implementation
-│   ├── bootstrap.py        # 🔜 Day 3: Bootstrap CI
-│   └── bias_scorer.py      # 🔜 Day 3: CBS composite score
-├── utils/                  # Utilities
-│   ├── data_parser.py      # 🔜 CSV parsing
-│   └── validator.py        # 🔜 Data validation
+│   ├── bootstrap.py        # ✅ Day 3: Bootstrap CI
+│   └── bias_scorer.py      # ✅ Day 3: CBS composite score
 ├── tests/                  # Unit tests
 │   ├── test_psi.py         # ✅ Day 1: PSI tests
 │   ├── test_ccs.py         # ✅ Day 2: CCS tests
 │   └── test_rho_pc.py      # ✅ Day 2: ρ_PC tests
 ├── data/                   # Sample data
-│   └── sample_data.csv     # ✅ Day 1: Example dataset
-├── app.py                  # 🔜 Day 3: Flask API
+│   └── sample_data.csv     # ✅ Example dataset
+├── app.py                  # ✅ Day 3: Flask REST API
 ├── requirements.txt        # ✅ Dependencies
-├── run_psi_test.py         # ✅ Day 1: Quick test
-└── run_day2_test.py        # ✅ Day 2: Comprehensive test
+├── run_psi_test.py         # ✅ Day 1: PSI test
+├── run_day2_test.py        # ✅ Day 2: CCS + ρ_PC test
+└── run_day3_test.py        # ✅ Day 3: Full integration test
 ```
 
 ## Day 1 Progress ✅
@@ -56,6 +54,15 @@ backend/
 - [x] ρ_PC unit tests written
 - [x] Mathematical correctness verified
 - [x] Comprehensive test script
+
+## Day 3 Progress ✅
+
+- [x] Bootstrap confidence intervals (1000 iterations)
+- [x] CBS composite bias score
+- [x] Flask REST API
+- [x] Integration tests
+- [x] API documentation
+- [x] Complete pipeline working
 
 ## Algorithms
 
@@ -129,6 +136,47 @@ print(f"P-value: {result['p_value']:.4f}")
 print(f"Significant: {result['significant']}")
 ```
 
+### CBS (Circular Bias Score) - Composite
+
+**Formula:**
+```
+CBS = w₁·ψ(PSI) + w₂·ψ(CCS) + w₃·ψ(ρ_PC)
+```
+
+**Risk Levels:**
+- CBS < 0.3: Low Risk
+- 0.3 ≤ CBS < 0.6: Medium Risk
+- CBS ≥ 0.6: High Risk
+
+**Usage:**
+```python
+from core.bias_scorer import detect_circular_bias
+
+# Complete detection pipeline
+results = detect_circular_bias(df, run_bootstrap=True, n_bootstrap=1000)
+
+print(f"CBS Score: {results['cbs_score']:.3f}")
+print(f"Risk Level: {results['risk_level']}")
+print(f"Bias Detected: {results['bias_detected']}")
+print(f"Confidence: {results['confidence']:.1f}%")
+
+# With bootstrap CI
+if 'bootstrap' in results:
+    print(f"PSI CI: [{results['bootstrap']['psi']['ci_lower']:.3f}, {results['bootstrap']['psi']['ci_upper']:.3f}]")
+```
+
+### Bootstrap Confidence Intervals
+
+**Usage:**
+```python
+from core.bootstrap import bootstrap_indicators
+
+bootstrap_results = bootstrap_indicators(df, n_iterations=1000, confidence=0.95)
+
+print(f"PSI Mean: {bootstrap_results['psi']['mean']:.4f}")
+print(f"PSI 95% CI: [{bootstrap_results['psi']['ci_lower']:.4f}, {bootstrap_results['psi']['ci_upper']:.4f}]")
+```
+
 ## Testing
 
 ### Quick Test (No pytest required)
@@ -141,6 +189,11 @@ python run_psi_test.py
 python run_day2_test.py
 ```
 
+### Day 3 Integration Test
+```bash
+python run_day3_test.py
+```
+
 ### Full Unit Tests
 ```bash
 # Test all algorithms
@@ -150,6 +203,18 @@ pytest tests/ -v
 pytest tests/test_psi.py -v
 pytest tests/test_ccs.py -v
 pytest tests/test_rho_pc.py -v
+```
+
+### Flask API Server
+```bash
+# Start API server
+python app.py
+
+# Server will run on http://localhost:5000
+# Endpoints:
+#   GET  /health       - Health check
+#   GET  /api/info     - API documentation
+#   POST /api/detect   - Bias detection
 ```
 
 ### Expected Output
