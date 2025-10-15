@@ -1,5 +1,6 @@
 import React from 'react';
 import './Dashboard.css';
+import VisualizationCharts from './VisualizationCharts';
 
 function MetricCard({ title, value, threshold, status, description, ciLower, ciUpper, pValue, showBootstrap }) {
   const getStatusColor = () => {
@@ -138,6 +139,10 @@ function Dashboard({ results, onReset }) {
           {results.interpretation || getInterpretation(results)}
         </div>
       </div>
+
+      {results.details && results.details.dataStats && (
+        <VisualizationCharts results={results} dataStats={results.details.dataStats} />
+      )}
 
       {results.details && (
         <div className="details-section">

@@ -4,6 +4,7 @@ import DataInput from './components/DataInput';
 import ScanButton from './components/ScanButton';
 import Dashboard from './components/Dashboard';
 import ProgressBar from './components/ProgressBar';
+import InteractiveTutorial from './components/InteractiveTutorial';
 import { initPyodide, runBiasDetection } from './utils/pyodideRunner';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   const [error, setError] = useState(null);
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const analysisSteps = [
     'Loading data',
@@ -31,13 +33,24 @@ function App() {
     setTimeout(() => {
       setPyodideReady(true);
       console.log('UI ready (mock mode)');
+      
+      // Show tutorial for first-time visitors
+      const hasSeenTutorial = localStorage.getItem('sleuth_tutorial_completed');
+      if (!hasSeenTutorial) {
+        setShowTutorial(true);
+      }
     }, 500);
   }, []);
 
-  const handleDataLoad = (csvData) => {
+  const handleDataLoad = (csvData, validationResult) => {
     setData(csvData);
     setResults(null);
     setError(null);
+    
+    // Store validation stats for visualization
+    if (validationResult && validationResult.stats) {
+      setData({ csvData, stats: validationResult.stats });
+    }
   };
 
   const handleScan = async () => {
@@ -93,7 +106,14 @@ function App() {
         details: {
           algorithms_evaluated: ['GPT-3.5', 'Llama-2-7B', 'Claude-Instant', 'Mistral-7B'],
           time_periods: 5,
-          indicators_triggered: 1
+          indicators_triggered: 1,
+          dataStats: data.stats || {
+            totalRows: 20,
+            algorithmCount: 4,
+            periodCount: 5,
+            timePeriods: [1, 2, 3, 4, 5],
+            algorithms: ['GPT-3.5', 'Llama-2-7B', 'Claude-Instant', 'Mistral-7B']
+          }
         },
         bootstrap_enabled: true
       };
@@ -110,11 +130,49 @@ function App() {
     }
   };
 
+  const handleTutorialClose = () => {
+    setShowTutorial(false);
+    localStorage.setItem('sleuth_tutorial_completed', 'true');
+  };
+
+  const handleLoadLLMExample = () => {
+    // Load LLM example data
+    const llmExampleCSV = `time_period,algorithm,performance,constraint_compute,constraint_memory,max_tokens,temperature,top_p,prompt_variant
+1,GPT-3.5,0.72,300,8.0,512,0.7,0.9,vanilla
+1,Llama-2-7B,0.68,450,12.0,512,0.7,0.9,vanilla
+1,Claude-Instant,0.75,400,10.0,512,0.7,0.9,vanilla
+1,Mistral-7B,0.70,420,11.0,512,0.7,0.9,vanilla
+2,GPT-3.5,0.74,305,8.2,512,0.75,0.92,few_shot
+2,Llama-2-7B,0.70,455,12.1,512,0.75,0.92,few_shot
+2,Claude-Instant,0.78,405,10.2,512,0.75,0.92,few_shot
+2,Mistral-7B,0.73,425,11.1,512,0.75,0.92,few_shot
+3,GPT-3.5,0.76,310,8.5,768,0.8,0.95,chain_of_thought
+3,Llama-2-7B,0.72,460,12.3,768,0.8,0.95,chain_of_thought
+3,Claude-Instant,0.80,410,10.5,768,0.8,0.95,chain_of_thought
+3,Mistral-7B,0.75,430,11.3,768,0.8,0.95,chain_of_thought`;
+    
+    handleDataLoad(llmExampleCSV, null);
+  };
+
   return (
     <div className="App">
+      {showTutorial && (
+        <InteractiveTutorial 
+          onClose={handleTutorialClose} 
+          onLoadExample={handleLoadLLMExample}
+        />
+      )}
+
       <header className="App-header">
         <h1>🔍 Sleuth</h1>
         <p className="subtitle">AI Evaluation Bias Hunter</p>
+        <button 
+          className="tutorial-trigger"
+          onClick={() => setShowTutorial(true)}
+          title="Show Tutorial"
+        >
+          ❓ Help
+        </button>
         <p className="subtitle" style={{color: '#ff9800', fontWeight: 'bold'}}>
           🧪 TEST MODE - Using Mock Detection
         </p>

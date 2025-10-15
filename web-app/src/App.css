@@ -25,6 +25,7 @@ body {
   padding: 2rem;
   text-align: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .App-header h1 {
@@ -36,6 +37,27 @@ body {
 .subtitle {
   color: #666;
   font-size: 1.1rem;
+}
+
+.tutorial-trigger {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.tutorial-trigger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
 }
 
 .App-main {

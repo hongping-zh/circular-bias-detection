@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import './DataInput.css';
+import ValidationMessage from './ValidationMessage';
+import { validateCSV, formatValidationMessage } from '../utils/dataValidator';
 
 function DataInput({ onDataLoad }) {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [validation, setValidation] = useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
     if (!file.name.endsWith('.csv')) {
-      alert('Please upload a CSV file');
+      setValidation({
+        type: 'error',
+        title: '✗ Invalid File Type',
+        message: 'Please upload a CSV file (.csv extension required)',
+        details: null
+      });
       return;
     }
 
@@ -18,7 +26,16 @@ function DataInput({ onDataLoad }) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const csvContent = e.target.result;
-      onDataLoad(csvContent);
+      
+      // Validate CSV content
+      const validationResult = validateCSV(csvContent);
+      const message = formatValidationMessage(validationResult);
+      
+      setValidation(message);
+      
+      if (validationResult.valid) {
+        onDataLoad(csvContent, validationResult);
+      }
     };
     reader.readAsText(file);
   };
@@ -86,6 +103,16 @@ function DataInput({ onDataLoad }) {
 
   return (
     <div className="data-input-container">
+      {validation && (
+        <ValidationMessage
+          type={validation.type}
+          title={validation.title}
+          message={validation.message}
+          details={validation.details}
+          onClose={() => setValidation(null)}
+        />
+      )}
+
       <div 
         className="upload-box"
         onDrop={handleDrop}
