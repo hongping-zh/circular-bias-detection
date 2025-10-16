@@ -99,6 +99,13 @@ time_period,algorithm,performance,constraint_compute,constraint_dataset_size
     \item Multi-panel analytics dashboard: CBS gauge chart (risk zones), indicator radar plot (threshold overlays), temporal trajectories, correlation scatter plots with confidence ellipses
 \end{itemize}
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{fig1_main_interface.png}
+\caption{Sleuth's analytical dashboard displaying three visualization panels: (A) CBS gauge chart with color-coded risk zones showing CBS = 0.64 (High Risk); (B) Radar plot overlaying observed indicator values against detection thresholds; (C) Time-series visualization illustrating positive correlation pattern.}
+\label{fig:interface}
+\end{figure}
+
 \subsection{Availability and Quality Assurance}
 
 \begin{itemize}
@@ -130,6 +137,13 @@ Biased & 0.71 $\pm$ 0.12 & 94\% (47/50) & --- \\
 
 \textbf{Overall Metrics:} Accuracy 94\% (94/100), Precision 92.2\% (47/51), Recall 94.0\% (47/50), F1-Score 93.1\%
 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\textwidth]{fig2_validation.png}
+\caption{Comparative performance across 100 synthetic evaluation sequences. Bar chart displays mean values for CBS and constituent indicators in clean datasets (blue) versus biased datasets (orange). Overall detection accuracy: 94\%.}
+\label{fig:validation}
+\end{figure}
+
 \subsection{Empirical Case Study}
 
 Historical ImageNet evaluation logs analyzed (4 architectures $\times$ 5 temporal intervals, Figure~\ref{fig:imagenet}):
@@ -140,6 +154,13 @@ Historical ImageNet evaluation logs analyzed (4 architectures $\times$ 5 tempora
     \item \textbf{Interpretation:} Dataset expansion from 50,000 to 54,000 samples correlated with accuracy improvements, indicating retrospective protocol modification
     \item \textbf{Remediation:} Research team adopted fixed-dataset methodology in subsequent benchmark cycles
 \end{itemize}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\textwidth]{fig3_imagenet_case.png}
+\caption{ImageNet case study showing strong correlation ($\rho_{PC} = 0.72$, p $< 0.001$) between effective dataset size and top-1 accuracy. Color gradient indicates chronological progression (2018--2023). Composite CBS = 0.68 (High Risk).}
+\label{fig:imagenet}
+\end{figure}
 
 \section{Impact and Applications}
 
