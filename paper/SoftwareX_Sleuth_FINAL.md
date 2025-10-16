@@ -2,7 +2,7 @@
 
 **Author:** Hongping Zhang  
 **Affiliation:** [Your Institution]  
-**Email:** yujjam@uest.edu.gr  
+**Email:** zhanghongping@gmail.com  
 **ORCID:** 0009-0000-2529-4613  
 **Code Repository:** https://github.com/hongping-zh/circular-bias-detection  
 **Archived Version:** https://doi.org/10.5281/zenodo.17201032  
