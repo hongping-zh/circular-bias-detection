@@ -1,0 +1,43 @@
+\documentclass[10pt]{letter}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\begin{document}
+
+\begin{letter}{Editors of \textit{SoftwareX}}
+
+\opening{Dear Editors,}
+
+I am pleased to submit our manuscript entitled \textbf{"Sleuth: Detecting Circular Bias in AI Model Evaluation via Statistical Consistency Metrics"} for consideration as a Software Article in \textit{SoftwareX}.
+
+The rapid adoption of machine learning in scientific research has exposed a critical but under-addressed threat to reproducibility: \textbf{circular bias}—the practice of adaptively tuning evaluation protocols (e.g., datasets, compute budgets, hyperparameters) in response to observed model performance. This creates self-reinforcing feedback loops that inflate results and undermine scientific claims, as recently highlighted in \textit{Patterns} (Kapoor \& Narayanan, 2023) and the broader reproducibility literature.
+
+While tools exist for tracking experiments or auditing model fairness, none provide \textbf{automated, statistically rigorous diagnostics} for circularity in the evaluation process itself. \textit{Sleuth} fills this gap by introducing three novel indicators—PSI, CCS, and $\rho_{PC}$—combined into a composite Circular Bias Score (CBS) with bootstrap-based uncertainty quantification. The tool operates entirely client-side via a no-code web interface, ensuring privacy while enabling researchers, reviewers, and auditors to detect and mitigate evaluation bias.
+
+Key strengths of Sleuth include:
+\begin{itemize}
+    \item First open-source framework specifically targeting circular bias in AI evaluation
+    \item Statistical rigor: 94\% detection accuracy on synthetic benchmarks, validated on real-world ImageNet logs
+    \item Privacy-preserving: zero data transmission, fully client-side execution
+    \item Immediate applicability: integrates with existing evaluation workflows via CSV input
+    \item Open science compliance: Creative Commons Attribution 4.0 International license, Zenodo DOI (10.5281/zenodo.17201032), and public GitHub repository
+\end{itemize}
+
+This work directly supports \textit{SoftwareX}'s mission to publish high-impact, reusable research software that advances methodological rigor. Sleuth addresses a timely and urgent need in the ML and AI communities, where evaluation integrity is increasingly scrutinized.
+
+The manuscript is original, unpublished, and not under consideration elsewhere. All authors have approved this submission.
+
+Thank you for your consideration. I look forward to your feedback.
+
+\closing{Sincerely,}
+
+\noindent
+Hongping Zhang\textsuperscript{\textdagger} \\
+Independent Researcher \\
+ORCID: 0009-0000-2529-4613 \\
+Email: yujjam@uest.edu.gr \\
+\textsuperscript{\textdagger}Corresponding author
+
+\end{letter}
+\end{document}
