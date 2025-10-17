@@ -18,7 +18,7 @@ Examples of unacceptable behavior:
 
 ## Enforcement
 
-Project maintainers are responsible for clarifying and enforcing standards of acceptable behavior. Violations may be reported to zhanghongping@gmail.com. All complaints will be reviewed and investigated promptly and fairly.
+Project maintainers are responsible for clarifying and enforcing standards of acceptable behavior. Violations may be reported to yujjam@uest.edu.gr. All complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution
 

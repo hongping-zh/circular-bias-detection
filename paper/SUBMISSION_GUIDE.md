@@ -134,10 +134,10 @@ Permanently archived with DOI under Creative Commons Attribution 4.0 Internation
 
 **Corresponding Author:**
 - **Name:** Hongping Zhang
-- **Email:** zhanghongping@gmail.com
+- **Email:** yujjam@uest.edu.gr
 - **ORCID:** 0009-0000-2529-4613
 - **Affiliation:** Independent Researcher
-- **Country:** [Your Country]
+- **Country:** Greece
 
 **Role:**
 - [x] I am the corresponding author
@@ -363,7 +363,7 @@ Before clicking "Submit", verify:
 - [x] Cover letter mentions key strengths
 - [x] All co-authors approved (if applicable)
 - [x] ORCID is correct
-- [x] Email is correct and monitored (zhanghongping@gmail.com)
+- [x] Email is correct and monitored (yujjam@uest.edu.gr)
 - [x] GitHub repo is public
 - [x] Zenodo DOI is active
 - [x] Live demo works

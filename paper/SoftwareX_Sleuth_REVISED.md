@@ -1,8 +1,8 @@
 # Sleuth: Detecting Circular Bias in AI Model Evaluation via Statistical Consistency Metrics
 
 **Author:** Hongping Zhang  
-**Affiliation:** [Your Institution]  
-**Corresponding email:** [your.email@example.com]  
+**Affiliation:** Independent Researcher  
+**Corresponding email:** yujjam@uest.edu.gr  
 **Software DOI:** https://doi.org/10.5281/zenodo.17201032  
 **Repository:** https://github.com/hongping-zh/circular-bias-detection  
 

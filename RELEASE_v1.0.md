@@ -258,7 +258,7 @@ See [LICENSE](LICENSE) for details.
 
 - **Issues**: https://github.com/hongping-zh/circular-bias-detection/issues
 - **Discussions**: https://github.com/hongping-zh/circular-bias-detection/discussions
-- **Email**: [Your contact email]
+- **Email**: yujjam@uest.edu.gr
 
 ---
 

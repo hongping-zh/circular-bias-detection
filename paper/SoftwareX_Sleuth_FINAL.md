@@ -1,8 +1,8 @@
 # Sleuth: A Browser-Based Tool for Detecting Circular Bias in AI Evaluation
 
 **Author:** Hongping Zhang  
-**Affiliation:** [Your Institution]  
-**Email:** zhanghongping@gmail.com  
+**Affiliation:** Independent Researcher  
+**Email:** yujjam@uest.edu.gr  
 **ORCID:** 0009-0000-2529-4613  
 **Code Repository:** https://github.com/hongping-zh/circular-bias-detection  
 **Archived Version:** https://doi.org/10.5281/zenodo.17201032  
@@ -266,7 +266,7 @@ Before submitting to SoftwareX:
 - [x] Figures prepared (max 3-4, minimum 300 DPI)
 
 **Pre-Submission Tasks:**
-- [ ] Fill in [Your Institution] affiliation
+- [x] Fill in affiliation
 - [ ] Add acknowledgments section if applicable
 - [ ] Verify all hyperlinks functional
 - [ ] Test live demo accessibility

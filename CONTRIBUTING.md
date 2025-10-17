@@ -6,7 +6,7 @@ Thank you for your interest in contributing!
 
 ```bash
 # Fork and clone
-git clone https://github.com/YOUR_USERNAME/circular-bias-detection.git
+git clone https://github.com/hongping-zh/circular-bias-detection.git
 cd circular-bias-detection
 
 # Install dependencies
