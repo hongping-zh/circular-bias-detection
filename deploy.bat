@@ -28,7 +28,7 @@ git add .
 
 echo.
 echo Creating commit...
-git commit -m "feat(v1.1): Add comprehensive enhancements - Bootstrap, LLM support, data validation, visualizations"
+git commit -m "feat(v1.1): Add Bootstrap, LLM support, data validation, and visualizations"
 
 echo.
 echo Pushing to GitHub...
