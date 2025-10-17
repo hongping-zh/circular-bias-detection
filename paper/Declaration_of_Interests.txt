@@ -1,0 +1,12 @@
+DECLARATION OF COMPETING INTERESTS
+
+Manuscript Title: Sleuth: A Browser-Based Tool for Detecting Circular Bias in AI Evaluation
+
+Author: Hongping Zhang
+
+Declaration:
+The author declares that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+Date: October 16, 2025
+
+Signature: Hongping Zhang

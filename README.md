@@ -145,6 +145,9 @@ This dataset demonstrates how to detect circular bias when prompt engineering an
 git clone https://github.com/hongping-zh/circular-bias-detection.git
 cd circular-bias-detection
 pip install -r requirements.txt
+
+# Optional: Install visualization dependencies
+pip install matplotlib seaborn plotly  # For enhanced visualizations
 ```
 
 ### Basic Usage
@@ -254,6 +257,103 @@ Adaptive Thresholds:
 ```
 
 See `examples/bootstrap_example.py` for a complete demonstration with LLM evaluation data.
+
+### Enhanced API: Integrated Bootstrap and Adaptive Thresholds
+
+**NEW:** Use BiasDetector with built-in bootstrap and adaptive thresholds:
+
+```python
+detector = BiasDetector()
+
+# Enable bootstrap confidence intervals
+results = detector.detect_bias(
+    performance_matrix=performance_matrix,
+    constraint_matrix=constraint_matrix,
+    algorithm_names=algorithms,
+    enable_bootstrap=True,        # ✨ Add CI and p-values
+    n_bootstrap=1000,
+    enable_adaptive_thresholds=True  # ✨ Data-driven thresholds
+)
+
+# Results now include bootstrap statistics
+print(f"PSI: {results['psi_score']:.4f} "
+      f"[{results['psi_ci_lower']:.4f}-{results['psi_ci_upper']:.4f}], "
+      f"p={results['psi_pvalue']:.3f}")
+
+# Generate enhanced report
+report = detector.generate_report(results)
+print(report)  # Includes CI and significance stars
+```
+
+### Data Validation and Auto-Cleaning
+
+**NEW:** Automatically detect and fix data quality issues:
+
+```python
+from circular_bias_detector.utils import (
+    validate_and_clean_data,
+    print_validation_report
+)
+
+# Load raw data
+df = pd.read_csv('raw_data.csv')
+
+# Validate and clean
+df_clean, report = validate_and_clean_data(
+    df,
+    performance_cols=['algorithm'],
+    constraint_cols=['constraint_compute', 'constraint_memory'],
+    time_col='time_period',
+    algorithm_col='algorithm',
+    auto_fix=True  # Automatically fix issues
+)
+
+# Print report
+print_validation_report(report)
+# Output:
+# Data Quality Score: 85.0/100 ⚠️  GOOD
+# Issues fixed:
+#  ✓ missing_values: forward_fill_then_mean
+#  ✓ outliers: IQR_clipping
+```
+
+### Enhanced Visualizations
+
+**NEW:** Generate publication-quality figures and interactive dashboards:
+
+```python
+from circular_bias_detector.visualization import (
+    plot_performance_heatmap,
+    plot_constraint_heatmap,
+    plot_interactive_dashboard,
+    plot_correlation_matrix
+)
+
+# 1. Performance heatmap
+plot_performance_heatmap(
+    performance_matrix,
+    algorithm_names=algorithms,
+    save_path='performance_heatmap.png'
+)
+
+# 2. Interactive Plotly dashboard (with hover tooltips)
+plot_interactive_dashboard(
+    performance_matrix,
+    constraint_matrix,
+    results,
+    algorithm_names=algorithms,
+    save_html='dashboard.html'  # Open in browser
+)
+
+# 3. Correlation matrix
+plot_correlation_matrix(
+    performance_matrix,
+    constraint_matrix,
+    save_path='correlation.png'
+)
+```
+
+See `examples/visualization_example.py` for complete code.
 
 ### LLM Evaluation Example
 
@@ -682,6 +782,32 @@ This project is licensed under the Creative Commons Attribution 4.0 Internationa
 **Hongping Zhang**
 - ORCID: [0009-0000-2529-4613](https://orcid.org/0009-0000-2529-4613)
 - Email: yujjam@uest.edu.gr
+
+## 📚 Additional Resources
+
+### Documentation
+
+- **[LLM Evaluation Guide](docs/LLM_EVALUATION_GUIDE.md)** - Comprehensive guide for detecting bias in large language model evaluation
+- **[API Documentation](#api-documentation)** - Detailed API reference
+- **[Examples Directory](examples/)** - Working code examples
+
+### Example Scripts
+
+| Script | Description |
+|--------|-------------|
+| `examples/llm_evaluation_example.py` | LLM bias detection with bootstrap |
+| `examples/visualization_example.py` | Generate all visualizations |
+| `examples/bootstrap_example.py` | Bootstrap confidence intervals |
+| `examples/basic_usage_example.py` | Getting started tutorial |
+
+### Key Features Added (v1.1+)
+
+- ✨ **Bootstrap Statistical Analysis**: Confidence intervals and p-values (n=1000)
+- ✨ **Adaptive Thresholds**: Data-driven cutoffs via permutation tests
+- ✨ **Data Validation**: Auto-detect and fix missing values, outliers, duplicates
+- ✨ **Enhanced Visualizations**: Heatmaps, interactive Plotly dashboards, correlation matrices
+- ✨ **LLM Evaluation Support**: Specialized guidance for prompt engineering bias
+- ✨ **Quality Scoring**: Automatic data quality assessment (0-100 scale)
 
 ## 🙏 Acknowledgments
 

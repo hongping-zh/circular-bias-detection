@@ -46,7 +46,10 @@ class BiasDetector:
                    performance_matrix: Union[np.ndarray, pd.DataFrame],
                    constraint_matrix: Union[np.ndarray, pd.DataFrame],
                    algorithm_params: Optional[Union[np.ndarray, pd.DataFrame]] = None,
-                   algorithm_names: Optional[List[str]] = None) -> Dict:
+                   algorithm_names: Optional[List[str]] = None,
+                   enable_bootstrap: bool = False,
+                   n_bootstrap: int = 1000,
+                   enable_adaptive_thresholds: bool = False) -> Dict:
         """
         Detect circular reasoning bias in evaluation data.
         
@@ -60,11 +63,17 @@ class BiasDetector:
             Shape (T, K, p) algorithm parameters across time
         algorithm_names : list, optional
             Names of algorithms for reporting
+        enable_bootstrap : bool, optional
+            If True, compute bootstrap confidence intervals and p-values (default: False)
+        n_bootstrap : int, optional
+            Number of bootstrap samples (default: 1000)
+        enable_adaptive_thresholds : bool, optional
+            If True, use data-adaptive thresholds instead of fixed values (default: False)
             
         Returns:
         --------
         dict
-            Comprehensive bias detection results
+            Comprehensive bias detection results with optional bootstrap statistics
         """
         
         # Convert to numpy arrays
@@ -94,22 +103,67 @@ class BiasDetector:
         except ValueError as e:
             raise ValueError(f"Input validation failed: {e}")
             
-        # Compute bias indicators
-        results = compute_all_indicators(
-            perf_array, 
-            const_array, 
-            params_array
-        )
+        # Compute adaptive thresholds if requested
+        if enable_adaptive_thresholds:
+            from .core import compute_adaptive_thresholds
+            adaptive_thresholds = compute_adaptive_thresholds(
+                perf_array, 
+                const_array,
+                quantile=0.95,
+                n_simulations=500
+            )
+            # Use adaptive thresholds
+            psi_threshold = adaptive_thresholds['psi_threshold']
+            ccs_threshold = adaptive_thresholds['ccs_threshold']
+            rho_pc_threshold = adaptive_thresholds['rho_pc_threshold']
+        else:
+            # Use fixed thresholds
+            psi_threshold = self.psi_threshold
+            ccs_threshold = self.ccs_threshold
+            rho_pc_threshold = self.rho_pc_threshold
         
-        # Apply custom thresholds
+        # Compute bootstrap statistics if requested
+        if enable_bootstrap:
+            from .core import bootstrap_psi, bootstrap_ccs, bootstrap_rho_pc
+            
+            psi_boot = bootstrap_psi(perf_array, params_array, n_bootstrap=n_bootstrap)
+            ccs_boot = bootstrap_ccs(const_array, n_bootstrap=n_bootstrap)
+            rho_boot = bootstrap_rho_pc(perf_array, const_array, n_bootstrap=n_bootstrap)
+            
+            results = {
+                'psi_score': psi_boot['psi'],
+                'ccs_score': ccs_boot['ccs'],
+                'rho_pc_score': rho_boot['rho_pc'],
+                'psi_ci_lower': psi_boot['ci_lower'],
+                'psi_ci_upper': psi_boot['ci_upper'],
+                'psi_pvalue': psi_boot['p_value'],
+                'ccs_ci_lower': ccs_boot['ci_lower'],
+                'ccs_ci_upper': ccs_boot['ci_upper'],
+                'ccs_pvalue': ccs_boot['p_value'],
+                'rho_pc_ci_lower': rho_boot['ci_lower'],
+                'rho_pc_ci_upper': rho_boot['ci_upper'],
+                'rho_pc_pvalue': rho_boot['p_value'],
+                'bootstrap_enabled': True,
+                'n_bootstrap': n_bootstrap
+            }
+        else:
+            # Standard computation
+            results = compute_all_indicators(
+                perf_array, 
+                const_array, 
+                params_array
+            )
+            results['bootstrap_enabled'] = False
+        
+        # Apply thresholds
         from .core import detect_bias_threshold
         bias_results = detect_bias_threshold(
             results['psi_score'],
             results['ccs_score'], 
             results['rho_pc_score'],
-            self.psi_threshold,
-            self.ccs_threshold,
-            self.rho_pc_threshold
+            psi_threshold,
+            ccs_threshold,
+            rho_pc_threshold
         )
         
         # Update results with custom thresholds
@@ -123,11 +177,16 @@ class BiasDetector:
             'num_constraints': const_array.shape[1],
             'algorithm_names': algorithm_names or [f'Algorithm_{i+1}' for i in range(K)],
             'thresholds': {
-                'psi': self.psi_threshold,
-                'ccs': self.ccs_threshold,
-                'rho_pc': self.rho_pc_threshold
-            }
+                'psi': psi_threshold,
+                'ccs': ccs_threshold,
+                'rho_pc': rho_pc_threshold
+            },
+            'adaptive_thresholds_enabled': enable_adaptive_thresholds
         }
+        
+        # Add adaptive threshold info if used
+        if enable_adaptive_thresholds:
+            results['metadata']['adaptive_method'] = 'quantile_95'
         
         # Store results
         self.last_results = results
@@ -214,23 +273,51 @@ class BiasDetector:
         report.append("INDICATOR SCORES:")
         report.append("-" * 30)
         
+        bootstrap_enabled = results.get('bootstrap_enabled', False)
+        
         psi = results['psi_score']
-        report.append(f"PSI (Parameter Stability):     {psi:.4f}")
-        report.append(f"  Threshold: {self.psi_threshold}")
+        if bootstrap_enabled:
+            psi_ci_lower = results['psi_ci_lower']
+            psi_ci_upper = results['psi_ci_upper']
+            psi_pvalue = results['psi_pvalue']
+            report.append(f"PSI (Parameter Stability):     {psi:.4f} [{psi_ci_lower:.4f}-{psi_ci_upper:.4f}]")
+            report.append(f"  p-value: {psi_pvalue:.3f} {'***' if psi_pvalue < 0.001 else '**' if psi_pvalue < 0.01 else '*' if psi_pvalue < 0.05 else 'ns'}")
+        else:
+            report.append(f"PSI (Parameter Stability):     {psi:.4f}")
+        report.append(f"  Threshold: {results['metadata']['thresholds']['psi']:.4f}")
         report.append(f"  Status: {'⚠️  UNSTABLE' if results['psi_bias'] else '✅ STABLE'}")
         report.append("")
         
         ccs = results['ccs_score']
-        report.append(f"CCS (Constraint Consistency):  {ccs:.4f}")
-        report.append(f"  Threshold: {self.ccs_threshold}")
+        if bootstrap_enabled:
+            ccs_ci_lower = results['ccs_ci_lower']
+            ccs_ci_upper = results['ccs_ci_upper']
+            ccs_pvalue = results['ccs_pvalue']
+            report.append(f"CCS (Constraint Consistency):  {ccs:.4f} [{ccs_ci_lower:.4f}-{ccs_ci_upper:.4f}]")
+            report.append(f"  p-value: {ccs_pvalue:.3f} {'***' if ccs_pvalue < 0.001 else '**' if ccs_pvalue < 0.01 else '*' if ccs_pvalue < 0.05 else 'ns'}")
+        else:
+            report.append(f"CCS (Constraint Consistency):  {ccs:.4f}")
+        report.append(f"  Threshold: {results['metadata']['thresholds']['ccs']:.4f}")
         report.append(f"  Status: {'⚠️  INCONSISTENT' if results['ccs_bias'] else '✅ CONSISTENT'}")
         report.append("")
         
         rho_pc = results['rho_pc_score']
-        report.append(f"ρ_PC (Performance-Constraint): {rho_pc:+.4f}")
-        report.append(f"  Threshold: ±{self.rho_pc_threshold}")
+        if bootstrap_enabled:
+            rho_ci_lower = results['rho_pc_ci_lower']
+            rho_ci_upper = results['rho_pc_ci_upper']
+            rho_pvalue = results['rho_pc_pvalue']
+            report.append(f"ρ_PC (Performance-Constraint): {rho_pc:+.4f} [{rho_ci_lower:+.4f}-{rho_ci_upper:+.4f}]")
+            report.append(f"  p-value: {rho_pvalue:.3f} {'***' if rho_pvalue < 0.001 else '**' if rho_pvalue < 0.01 else '*' if rho_pvalue < 0.05 else 'ns'}")
+        else:
+            report.append(f"ρ_PC (Performance-Constraint): {rho_pc:+.4f}")
+        report.append(f"  Threshold: ±{results['metadata']['thresholds']['rho_pc']:.4f}")
         report.append(f"  Status: {'⚠️  CORRELATED' if results['rho_pc_bias'] else '✅ INDEPENDENT'}")
         report.append("")
+        
+        if bootstrap_enabled:
+            report.append(f"✨ Bootstrap resampling (n={results['n_bootstrap']})")
+            report.append("   Significance: *** p<0.001, ** p<0.01, * p<0.05, ns p≥0.05")
+            report.append("")
         
         # Metadata
         meta = results['metadata']

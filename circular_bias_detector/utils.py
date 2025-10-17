@@ -1,10 +1,10 @@
 """
-Utility functions for the circular bias detection framework.
+Utility functions for data loading, validation, and preprocessing.
 """
 
 import numpy as np
 import pandas as pd
-from typing import Union, Optional, Tuple
+from typing import Tuple, Optional, Union, Dict, List
 import warnings
 import json
 
@@ -342,3 +342,285 @@ def load_results_json(input_file: str) -> dict:
         return results
     except Exception as e:
         raise ValueError(f"Error loading results from {input_file}: {e}")
+
+
+def validate_and_clean_data(df: pd.DataFrame, 
+                            performance_cols: list,
+                            constraint_cols: list,
+                            time_col: str = 'time_period',
+                            algorithm_col: str = 'algorithm',
+                            auto_fix: bool = True) -> Tuple[pd.DataFrame, dict]:
+    """
+    Validate and automatically clean evaluation data.
+    
+    Detects and optionally fixes:
+    - Missing values (NaN)
+    - Duplicate entries
+    - Outliers (IQR method)
+    - Non-monotonic time periods
+    - Negative performance values
+    
+    Parameters:
+    -----------
+    df : pd.DataFrame
+        Raw evaluation data
+    performance_cols : list
+        Column names for performance metrics
+    constraint_cols : list
+        Column names for constraints
+    time_col : str
+        Column name for time periods
+    algorithm_col : str
+        Column name for algorithm identifiers
+    auto_fix : bool
+        If True, automatically apply fixes. If False, only report issues.
+        
+    Returns:
+    --------
+    tuple
+        (cleaned_df, validation_report)
+    """
+    
+    report = {
+        'issues_found': [],
+        'fixes_applied': [],
+        'warnings': [],
+        'summary': {}
+    }
+    
+    df_clean = df.copy()
+    
+    # 1. Check for missing values
+    missing_values = df_clean[performance_cols + constraint_cols].isnull().sum()
+    if missing_values.any():
+        missing_info = missing_values[missing_values > 0].to_dict()
+        report['issues_found'].append({
+            'type': 'missing_values',
+            'details': missing_info,
+            'severity': 'high'
+        })
+        
+        if auto_fix:
+            # Forward fill for time series
+            for col in performance_cols + constraint_cols:
+                if df_clean[col].isnull().any():
+                    df_clean[col] = df_clean.groupby(algorithm_col)[col].ffill()
+                    # If still NaN, use column mean
+                    if df_clean[col].isnull().any():
+                        df_clean[col].fillna(df_clean[col].mean(), inplace=True)
+            
+            report['fixes_applied'].append({
+                'type': 'missing_values',
+                'method': 'forward_fill_then_mean',
+                'columns': list(missing_info.keys())
+            })
+    
+    # 2. Check for duplicates
+    duplicates = df_clean.duplicated(subset=[time_col, algorithm_col])
+    if duplicates.any():
+        n_duplicates = duplicates.sum()
+        report['issues_found'].append({
+            'type': 'duplicates',
+            'count': int(n_duplicates),
+            'severity': 'high'
+        })
+        
+        if auto_fix:
+            df_clean = df_clean.drop_duplicates(subset=[time_col, algorithm_col], keep='first')
+            report['fixes_applied'].append({
+                'type': 'duplicates',
+                'method': 'keep_first',
+                'removed': int(n_duplicates)
+            })
+    
+    # 3. Check for outliers in performance (IQR method)
+    outlier_cols = []
+    for col in performance_cols:
+        Q1 = df_clean[col].quantile(0.25)
+        Q3 = df_clean[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 3 * IQR
+        upper_bound = Q3 + 3 * IQR
+        
+        outliers = (df_clean[col] < lower_bound) | (df_clean[col] > upper_bound)
+        if outliers.any():
+            outlier_cols.append({
+                'column': col,
+                'count': int(outliers.sum()),
+                'bounds': (float(lower_bound), float(upper_bound))
+            })
+            
+            if auto_fix:
+                # Clip to bounds
+                df_clean[col] = df_clean[col].clip(lower=lower_bound, upper=upper_bound)
+    
+    if outlier_cols:
+        report['issues_found'].append({
+            'type': 'outliers',
+            'details': outlier_cols,
+            'severity': 'medium'
+        })
+        
+        if auto_fix:
+            report['fixes_applied'].append({
+                'type': 'outliers',
+                'method': 'IQR_clipping',
+                'columns': [x['column'] for x in outlier_cols]
+            })
+    
+    # 4. Check for negative performance values
+    negative_perf = []
+    for col in performance_cols:
+        neg_count = (df_clean[col] < 0).sum()
+        if neg_count > 0:
+            negative_perf.append({'column': col, 'count': int(neg_count)})
+            
+            if auto_fix:
+                df_clean[col] = df_clean[col].abs()
+    
+    if negative_perf:
+        report['issues_found'].append({
+            'type': 'negative_values',
+            'details': negative_perf,
+            'severity': 'high'
+        })
+        
+        if auto_fix:
+            report['fixes_applied'].append({
+                'type': 'negative_values',
+                'method': 'absolute_value'
+            })
+    
+    # 5. Check time period consistency
+    time_periods = sorted(df_clean[time_col].unique())
+    expected_periods = list(range(1, len(time_periods) + 1))
+    
+    if time_periods != expected_periods:
+        report['issues_found'].append({
+            'type': 'non_sequential_time',
+            'found': time_periods,
+            'expected': expected_periods,
+            'severity': 'medium'
+        })
+        
+        if auto_fix:
+            # Remap to sequential
+            time_mapping = {old: new for old, new in zip(time_periods, expected_periods)}
+            df_clean[time_col] = df_clean[time_col].map(time_mapping)
+            
+            report['fixes_applied'].append({
+                'type': 'non_sequential_time',
+                'method': 'remap_sequential',
+                'mapping': time_mapping
+            })
+    
+    # 6. Check for constant constraints (low variance)
+    constant_constraints = []
+    for col in constraint_cols:
+        if df_clean[col].std() < 1e-6:
+            constant_constraints.append(col)
+    
+    if constant_constraints:
+        report['warnings'].append({
+            'type': 'constant_constraints',
+            'columns': constant_constraints,
+            'message': 'These constraints have near-zero variance. CCS may be unreliable.'
+        })
+    
+    # 7. Summary statistics
+    report['summary'] = {
+        'total_issues_found': len(report['issues_found']),
+        'total_fixes_applied': len(report['fixes_applied']),
+        'total_warnings': len(report['warnings']),
+        'data_quality_score': _compute_quality_score(report),
+        'rows_original': len(df),
+        'rows_cleaned': len(df_clean),
+        'time_periods': len(df_clean[time_col].unique()),
+        'algorithms': len(df_clean[algorithm_col].unique())
+    }
+    
+    return df_clean, report
+
+
+def _compute_quality_score(report: dict) -> float:
+    """
+    Compute data quality score (0-100) based on validation report.
+    
+    Scoring:
+    - Start with 100
+    - Deduct 20 per high severity issue
+    - Deduct 10 per medium severity issue
+    - Deduct 5 per warning
+    """
+    score = 100.0
+    
+    for issue in report['issues_found']:
+        if issue['severity'] == 'high':
+            score -= 20
+        elif issue['severity'] == 'medium':
+            score -= 10
+    
+    score -= len(report['warnings']) * 5
+    
+    return max(0.0, score)
+
+
+def print_validation_report(report: dict) -> None:
+    """
+    Print a formatted validation report to console.
+    
+    Parameters:
+    -----------
+    report : dict
+        Validation report from validate_and_clean_data()
+    """
+    
+    print("=" * 60)
+    print("DATA VALIDATION REPORT")
+    print("=" * 60)
+    
+    # Summary
+    summary = report['summary']
+    quality_score = summary['data_quality_score']
+    
+    if quality_score >= 90:
+        quality_status = "✅ EXCELLENT"
+    elif quality_score >= 70:
+        quality_status = "⚠️  GOOD"
+    elif quality_score >= 50:
+        quality_status = "⚠️  FAIR"
+    else:
+        quality_status = "❌ POOR"
+    
+    print(f"\nData Quality Score: {quality_score:.1f}/100 {quality_status}")
+    print(f"Rows: {summary['rows_original']} → {summary['rows_cleaned']}")
+    print(f"Time periods: {summary['time_periods']}")
+    print(f"Algorithms: {summary['algorithms']}")
+    
+    # Issues
+    if report['issues_found']:
+        print(f"\n⚠️  ISSUES FOUND: {len(report['issues_found'])}")
+        print("-" * 30)
+        for issue in report['issues_found']:
+            severity_icon = "🔴" if issue['severity'] == 'high' else "🟡"
+            print(f"{severity_icon} {issue['type'].upper()}")
+            if 'details' in issue:
+                print(f"   Details: {issue['details']}")
+    else:
+        print("\n✅ NO ISSUES FOUND")
+    
+    # Fixes
+    if report['fixes_applied']:
+        print(f"\n✨ FIXES APPLIED: {len(report['fixes_applied'])}")
+        print("-" * 30)
+        for fix in report['fixes_applied']:
+            print(f"✓ {fix['type']}: {fix['method']}")
+    
+    # Warnings
+    if report['warnings']:
+        print(f"\n⚠️  WARNINGS: {len(report['warnings'])}")
+        print("-" * 30)
+        for warning in report['warnings']:
+            print(f"⚠️  {warning['type']}: {warning['message']}")
+    
+    print("\n" + "=" * 60)
