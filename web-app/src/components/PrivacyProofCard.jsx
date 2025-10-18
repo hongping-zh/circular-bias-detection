@@ -45,7 +45,12 @@ export default function PrivacyProofCard() {
             <li>Press <kbd className="bg-gray-100 px-2 py-1 rounded text-xs">F12</kbd></li>
             <li>Go to <strong>Network</strong> tab</li>
             <li>Upload your CSV</li>
-            <li>See <strong className="text-green-600">ZERO</strong> uploads ✅</li>
+            <li className="flex items-center">
+              <span>See <strong className="text-green-600">ZERO</strong> uploads</span>
+              <svg className="w-4 h-4 ml-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </li>
           </ol>
           <div className="mt-3 text-xs text-gray-500 flex items-center">
             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,8 +76,11 @@ export default function PrivacyProofCard() {
   circular-bias-detection
 grep -r "fetch" src/`}
             </pre>
-            <p className="text-green-600 font-semibold">
-              Result: No uploads! ✅
+            <p className="text-green-600 font-semibold flex items-center">
+              <span>Result: No uploads!</span>
+              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </p>
           </div>
         </div>
@@ -89,7 +97,12 @@ grep -r "fetch" src/`}
             <li>Download the app</li>
             <li>Disconnect internet</li>
             <li>Run analysis</li>
-            <li>Still works! ✅</li>
+            <li className="flex items-center">
+              <span>Still works!</span>
+              <svg className="w-4 h-4 ml-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </li>
           </ol>
           <div className="mt-3">
             <a 
@@ -197,9 +210,24 @@ export function PrivacyProofBadge() {
             Verify our privacy claims:
           </p>
           <ul className="space-y-1 text-gray-700">
-            <li>✅ Press F12 → Network → Zero uploads</li>
-            <li>✅ View source code on GitHub</li>
-            <li>✅ Works 100% offline</li>
+            <li className="flex items-start">
+              <svg className="w-4 h-4 mr-1 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Press F12 → Network → Zero uploads
+            </li>
+            <li className="flex items-start">
+              <svg className="w-4 h-4 mr-1 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              View source code on GitHub
+            </li>
+            <li className="flex items-start">
+              <svg className="w-4 h-4 mr-1 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Works 100% offline
+            </li>
           </ul>
           <a 
             href="/privacy" 
