@@ -5,6 +5,8 @@ import ScanButton from './components/ScanButton';
 import Dashboard from './components/Dashboard';
 import ProgressBar from './components/ProgressBar';
 import InteractiveTutorial from './components/InteractiveTutorial';
+import SecurityIndicator from './components/SecurityIndicator';
+import PrivacyProofCard from './components/PrivacyProofCard';
 import { initPyodide, runBiasDetection } from './utils/pyodideRunner';
 
 function App() {
@@ -156,6 +158,9 @@ function App() {
 
   return (
     <div className="App">
+      {/* Real-time Privacy Monitor - floats in bottom-right corner */}
+      <SecurityIndicator />
+
       {showTutorial && (
         <InteractiveTutorial 
           onClose={handleTutorialClose} 
@@ -188,6 +193,9 @@ function App() {
 
         {pyodideReady && !results && !loading && (
           <>
+            {/* Privacy Verification Guide Card */}
+            <PrivacyProofCard />
+
             <DataInput onDataLoad={handleDataLoad} />
             
             <ScanButton 
