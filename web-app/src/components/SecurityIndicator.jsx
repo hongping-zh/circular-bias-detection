@@ -61,7 +61,7 @@ export default function SecurityIndicator() {
   }, [isMonitoring]);
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4" style={{ zIndex: 9999 }}>
       {/* Compact indicator */}
       <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-2xl p-4 max-w-sm">
         {/* Header */}
