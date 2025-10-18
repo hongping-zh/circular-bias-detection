@@ -6,9 +6,14 @@ export default function PrivacyPolicy() {
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            🔒 Privacy Policy
-          </h1>
+          <div className="flex items-center justify-center mb-4">
+            <svg className="w-12 h-12 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <h1 className="text-4xl font-bold text-gray-900">
+              Privacy Policy
+            </h1>
+          </div>
           <p className="text-lg text-gray-600">
             Your privacy is our top priority. We believe in transparency.
           </p>
@@ -20,7 +25,9 @@ export default function PrivacyPolicy() {
         {/* Privacy-First Design */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">🛡️</span>
+            <svg className="w-7 h-7 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
             Privacy-First Design
           </h2>
           <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
@@ -51,29 +58,41 @@ export default function PrivacyPolicy() {
         {/* What We DON'T Collect */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">❌</span>
+            <svg className="w-7 h-7 mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             What We DON'T Collect
           </h2>
           <div className="bg-gray-50 rounded-lg p-6">
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start">
-                <span className="text-red-500 font-bold mr-2">❌</span>
+                <svg className="w-5 h-5 mr-2 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span><strong>Your evaluation data</strong> - stays in your browser</span>
               </li>
               <li className="flex items-start">
-                <span className="text-red-500 font-bold mr-2">❌</span>
+                <svg className="w-5 h-5 mr-2 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span><strong>Your model information</strong> - not transmitted</span>
               </li>
               <li className="flex items-start">
-                <span className="text-red-500 font-bold mr-2">❌</span>
+                <svg className="w-5 h-5 mr-2 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span><strong>Your IP address</strong> - no server-side logs</span>
               </li>
               <li className="flex items-start">
-                <span className="text-red-500 font-bold mr-2">❌</span>
+                <svg className="w-5 h-5 mr-2 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span><strong>Personal information</strong> - not required</span>
               </li>
               <li className="flex items-start">
-                <span className="text-red-500 font-bold mr-2">❌</span>
+                <svg className="w-5 h-5 mr-2 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span><strong>Analytics/tracking cookies</strong> - disabled by default</span>
               </li>
             </ul>
@@ -83,7 +102,9 @@ export default function PrivacyPolicy() {
         {/* Optional Data Sharing */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">📊</span>
+            <svg className="w-7 h-7 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
             Optional: Help Improve Sleuth (Opt-In Only)
           </h2>
           <div className="bg-blue-50 rounded-lg p-6">
@@ -94,15 +115,21 @@ export default function PrivacyPolicy() {
             <h3 className="font-semibold text-gray-900 mb-2">What you CAN optionally share:</h3>
             <ul className="space-y-2 text-gray-700 mb-4">
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">📈</span>
+                <svg className="w-4 h-4 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
                 <span><strong>Anonymous usage statistics</strong> - e.g., "PSI threshold triggered"</span>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">📊</span>
+                <svg className="w-4 h-4 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
                 <span><strong>Aggregated bias metrics</strong> - statistical summaries only</span>
               </li>
               <li className="flex items-start">
-                <span className="text-blue-600 mr-2">🐛</span>
+                <svg className="w-4 h-4 mr-2 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <span><strong>Error reports</strong> - no personal data included</span>
               </li>
             </ul>
@@ -110,19 +137,27 @@ export default function PrivacyPolicy() {
             <h3 className="font-semibold text-gray-900 mb-2">How we protect shared data:</h3>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">🔐</span>
+                <svg className="w-4 h-4 mr-2 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
                 <span><strong>Differential Privacy</strong> - noise added to prevent re-identification (ε = 1.0)</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">🔢</span>
+                <svg className="w-4 h-4 mr-2 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 0l4 16M6 9h14M4 15h14" />
+                </svg>
                 <span><strong>Aggregation</strong> - only group statistics (k ≥ 10 users)</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">🔒</span>
+                <svg className="w-4 h-4 mr-2 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
                 <span><strong>Encrypted transmission</strong> - HTTPS/TLS 1.3</span>
               </li>
               <li className="flex items-start">
-                <span className="text-green-600 mr-2">🗑️</span>
+                <svg className="w-4 h-4 mr-2 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
                 <span><strong>Right to deletion</strong> - delete your data anytime</span>
               </li>
             </ul>
@@ -132,7 +167,9 @@ export default function PrivacyPolicy() {
         {/* Technical Details */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">⚙️</span>
+            <svg className="w-7 h-7 mr-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
             Technical Implementation
           </h2>
           <div className="bg-gray-100 rounded-lg p-6 font-mono text-sm">
@@ -165,7 +202,9 @@ function shareAnonymousStats(results) {
         {/* Data Retention */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">⏱️</span>
+            <svg className="w-7 h-7 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             Data Retention
           </h2>
           <div className="space-y-3 text-gray-700">
@@ -184,7 +223,9 @@ function shareAnonymousStats(results) {
         {/* User Rights */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">⚖️</span>
+            <svg className="w-7 h-7 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+            </svg>
             Your Rights (GDPR/CCPA Compliant)
           </h2>
           <div className="grid md:grid-cols-2 gap-4">
@@ -210,7 +251,9 @@ function shareAnonymousStats(results) {
         {/* Future: Federated Learning */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">🔮</span>
+            <svg className="w-7 h-7 mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
             Future: Federated Learning (Planned)
           </h2>
           <div className="bg-purple-50 border-l-4 border-purple-500 p-6 rounded-r-lg">
@@ -219,15 +262,21 @@ function shareAnonymousStats(results) {
             </p>
             <ul className="space-y-2 text-gray-700">
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">🤝</span>
+                <svg className="w-4 h-4 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
                 <span><strong>Collaborative learning</strong> - improve models together</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">🔐</span>
+                <svg className="w-4 h-4 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
                 <span><strong>Your data stays local</strong> - only model updates shared</span>
               </li>
               <li className="flex items-start">
-                <span className="text-purple-600 mr-2">🎓</span>
+                <svg className="w-4 h-4 mr-2 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                </svg>
                 <span><strong>Advanced privacy</strong> - Fed-CAD (correlation-aware differential privacy)</span>
               </li>
             </ul>
@@ -240,7 +289,9 @@ function shareAnonymousStats(results) {
         {/* Contact */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">📧</span>
+            <svg className="w-7 h-7 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
             Contact & Questions
           </h2>
           <div className="bg-gray-50 rounded-lg p-6">
@@ -283,7 +334,9 @@ function shareAnonymousStats(results) {
         {/* Open Source */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-            <span className="mr-3">💻</span>
+            <svg className="w-7 h-7 mr-3 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
             Open Source Transparency
           </h2>
           <div className="bg-gray-50 rounded-lg p-6">

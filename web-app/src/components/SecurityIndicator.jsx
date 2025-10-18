@@ -61,15 +61,18 @@ export default function SecurityIndicator() {
   }, [isMonitoring]);
 
   return (
-    <div className="fixed bottom-4 right-4" style={{ zIndex: 9999 }}>
+    <div style={{ position: 'fixed', bottom: '16px', right: '16px', zIndex: 9999 }}>
       {/* Compact indicator */}
-      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-2xl p-4 max-w-sm">
+      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-2xl p-4" style={{ maxWidth: '320px' }}>
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center">
             <div className="w-3 h-3 bg-white rounded-full animate-pulse mr-2"></div>
+            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
             <span className="font-bold text-sm">
-              🔒 Privacy Monitor
+              Privacy Monitor
             </span>
           </div>
           <button
@@ -145,8 +148,11 @@ export default function SecurityIndicator() {
 
         {/* Footer */}
         <div className="mt-3 pt-3 border-t border-white/20 text-xs opacity-75">
-          <p>
-            🔓 Open source •{' '}
+          <p className="flex items-center">
+            <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+            </svg>
+            Open source •{' '}
             <a 
               href="https://github.com/hongping-zh/circular-bias-detection" 
               target="_blank"
@@ -191,7 +197,10 @@ export function SecurityBanner() {
     <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 px-4 text-center text-sm">
       <span className="inline-flex items-center">
         <span className="w-2 h-2 bg-white rounded-full animate-pulse mr-2"></span>
-        <strong>🔒 Privacy Mode Active</strong>
+        <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <strong>Privacy Mode Active</strong>
         <span className="mx-2">•</span>
         Data uploads: <strong className="ml-1 text-lg">{uploadCount}</strong>
         <span className="mx-2">•</span>
