@@ -230,14 +230,14 @@ export function formatValidationMessage(result) {
   if (result.valid) {
     return {
       type: 'success',
-      title: '✓ Data Validation Passed',
+      title: 'Data Validation Passed',
       message: `Successfully loaded ${result.stats.totalRows} rows with ${result.stats.algorithmCount} algorithms across ${result.stats.periodCount} time periods.`,
       details: result.warnings.length > 0 ? result.warnings : null
     };
   } else {
     return {
       type: 'error',
-      title: '✗ Data Validation Failed',
+      title: 'Data Validation Failed',
       message: result.errors[0] || 'Invalid CSV format',
       details: result.errors.length > 1 ? result.errors.slice(1) : null
     };

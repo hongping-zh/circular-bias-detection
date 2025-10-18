@@ -1,5 +1,6 @@
 import React from 'react';
 import './ScanButton.css';
+import Icon from './Icon';
 
 function ScanButton({ onClick, disabled, loading }) {
   return (
@@ -16,7 +17,7 @@ function ScanButton({ onClick, disabled, loading }) {
           </>
         ) : (
           <>
-            🔍 Scan for Bias
+            <Icon name="search" size={16} /> Scan for Bias
           </>
         )}
       </button>

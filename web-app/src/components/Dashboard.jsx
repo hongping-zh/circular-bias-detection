@@ -1,6 +1,7 @@
 import React from 'react';
 import './Dashboard.css';
 import VisualizationCharts from './VisualizationCharts';
+import Icon from './Icon';
 
 function MetricCard({ title, value, threshold, status, description, ciLower, ciUpper, pValue, showBootstrap }) {
   const getStatusColor = () => {
@@ -14,10 +15,10 @@ function MetricCard({ title, value, threshold, status, description, ciLower, ciU
 
   const getStatusIcon = () => {
     switch (status) {
-      case 'ok': return '✓';
-      case 'warning': return '⚠️';
-      case 'danger': return '✗';
-      default: return '○';
+      case 'ok': return <Icon name="check" size={20} color="#4caf50" />;
+      case 'warning': return <Icon name="warning" size={20} color="#ff9800" />;
+      case 'danger': return <Icon name="x" size={20} color="#f44336" />;
+      default: return <Icon name="circle" size={20} color="#9e9e9e" />;
     }
   };
 
@@ -73,7 +74,7 @@ function Dashboard({ results, onReset }) {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h2>📊 Bias Detection Results</h2>
+        <h2><Icon name="chart" size={24} /> Bias Detection Results</h2>
         <button className="reset-button" onClick={onReset}>
           ← New Scan
         </button>
@@ -81,7 +82,7 @@ function Dashboard({ results, onReset }) {
 
       <div className={`overall-status ${overallBias ? 'detected' : 'clean'}`}>
         <div className="status-icon-large">
-          {overallBias ? '⚠️' : '✓'}
+          {overallBias ? <Icon name="warning" size={48} color="#f44336" /> : <Icon name="check" size={48} color="#4caf50" />}
         </div>
         <div className="status-text">
           <h3>{overallBias ? 'BIAS DETECTED' : 'NO BIAS DETECTED'}</h3>
@@ -91,7 +92,7 @@ function Dashboard({ results, onReset }) {
 
       {results.bootstrap_enabled && (
         <div className="bootstrap-badge">
-          ✨ Enhanced with Bootstrap Statistical Analysis (n=1000)
+          <Icon name="sparkles" size={16} /> Enhanced with Bootstrap Statistical Analysis (n=1000)
         </div>
       )}
 
@@ -134,7 +135,7 @@ function Dashboard({ results, onReset }) {
       </div>
 
       <div className="interpretation-section">
-        <h3>💡 Interpretation</h3>
+        <h3><Icon name="info" size={20} /> Interpretation</h3>
         <div className="interpretation-box">
           {results.interpretation || getInterpretation(results)}
         </div>
@@ -146,7 +147,7 @@ function Dashboard({ results, onReset }) {
 
       {results.details && (
         <div className="details-section">
-          <h3>📋 Details</h3>
+          <h3><Icon name="info" size={20} /> Details</h3>
           <ul>
             {results.details.algorithms_evaluated && (
               <li><strong>Algorithms:</strong> {results.details.algorithms_evaluated.join(', ')}</li>
@@ -163,10 +164,10 @@ function Dashboard({ results, onReset }) {
 
       <div className="action-buttons">
         <button className="download-button" onClick={() => downloadResults(results)}>
-          📥 Download Report (JSON)
+          Download Report (JSON)
         </button>
         <button className="cite-button" onClick={copyCitation}>
-          📋 Copy Citation
+          Copy Citation
         </button>
       </div>
     </div>

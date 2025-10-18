@@ -1,19 +1,20 @@
 import React from 'react';
 import './ValidationMessage.css';
+import Icon from './Icon';
 
 function ValidationMessage({ type, title, message, details, onClose }) {
   const getIcon = () => {
     switch (type) {
       case 'success':
-        return '✓';
+        return <Icon name="check" size={20} color="#4caf50" />;
       case 'error':
-        return '✗';
+        return <Icon name="x" size={20} color="#f44336" />;
       case 'warning':
-        return '⚠️';
+        return <Icon name="warning" size={20} color="#ff9800" />;
       case 'info':
-        return 'ℹ️';
+        return <Icon name="info" size={20} color="#2196f3" />;
       default:
-        return '○';
+        return <Icon name="info" size={20} color="#2196f3" />;
     }
   };
 

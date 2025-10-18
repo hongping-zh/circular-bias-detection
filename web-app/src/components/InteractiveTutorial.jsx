@@ -1,55 +1,56 @@
 import React, { useState } from 'react';
 import './InteractiveTutorial.css';
+import Icon from './Icon';
 
 const tutorialSteps = [
   {
     id: 1,
-    title: 'Welcome to Sleuth! 👋',
+    title: 'Welcome to Sleuth!',
     content: 'Sleuth helps you detect circular reasoning bias in AI algorithm evaluations. Let\'s take a quick tour!',
-    icon: '🔍',
+    iconName: 'search',
     action: 'Start Tutorial'
   },
   {
     id: 2,
-    title: 'What is Circular Bias? 🔄',
+    title: 'What is Circular Bias?',
     content: 'Circular bias occurs when evaluation protocols are manipulated to favor specific algorithms. This happens when:\n\n• Parameters are tuned based on preliminary results\n• Constraints are adjusted mid-evaluation\n• Test sets are cherry-picked to improve scores',
-    icon: '⚠️',
+    iconName: 'warning',
     action: 'Next'
   },
   {
     id: 3,
-    title: 'Upload Your Data 📁',
+    title: 'Upload Your Data',
     content: 'You can upload your own CSV file, try our example from Zenodo, or generate synthetic data.\n\nRequired columns:\n• time_period\n• algorithm\n• performance\n• constraint columns (e.g., constraint_compute)',
-    icon: '📊',
+    iconName: 'chart',
     action: 'Next',
     highlight: 'upload-box'
   },
   {
     id: 4,
-    title: 'Three Key Indicators 📈',
+    title: 'Three Key Indicators',
     content: 'Sleuth analyzes three indicators:\n\n1. PSI (Performance-Structure Independence)\n   → Measures parameter stability\n\n2. CCS (Constraint-Consistency Score)\n   → Checks constraint consistency\n\n3. ρ_PC (Performance-Constraint Correlation)\n   → Detects suspicious correlations',
-    icon: '🎯',
+    iconName: 'chart',
     action: 'Next'
   },
   {
     id: 5,
-    title: 'Bootstrap Analysis 📊',
+    title: 'Bootstrap Analysis',
     content: 'For statistical rigor, Sleuth performs:\n\n• 1000 bootstrap resamples\n• 95% confidence intervals\n• P-value significance testing\n\nThis ensures results are reliable and reproducible.',
-    icon: '✨',
+    iconName: 'sparkles',
     action: 'Next'
   },
   {
     id: 6,
-    title: 'Interactive Visualizations 📉',
+    title: 'Interactive Visualizations',
     content: 'After analysis, you\'ll see:\n\n• PSI time series chart\n• ρ_PC scatter plot\n• Indicator comparison bars\n\nThese help you understand the data and spot patterns.',
-    icon: '📊',
+    iconName: 'chart',
     action: 'Next'
   },
   {
     id: 7,
-    title: 'LLM Example 🤖',
+    title: 'LLM Example',
     content: 'Special case: LLM Evaluation Bias\n\nSleuth can detect if:\n• Prompt engineering was iteratively tuned\n• Temperature/top_p adjusted for better scores\n• Max tokens optimized per model\n\nLoad "LLM Eval Sample" to see an example!',
-    icon: '🤖',
+    iconName: 'settings',
     action: 'Try It!',
     highlight: 'option-buttons'
   }
@@ -103,7 +104,7 @@ function InteractiveTutorial({ onClose, onLoadExample }) {
         </button>
 
         <div className="tutorial-header">
-          <div className="tutorial-icon">{step.icon}</div>
+          <div className="tutorial-icon"><Icon name={step.iconName} size={48} color="#667eea" /></div>
           <h2>{step.title}</h2>
         </div>
 

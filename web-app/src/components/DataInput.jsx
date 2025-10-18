@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './DataInput.css';
 import ValidationMessage from './ValidationMessage';
+import Icon from './Icon';
 import { validateCSV, formatValidationMessage } from '../utils/dataValidator';
 
 function DataInput({ onDataLoad }) {
@@ -14,7 +15,7 @@ function DataInput({ onDataLoad }) {
     if (!file.name.endsWith('.csv')) {
       setValidation({
         type: 'error',
-        title: '✗ Invalid File Type',
+        title: 'Invalid File Type',
         message: 'Please upload a CSV file (.csv extension required)',
         details: null
       });
@@ -126,19 +127,19 @@ function DataInput({ onDataLoad }) {
           style={{ display: 'none' }}
         />
         <label htmlFor="file-upload" className="upload-label">
-          📁 Upload Your Data
+          Upload Your Data
           <span className="upload-hint">
             Drag & drop CSV or click to browse
           </span>
         </label>
         {selectedFile && (
           <div className="features-list">
-            <h4>✨ Features</h4>
+            <h4><Icon name="sparkles" size={16} /> Features</h4>
             <ul>
-              <li>✓ No signup required</li>
-              <li>✓ Privacy-first: runs in your browser</li>
-              <li>✓ Results in &lt; 30 seconds</li>
-              <li>✓ Free and open source</li>
+              <li><Icon name="check" size={14} /> No signup required</li>
+              <li><Icon name="check" size={14} /> Privacy-first: runs in your browser</li>
+              <li><Icon name="check" size={14} /> Results in &lt; 30 seconds</li>
+              <li><Icon name="check" size={14} /> Free and open source</li>
             </ul>
           </div>
         )}

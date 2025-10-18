@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from './Icon';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,7 +13,6 @@ import {
   Filler
 } from 'chart.js';
 import { Line, Scatter, Bar } from 'react-chartjs-2';
-import './VisualizationCharts.css';
 
 // Register Chart.js components
 ChartJS.register(
@@ -254,7 +254,7 @@ function VisualizationCharts({ results, dataStats }) {
           <p className="chart-description">
             Scatter plot shows correlation between performance and constraints.
             {Math.abs(results.rho_pc) > 0.5 && (
-              <span className="warning-text"> ⚠️ High correlation detected!</span>
+              <span className="warning-text"> <Icon name="warning" size={16} /> High correlation detected!</span>
             )}
           </p>
         </div>

@@ -7,6 +7,7 @@ import ProgressBar from './components/ProgressBar';
 import InteractiveTutorial from './components/InteractiveTutorial';
 import SecurityIndicator from './components/SecurityIndicator';
 import PrivacyProofCard from './components/PrivacyProofCard';
+import Icon from './components/Icon';
 import { initPyodide, runBiasDetection } from './utils/pyodideRunner';
 
 function App() {
@@ -169,17 +170,17 @@ function App() {
       )}
 
       <header className="App-header">
-        <h1>🔍 Sleuth</h1>
+        <h1><Icon name="search" size={32} /> Sleuth</h1>
         <p className="subtitle">AI Evaluation Bias Hunter</p>
         <button 
           className="tutorial-trigger"
           onClick={() => setShowTutorial(true)}
           title="Show Tutorial"
         >
-          ❓ Help
+          <Icon name="help" size={16} /> Help
         </button>
         <p className="subtitle" style={{color: '#ff9800', fontWeight: 'bold'}}>
-          🧪 TEST MODE - Using Mock Detection
+          <Icon name="lab" size={16} /> TEST MODE - Using Mock Detection
         </p>
       </header>
 
@@ -187,7 +188,7 @@ function App() {
         {!pyodideReady && (
           <div className="loading-overlay">
             <div className="spinner"></div>
-            <p>🧪 Loading UI (Test Mode - Using Mock Data)</p>
+            <p><Icon name="lab" size={20} /> Loading UI (Test Mode - Using Mock Data)</p>
           </div>
         )}
 
@@ -206,17 +207,17 @@ function App() {
 
             {error && (
               <div className="error-message">
-                ⚠️ {error}
+                <Icon name="warning" size={20} /> {error}
               </div>
             )}
 
             <div className="features">
-              <h3>✨ Features</h3>
+              <h3><Icon name="sparkles" size={20} /> Features</h3>
               <ul>
-                <li>✓ No signup required</li>
-                <li>✓ No data uploaded to server</li>
-                <li>✓ Results in &lt; 1 minute</li>
-                <li>✓ Free and open source</li>
+                <li><Icon name="check" size={16} /> No signup required</li>
+                <li><Icon name="check" size={16} /> No data uploaded to server</li>
+                <li><Icon name="check" size={16} /> Results in &lt; 1 minute</li>
+                <li><Icon name="check" size={16} /> Free and open source</li>
               </ul>
             </div>
           </>

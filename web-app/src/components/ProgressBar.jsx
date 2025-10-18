@@ -1,11 +1,12 @@
 import React from 'react';
 import './ProgressBar.css';
+import Icon from './Icon';
 
 function ProgressBar({ progress, currentStep, steps }) {
   return (
     <div className="progress-container">
       <div className="progress-header">
-        <h3>⚙️ Analyzing Data...</h3>
+        <h3><Icon name="settings" size={20} /> Analyzing Data...</h3>
         <span className="progress-percentage">{Math.round(progress)}%</span>
       </div>
       
@@ -29,7 +30,7 @@ function ProgressBar({ progress, currentStep, steps }) {
               className={`progress-step ${isActive ? 'active' : ''} ${isComplete ? 'complete' : ''}`}
             >
               <div className="step-icon">
-                {isComplete ? '✓' : isActive ? '⚙️' : '○'}
+                {isComplete ? <Icon name="check" size={16} color="#4caf50" /> : isActive ? <Icon name="settings" size={16} color="#2196f3" /> : <Icon name="circle" size={16} color="#ccc" />}
               </div>
               <div className="step-label">{step}</div>
             </div>
