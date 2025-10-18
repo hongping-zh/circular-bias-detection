@@ -8,9 +8,9 @@ export default function PrivacyProofCard() {
   return (
     <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-500 rounded-2xl p-8 my-8 shadow-xl">
       {/* Header */}
-      <div className="text-center mb-6">
-        <div className="text-4xl mb-3">🔐</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className="text-center mb-4">
+        <div className="text-xl mb-2">🔐</div>
+        <h2 className="text-xl font-bold text-gray-900 mb-2">
           Your Data. Your Device. Period.
         </h2>
         <p className="text-lg text-gray-600">
