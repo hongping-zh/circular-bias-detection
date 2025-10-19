@@ -1,0 +1,20 @@
+﻿cff-version: 1.2.0
+message: "If you use Sleuth, please cite this work."
+title: "Sleuth: A statistical framework to detect circular reasoning bias in AI evaluation"
+authors:
+  - family-names: Zhang
+    given-names: Hongping
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.17201032
+keywords:
+  - circular bias
+  - evaluation integrity
+  - AI benchmarks
+  - PSI
+  - CCS
+  - rho_PC
+license: CC-BY-4.0
+repository-code: "https://github.com/hongping-zh/circular-bias-detection"
+url: "https://hongping-zh.github.io/circular-bias-detection/"
+version: "1.1.0"
