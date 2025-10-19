@@ -11,7 +11,29 @@
 **Stop deploying AI models with inflated performance scores.**
 
 Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets until your benchmark numbers look good—a hidden form of bias that breaks AI evaluations.
+<p align="center">
+  <a href="https://hongping-zh.github.io/circular-bias-detection/?utm_source=github&utm_medium=readme&utm_campaign=hero_live_demo">
+    <img src="https://img.shields.io/badge/%F0%9F%94%8D%20LIVE%20DEMO-Try%20Sleuth-brightgreen?style=for-the-badge" alt="Live Demo">
+  </a>
+  <a href="https://colab.research.google.com/github/hongping-zh/circular-bias-detection/blob/main/examples/quickstart_colab.ipynb?utm_source=github&utm_medium=readme&utm_campaign=hero_colab">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" style="height:28px;">
+  </a>
+</p>
 
+<p align="center">
+  <b>Detect circular bias in AI evaluations instantly.</b> Free web app + Python SDK. Stop shipping inflated benchmark scores.
+</p>
+
+<p align="center">
+  <sub>For researchers, reviewers, and ML engineers • Works with CSVs • Privacy-preserving</sub>
+</p>
+
+---
+
+## Why Sleuth?
+- Find hidden evaluation bias from hyperparam/prompt/dataset tweaking.
+- 3 indicators (PSI, CCS, ρ_PC) with interpretation and fixes.
+- Use in 30 seconds via Web App, or programmatically via Python/CLI.
 ### ⚡ Quick Start
 
 **[🔍 Try Live Demo →](https://is.gd/check_sleuth)** • No installation • Runs in browser • 100% private
