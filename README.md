@@ -866,7 +866,14 @@ We welcome contributions! Here's how you can help:
 - Check existing issues and documentation
 - Open a new issue with the `question` label
 - Email: yujjam@uest.edu.gr
-
+```bibtex
+@dataset{zhang2025sleuth,
+  title        = {Sleuth: Circular Bias Detection Framework},
+  author       = {Hongping Zhang},
+  year         = {2025},
+  doi          = {10.5281/zenodo.17201032},
+  url          = {[https://github.com/hongping-zh/circular-bias-detection](https://github.com/hongping-zh/circular-bias-detection)}
+}
 ## 📄 License
 
 This project is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0) - see the [LICENSE](LICENSE) file for details.
