@@ -1,0 +1,39 @@
+name: Check CITATION.cff version matches tag
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  release:
+    types: [published, edited]
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract tag version
+        run: echo "TAG_VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: Read version from CITATION.cff
+        run: |
+          VERSION_LINE=$(grep -E '^\s*version\s*:' CITATION.cff || true)
+          if [ -z "$VERSION_LINE" ]; then
+            echo "::error::version field not found in CITATION.cff"
+            exit 1
+          fi
+          # Extract semantic version digits, strip quotes if present
+          CITATION_VERSION=$(echo "$VERSION_LINE" | sed -E 's/.*version\s*:\s*"?([0-9]+\.[0-9]+\.[0-9]+)"?.*/\1/')
+          echo "CITATION_VERSION=$CITATION_VERSION" >> $GITHUB_ENV
+
+      - name: Compare versions
+        run: |
+          echo "Tag version:       $TAG_VERSION"
+          echo "CITATION.cff ver.: $CITATION_VERSION"
+          if [ "$TAG_VERSION" != "$CITATION_VERSION" ]; then
+            echo "::error::CITATION.cff version ($CITATION_VERSION) does not match tag ($TAG_VERSION)."
+            exit 1
+          fi
+          echo "Versions match ✓"

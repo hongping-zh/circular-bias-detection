@@ -49,7 +49,7 @@ setup(
     project_urls={
         'Documentation': 'https://github.com/hongping-zh/circular-bias-detection#readme',
         'Source': 'https://github.com/hongping-zh/circular-bias-detection',
-        'Dataset': 'https://doi.org/10.5281/zenodo.17201032',
+        'Dataset': 'https://doi.org/10.5281/zenodo.17196639',
         'Bug Tracker': 'https://github.com/hongping-zh/circular-bias-detection/issues',
     },
     packages=find_packages(exclude=['tests*', 'docs*']),
@@ -70,7 +70,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
-        'License :: OSI Approved :: Creative Commons License',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
@@ -78,5 +78,5 @@ setup(
         'Programming Language :: Python :: 3.11',
     ],
     keywords='bias-detection algorithm-evaluation fairness machine-learning',
-    license='CC-BY-4.0',
+    license='MIT',
 )
