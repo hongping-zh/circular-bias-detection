@@ -56,7 +56,7 @@ The tool's browser-based architecture eliminates installation barriers and data 
 # Implementation
 
 Sleuth's frontend combines React for UI components with Chart.js for visualization rendering. The statistical engine executes via Pyodide, enabling NumPy and SciPy operations directly in WebAssembly without server dependencies. Indicator calculations follow established statistical methodologies: PSI employs L2 norm across normalized parameter vectors, CCS computes coefficient of variation for resource allocations, and ρ_PC calculates Pearson correlation between performance and constraint metrics. Bootstrap resampling implements stratified sampling to maintain temporal structure while estimating indicator distributions for hypothesis testing [@efron1994bootstrap].
-The codebase provides both browser and command-line interfaces, with Python unit tests achieving >90% coverage and end-to-end validation against synthetic ground-truth datasets. Complete source code and documentation are archived at Zenodo (software DOI: 10.5281/zenodo.17201032). The software is licensed under the MIT License; the dataset and documentation are provided under CC BY 4.0.
+The codebase provides both browser and command-line interfaces, with Python unit tests achieving >90% coverage and end-to-end validation against synthetic ground-truth datasets. Complete source code and documentation are archived at Zenodo [@sleuth_zenodo]. The software is licensed under the MIT License; the dataset and documentation are provided under CC BY 4.0.
 
 # Acknowledgements
 
