@@ -5,7 +5,7 @@ import ScanButton from './components/ScanButton';
 import Dashboard from './components/Dashboard';
 import ProgressBar from './components/ProgressBar';
 import InteractiveTutorial from './components/InteractiveTutorial';
-import { initPyodide, runBiasDetection } from './utils/pyodideRunner';
+import { initPyodideInWorker, onPyodideProgress, runPython } from './utils/pyodideClient';
 
 function App() {
   const [pyodideReady, setPyodideReady] = useState(false);
@@ -26,20 +26,34 @@ function App() {
     'Generating report'
   ];
 
-  // Skip Pyodide for testing - use mock detection
+  // Initialize Pyodide in Web Worker and show tutorial for first-time users
   useEffect(() => {
-    console.log('Testing mode: Pyodide disabled');
-    // Simulate Pyodide ready immediately
-    setTimeout(() => {
-      setPyodideReady(true);
-      console.log('UI ready (mock mode)');
-      
-      // Show tutorial for first-time visitors
-      const hasSeenTutorial = localStorage.getItem('sleuth_tutorial_completed');
-      if (!hasSeenTutorial) {
-        setShowTutorial(true);
+    let unsubscribe = null;
+    (async () => {
+      try {
+        unsubscribe = onPyodideProgress((p) => {
+          // map worker init progress to UI
+          if (!pyodideReady) {
+            setLoading(true);
+            setCurrentStep(0);
+            setProgress(Math.min(99, Math.round((p.progress || 0) * 100)));
+          }
+        });
+        await initPyodideInWorker();
+        setPyodideReady(true);
+      } catch (e) {
+        console.error('Pyodide init failed', e);
+        setError('Failed to initialize Python runtime in browser. Please retry.');
+      } finally {
+        setLoading(false);
+        setProgress(0);
+        setCurrentStep(0);
+        // Show tutorial for first-time visitors
+        const hasSeenTutorial = localStorage.getItem('sleuth_tutorial_completed');
+        if (!hasSeenTutorial) setShowTutorial(true);
       }
-    }, 500);
+    })();
+    return () => { if (unsubscribe) unsubscribe(); };
   }, []);
 
   const handleDataLoad = (csvData, validationResult) => {
@@ -65,61 +79,82 @@ function App() {
     setCurrentStep(0);
 
     try {
-      // Simulate multi-step processing with progress updates
-      const stepDuration = 400; // ms per step
-      
+      // Real detection via Web Worker (Pyodide)
+      const code = `
+import numpy as np
+import pandas as pd
+import io
+from scipy import stats
+
+def compute_psi(theta_matrix):
+    T, K = theta_matrix.shape
+    if T < 2:
+        return 0.0
+    changes = np.diff(theta_matrix, axis=0)
+    return float(np.mean(np.abs(changes)))
+
+def compute_ccs(constraint_matrix):
+    T, p = constraint_matrix.shape
+    if T < 2:
+        return 1.0
+    normalized = (constraint_matrix - constraint_matrix.mean(axis=0)) / (constraint_matrix.std(axis=0) + 1e-10)
+    correlations = []
+    for i in range(T-1):
+        for j in range(i+1, T):
+            corr = np.corrcoef(normalized[i], normalized[j])[0, 1]
+            if not np.isnan(corr):
+                correlations.append(corr)
+    return float(np.mean(correlations) if correlations else 1.0)
+
+def compute_rho_pc(performance_matrix, constraint_matrix):
+    perf_avg = np.mean(performance_matrix, axis=1)
+    const_avg = np.mean(constraint_matrix, axis=1)
+    if len(perf_avg) < 2:
+        return 0.0
+    corr, _ = stats.pearsonr(perf_avg, const_avg)
+    return float(corr) if not np.isnan(corr) else 0.0
+
+def detect_bias(csv_string, psi_threshold=0.15, ccs_threshold=0.85, rho_pc_threshold=0.5):
+    df = pd.read_csv(io.StringIO(csv_string))
+    perf_matrix = df.pivot(index='time_period', columns='algorithm', values='performance').values
+    const_cols = [c for c in df.columns if c.startswith('constraint_')]
+    const_matrix = df.groupby('time_period')[const_cols].first().values
+    algorithms = df['algorithm'].unique().tolist()
+    psi = compute_psi(perf_matrix)
+    ccs = compute_ccs(const_matrix)
+    rho_pc = compute_rho_pc(perf_matrix, const_matrix)
+    psi_detected = psi > psi_threshold
+    ccs_detected = ccs < ccs_threshold
+    rho_detected = abs(rho_pc) > rho_pc_threshold
+    indicators = int(psi_detected) + int(ccs_detected) + int(rho_detected)
+    return {
+        'psi': psi,
+        'ccs': ccs,
+        'rho_pc': rho_pc,
+        'overall_bias': indicators >= 2,
+        'confidence': indicators / 3.0,
+        'details': {
+            'algorithms_evaluated': algorithms,
+            'time_periods': int(perf_matrix.shape[0]),
+            'indicators_triggered': int(indicators)
+        }
+    }
+
+import json
+res = detect_bias(csv_data)
+json.dumps(res)
+      `;
+
+      // Simulate step progress
       for (let i = 0; i < analysisSteps.length; i++) {
         setCurrentStep(i);
-        setProgress((i / analysisSteps.length) * 100);
-        
-        // Simulate processing time for each step
-        await new Promise(resolve => setTimeout(resolve, stepDuration));
-        
-        // Update progress within step
-        setProgress(((i + 0.5) / analysisSteps.length) * 100);
-        await new Promise(resolve => setTimeout(resolve, stepDuration / 2));
+        setProgress(Math.round(((i + 0.2) / analysisSteps.length) * 100));
+        await new Promise(r => setTimeout(r, 120));
       }
-      
-      // Final progress
-      setProgress(100);
-      setCurrentStep(analysisSteps.length);
-      
-      // Wait a bit before showing results
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      const mockResults = {
-        psi: 0.0238,
-        psi_ci_lower: 0.0113,
-        psi_ci_upper: 0.0676,
-        psi_p_value: 0.355,
-        ccs: 0.8860,
-        ccs_ci_lower: 0.8723,
-        ccs_ci_upper: 0.9530,
-        ccs_p_value: 0.342,
-        rho_pc: 0.9983,
-        rho_pc_ci_lower: 0.9972,
-        rho_pc_ci_upper: 1.0000,
-        rho_pc_p_value: 0.772,
-        overall_bias: false,
-        confidence: 0.333,
-        interpretation: 'No circular bias detected (confidence: 33.3%). Evaluation appears sound.',
-        details: {
-          algorithms_evaluated: ['GPT-3.5', 'Llama-2-7B', 'Claude-Instant', 'Mistral-7B'],
-          time_periods: 5,
-          indicators_triggered: 1,
-          dataStats: data.stats || {
-            totalRows: 20,
-            algorithmCount: 4,
-            periodCount: 5,
-            timePeriods: [1, 2, 3, 4, 5],
-            algorithms: ['GPT-3.5', 'Llama-2-7B', 'Claude-Instant', 'Mistral-7B']
-          }
-        },
-        bootstrap_enabled: true
-      };
-      
-      setResults(mockResults);
-      console.log('Mock detection completed:', mockResults);
+
+      const resultJSON = await runPython(code, { csv_data: data.csvData || data });
+      const result = typeof resultJSON === 'string' ? JSON.parse(resultJSON) : resultJSON;
+      setResults({ ...result, bootstrap_enabled: false, interpretation: result.overall_bias ? undefined : 'No circular bias detected. Evaluation appears sound.' });
     } catch (err) {
       console.error('Detection failed:', err);
       setError(err.message || 'Detection failed');
@@ -173,16 +208,13 @@ function App() {
         >
           ❓ Help
         </button>
-        <p className="subtitle" style={{color: '#ff9800', fontWeight: 'bold'}}>
-          🧪 TEST MODE - Using Mock Detection
-        </p>
       </header>
 
       <main className="App-main">
         {!pyodideReady && (
           <div className="loading-overlay">
             <div className="spinner"></div>
-            <p>🧪 Loading UI (Test Mode - Using Mock Data)</p>
+            <p>Initializing Python runtime in your browser...</p>
           </div>
         )}
 

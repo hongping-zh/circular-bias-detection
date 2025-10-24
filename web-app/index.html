@@ -10,14 +10,18 @@
       content="Sleuth - AI Evaluation Bias Hunter. Detect circular reasoning bias in algorithm evaluation. Free, fast, and privacy-preserving."
     />
     
-    <!-- Load Pyodide -->
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
-    
     <title>Sleuth - AI Evaluation Bias Hunter</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+        });
+      }
+    </script>
   </body>
 </html>

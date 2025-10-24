@@ -7,8 +7,10 @@ import pandas as pd
 from typing import Union, Dict, List, Optional, Tuple
 import warnings
 
-from .core import compute_all_indicators
-from .utils import validate_matrices, load_data
+from .core.metrics import compute_all_indicators
+from .core.matrix import validate_matrices
+from .core.bootstrap import bootstrap_psi, bootstrap_ccs, bootstrap_rho_pc, compute_adaptive_thresholds
+from .utils import load_data
 
 
 class BiasDetector:
@@ -105,7 +107,6 @@ class BiasDetector:
             
         # Compute adaptive thresholds if requested
         if enable_adaptive_thresholds:
-            from .core import compute_adaptive_thresholds
             adaptive_thresholds = compute_adaptive_thresholds(
                 perf_array, 
                 const_array,
@@ -124,8 +125,6 @@ class BiasDetector:
         
         # Compute bootstrap statistics if requested
         if enable_bootstrap:
-            from .core import bootstrap_psi, bootstrap_ccs, bootstrap_rho_pc
-            
             psi_boot = bootstrap_psi(perf_array, params_array, n_bootstrap=n_bootstrap)
             ccs_boot = bootstrap_ccs(const_array, n_bootstrap=n_bootstrap)
             rho_boot = bootstrap_rho_pc(perf_array, const_array, n_bootstrap=n_bootstrap)
@@ -156,7 +155,7 @@ class BiasDetector:
             results['bootstrap_enabled'] = False
         
         # Apply thresholds
-        from .core import detect_bias_threshold
+        from .core.metrics import detect_bias_threshold
         bias_results = detect_bias_threshold(
             results['psi_score'],
             results['ccs_score'], 
