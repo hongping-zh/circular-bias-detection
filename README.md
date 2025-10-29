@@ -1007,8 +1007,16 @@ This project aims to improve AI evaluation integrity across the research communi
 
 <div align="center">
 
-**[🚀 Try Sleuth Now](https://is.gd/check_sleuth)** • **[⭐ Star on GitHub](https://github.com/hongping-zh/circular-bias-detection)** • **[📖 Read the Docs](#api-documentation)**
+---
 
-Made with ❤️ for the AI research community
+### 🚀 Ready to Detect Bias?
+
+**[� Try Sleuth Now](https://is.gd/check_sleuth)** • **[⭐ Star on GitHub](https://github.com/hongping-zh/circular-bias-detection)** • **[📖 Read the Docs](#-api-documentation)** • **[💌 Get Support](#-community--support)**
+
+---
+
+<img src="https://img.shields.io/badge/Made_with-❤️_for_AI_Research-red?style=for-the-badge" alt="Made with love"/>
+
+<sub>Empowering researchers worldwide to ensure AI evaluation integrity</sub>
 
 </div>
