@@ -1,18 +1,19 @@
 # Sleuth - AI Bias Detector
 
 <!-- Badges Section -->
-[![Web App](https://img.shields.io/badge/🚀_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
+[![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
 [![GitHub stars](https://img.shields.io/github/stars/hongping-zh/circular-bias-detection?style=social)](https://github.com/hongping-zh/circular-bias-detection)
+[![CI](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml/badge.svg)](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue)](https://pypi.org/project/circular-bias-detector/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![License: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
 [![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
-[![JOSS Status](https://img.shields.io/badge/JOSS-under%20review-yellow)](https://joss.theoj.org/)
+[![JOSS Status](https://img.shields.io/badge/JOSS-under%20review-yellow)](https://github.com/openjournals/joss-reviews/issues/9272)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
 
-## 🎯 Detect AI Evaluation Bias in 30 Seconds
+## Detect AI Evaluation Bias in 30 Seconds
 
 **Stop deploying AI models with inflated performance scores.**
 
@@ -180,13 +181,14 @@ Unlike existing tools, Sleuth is the **only tool** that audits your **evaluation
 
 ### Workflow Diagram
 
-> **📊 Visualization Note:** A complete workflow diagram (`docs/workflow_diagram.png`) illustrating the CBD framework pipeline is available in the repository. The diagram shows:
-> 1. **Input**: CSV evaluation logs with timestamps, algorithms, performance metrics, and constraints
-> 2. **Processing**: Matrix construction, normalization, and indicator computation (PSI, CCS, ρ_PC)
-> 3. **Statistical Testing**: Bootstrap resampling (n=1000) for confidence intervals and p-values  
-> 4. **Output**: Bias detection verdict with risk level, confidence score, and actionable recommendations
->
-> *The web app provides interactive visualizations including CBS gauge charts, radar plots, performance heatmaps, and temporal trend analyses. See [`examples/visualization_example.py`](examples/visualization_example.py) for generating all figures programmatically.*
+```mermaid
+flowchart LR
+    A[Inputs: CSV/JSONL logs (X, S, optional Y)] --> B[Pre-checks & Validation]
+    B --> C[Indicators: PSI, CCS, ρ_PC]
+    C --> D[Bootstrap CI & p-values]
+    D --> E[Decision & Risk Level]
+    E --> F[Report: Tables / Plots / Export]
+```
 
 ### Web App Interface
 
@@ -957,10 +959,9 @@ If you use Sleuth in your research or industry work, please cite:
 
 ### JOSS Submission
 
-This software is currently **under review** at the Journal of Open Source Software (JOSS). You can track the review progress and participate in the discussion:
+This software is currently **under review** at the Journal of Open Source Software (JOSS).
 
-- **JOSS Submission**: Coming soon after initial submission
-- **Review Thread**: Will be available at `https://github.com/openjournals/joss-reviews/issues/[NUMBER]`  
+- **Review Thread**: https://github.com/openjournals/joss-reviews/issues/9272  
 - **Paper Draft**: [`paper.md`](paper.md)
 - **Bibliography**: [`paper.bib`](paper.bib)
 
