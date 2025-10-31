@@ -1,0 +1,4 @@
+gradio>=4.44,<5
+pandas>=2.1
+numpy>=1.26
+circular-bias-detector>=1.0.0
