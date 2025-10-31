@@ -1118,3 +1118,15 @@ If Sleuth helped your research or saved you from deploying a biased model, pleas
 <sub>Empowering researchers worldwide to ensure AI evaluation integrity</sub>
 
 </div>
+
+## 馃搧 鐩綍缁撴瀯璇存槑
+
+- circular_bias_detector/ 鏍稿績搴撲唬鐮侊紙core/metrics.py銆乧ore/bootstrap.py 绛夛紝鎸囨爣涓?CBS 璁＄畻銆佸彲瑙嗗寲锛夈€?- circular_bias_cli/ 鍛戒护琛屽叆鍙ｄ笌閫傞厤鍣紙main.py銆乤dapters/銆乽tils/锛夈€?- examples/ 鍙繍琛岀ず渚嬨€佸鐜拌剼鏈笌 Notebook锛堝 basic_usage_example.py銆乺eproduce_simulations.py锛夈€?- tests/ 鍗曞厓娴嬭瘯涓庣鍒扮娴嬭瘯銆?- web-app/ 娴忚鍣ㄧ搴旂敤锛圴ite + React + Pyodide锛夛紝src/ 婧愮爜锛宲ublic/ 闈欐€佽祫婧愶紝dist/ 鏋勫缓浜х墿銆?- data/ 绀轰緥 CSV 涓庢暟鎹瓧鍏革紝鐢ㄤ簬蹇€熻瘯鐢ㄣ€?- experiments/ 璁烘枃/鎶ュ憡澶嶇幇瀹為獙鑴氭湰涓庤〃鍥剧敓鎴愩€?- docs/ 浣跨敤涓庢妧鏈枃妗ｏ紙鍙瀯寤轰负鏂囨。绔欑偣锛夈€?- paper/ 璁烘枃鐩稿叧鏉愭枡锛堝浘銆佸弬鑰冩枃鐚€佹姇绋挎枃浠讹級锛汮OSS 璁烘枃姝ｆ枃涓烘牴鐩綍鐨?paper.md銆?
+> 鎻愮ず锛氳嫢浠呮兂蹇€熶笂鎵嬶紝鐩存帴鏌ョ湅 examples/ 涓?web-app/銆?
+## 鈴憋笍 5鍒嗛挓涓婃墜
+
+- 鏂瑰紡A锛歐eb App锛堥浂瀹夎锛?  1. 鎵撳紑鍦ㄧ嚎婕旂ず鎴栨湰鍦板惎鍔?web-app锛堝厛鎵ц npm install锛涘啀鎵ц npm run dev锛夈€?  2. 鍦ㄩ〉闈㈠鍏ヨ瘎浼版棩蹇?CSV锛堟垨浣跨敤 data/sample_data.csv锛夈€?  3. 鏌ョ湅 CBS 浠〃鐩樸€侀浄杈惧浘涓庢椂闂村簭鍒楋紝骞跺鍑虹粨鏋溿€?
+- 鏂瑰紡B锛歅ython/CLI锛堟湰鍦扮绾匡級
+  1. 瀹夎锛歱ip install circular-bias-detector
+  2. 鏈€灏忕ず渚嬶細浣跨敤 examples/ 涓嬬殑鑴氭湰杩愯锛屾垨鍦?Python 涓皟鐢?compute_cbs銆?  3. CLI 绀轰緥锛歝ircular-bias --input data/sample_data.csv --output out.json
+  4. 鏇村绀轰緥锛歟xamples/basic_usage_example.py銆乪xamples/bootstrap_example.py銆乪xamples/reproduce_simulations.py

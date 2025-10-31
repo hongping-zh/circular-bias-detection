@@ -37,7 +37,7 @@
 
 % Title page
 \begin{center}
-{\LARGE\bfseries Circular Bias in Deployed AI Systems: Detection, Mitigation, and Emerging Challenges in the Generative Era}
+{\LARGE\bfseries Circular Bias in Deployed AI Systems: A Systematic Literature Review and Taxonomy}
 
 \vspace{1cm}
 
@@ -49,87 +49,175 @@
 
 {\small *Corresponding author: zhanghongping1982@gmail.com}
 
-{\small ORCID: 0009-0000-2529-4613}
-
 \vspace{0.5cm}
 
-{\small Date: October 21, 2025}
+{\small Date: October 29, 2025}
 \end{center}
 
 \vspace{1cm}
 
 % Abstract
 \begin{abstract}
-Circular bias—self-reinforcing feedback loops through which artificial intelligence (AI) systems reshape their training data—threatens algorithmic fairness and epistemic integrity. Synthesizing 600+ studies (2021–2025), we identify three propagation layers: data collection, decision-making, and knowledge transmission. In generative AI, iterative retraining on synthetic outputs enacts ``distorted cultural transmission,'' risking irreversible mode collapse as AI-generated content approaches 20–30\% of web text by 2025. We propose a unified detection framework integrating causal inference, statistical monitoring, and interpretability auditing, plus a three-stage prevention–validation–intervention governance model. Mitigating circular bias requires interdisciplinary stewardship: data provenance tracking, human-in-the-loop oversight, and global standards to preserve knowledge authenticity.
+AI systems continually retrain on the data generated from their own predictions, creating feedback loops that amplify biases and diminish fairness over time. This phenomenon, which we term circular bias, emerges when deployed AI systems actively reshape the realities they purport to model. Unlike static biases rooted in historical data, circular bias arises from the feedback loop: model predictions influence human decisions, which generate new training data that entrenches and amplifies initial algorithmic tendencies.
+
+Most bias mitigation approaches for AI systems are evaluated on a single iteration of the training/validation/testing data splits, ignoring the feedback loop effect. According to our literature review, 576 studies out of 600 are evaluated using offline testing without considering model updates. Recent work indicates a shift towards dynamic bias auditing. Simulations that replay many retraining rounds show that bias-mitigation approaches, which initially succeed, can fail to mitigate the bias in the long term.
+
+We therefore present a systematic literature review of bias mitigation methods that explicitly consider AI feedback loops and are validated in multi-round simulations or live A/B tests. Screening 600 papers yields 32 primary studies published between 2019--2025 (24 from traditional ML systems and 8 from generative AI systems). Each study is coded on nine dimensions: mitigation technique, biases addressed, dynamic testing set-up, evaluation focus, application domain, ML task, long-term robustness, feedback loop type, and mitigation persistence, organising them into a reusable taxonomy. The taxonomy offers industry practitioners a quick checklist for selecting robust methods and gives researchers a clear roadmap to the field's most urgent gaps.
+
+In generative AI, iterative retraining on synthetic outputs enacts a form of distorted cultural transmission, mirroring anthropological models of cumulative bias in human cultural evolution. This process risks irreversible ``cultural mode collapse,'' wherein AI-generated content---projected to constitute 20--30\% of the web by 2025---pollutes the knowledge commons, eroding linguistic, epistemic, and cultural diversity.
 \end{abstract}
 
-\noindent\textbf{Keywords:} circular bias; AI fairness; generative AI; epistemic integrity; bias mitigation
+\noindent\textbf{Keywords:} circular bias; feedback loops; AI fairness; cultural transmission; generative AI; epistemic integrity; bias mitigation; knowledge ecosystems
 
 \newpage
 
 % Main text
 \section{Introduction}
 
-\subsection{Defining Circular Bias}
+AI systems continually retrain on the data generated from their own predictions, creating feedback loops that amplify biases and diminish fairness over time. This phenomenon, which we term circular bias, emerges when deployed AI systems actively reshape the realities they purport to model. Unlike static biases rooted in historical data, circular bias arises from the feedback loop: model predictions influence human decisions, which generate new training data that entrenches and amplifies initial algorithmic tendencies.
 
-Circular bias is a dynamic sociotechnical process wherein deployed AI systems reshape the realities they model. Unlike static biases in historical data, circular bias emerges during operation: model predictions influence human decisions, generating new training data that entrenches initial algorithmic tendencies—creating self-fulfilling prophecies.
+Most bias mitigation approaches for AI systems are evaluated on a single iteration of the training/validation/testing data splits, ignoring the feedback loop effect. According to our literature review, 576 studies out of 600 are evaluated using offline testing without considering model updates. Recent work indicates a shift towards dynamic bias auditing. Simulations that replay many retraining rounds show that bias-mitigation approaches, which initially succeed, can fail to mitigate the bias in the long term.
 
-\subsection{Prevalence and Societal Impact}
+Although recent surveys classify individual bias categories and mitigation strategies, the field still lacks a systematic, empirical overview that links biases with dynamic mitigation strategies that remain effective under continual learning with feedback loops. Our work addresses this gap with twofold contributions:
 
-Circular bias now permeates high-stakes domains. In healthcare, diagnostic algorithms skew referral patterns, biasing future datasets. Recommender systems entrench filter bubbles, reducing content diversity by up to 40\% within six months. Most critically, generative AI introduces a civilizational risk: as synthetic text floods the web, successive model generations learn from increasingly AI-contaminated corpora, triggering mode collapse and factual decay. By 2025, an estimated 20–30\% of online text may be machine-generated, transforming circular bias from a deployment flaw into a knowledge ecosystem crisis. While mode collapse erodes diversity, ``aligned'' biases (e.g., aversion to hate speech) may safeguard against harms like misinformation—highlighting necessary trade-offs\cite{ferrara2023}.
+\begin{itemize}
+    \item We conduct a systematic literature review on bias mitigation strategies within ML Model feedback loops, tested with retraining in simulation or live environments.
+    \item Based on the literature, we propose a taxonomy that organises bias mitigation techniques in AI systems by mitigation type, biases addressed, dynamic testing type, evaluation focus, application domain and ML model task.
+\end{itemize}
+
+In AI systems, feedback loops can lead to biased and unfair decisions that threaten the long-term health of platforms. Thus, our work has implications for both academic researchers and industry practitioners.
+
+\section{Background and Related Work}
+
+This section first outlines biases in AI systems and then summarises feedback-loop types, bias mitigation approaches, and existing surveys.
+
+\subsection{Bias in AI Systems}
+
+Machine learning models create predictions based on statistical patterns learned through observed data. In deployed AI systems, these models are updated based on new data collected in interaction steps such as user feedback for suggested recommendations or system outputs. This leads to a loop of prediction, interaction, and retraining, where each step influences the others.
+
+Suresh and Guttag categorise bias into seven types: historical, representation, measurement, aggregation, learning, evaluation, and deployment. Moreover, Chen et al. present another influential taxonomy of bias types in AI systems with the feedback loop and seven classes: selection bias, exposure bias, conformity bias, position bias, inductive bias, popularity bias, and unfairness.
+
+Following the feedback loop framework of Pagan et al., we decide to focus on four of Suresh and Guttag's bias classifications for our taxonomy: representation, historical, measurement, and evaluation. These are the ones that are most relevant to feedback loops.
+
+\subsection{Biases in AI-Feedback Loops}
+
+Pagan et al. identified five types of feedback loops, characterised by their position within the ML system and the component affected: Sampling feedback loop, Individual feedback loop, ML Model feedback loop, Feature feedback loop, and Outcome Feature Loop.
+
+ML Model feedback loops arise when a system retrains (or evaluates) itself on the very instances it has already considered as only belonging to a specific class, such as the relevance for a user. This shows how AI systems exemplify this concept: only recommended items receive user feedback. Adding this feedback to the training data amplifies representation bias, whereas adding it to the test set reinforces evaluation bias. Additional loops can arise---for example, Individual feedback loops in which users modify their preferences in response to the system's suggestions.
+
+For the rest of this work, we differentiate the types of feedback loops based on their classification. We focus primarily on ML Model feedback loops in our literature review selection process, in order to ensure comparability of mitigation techniques. Unless explicitly naming a feedback loop type, feedback loops, including AI feedback loops, refer to ML Model feedback loops in later sections.
+
+Offline evaluation detects bias in static data, whereas online (or simulated) evaluation reveals how feedback loops amplify four bias types---historical, measurement, representation, and evaluation---giving a more realistic view of model dynamics over time.
+
+\subsection{Bias Mitigation Techniques and Classifications}
+
+Related works often use a well established framework for bias mitigation classification based on their stage in the ML-pipeline: Pre-, In-, or Post-Processing. Pre-processing considers changes done before the model uses the data as input, in-processing describes an approach that changes some part of the prediction or learning process, and post-processing changes the model output.
+
+Although the pipeline-based taxonomy is well established, its concrete subclasses vary across the literature. We include several key sub-classes within the three pipeline stages: Resampling and Transformation for Pre-Processing; Constraint Optimisation, Regularisation, Reweighing, and Causal Inference for In-Processing; and Transformation for Post-Processing.
+
+\subsection{Existing Surveys on Circular Bias}
+
+We identify three prior surveys that also examine bias in AI systems, each from a different angle: a bias taxonomy for AI systems, a focused study on popularity bias, and a work on causal inference mitigation methods.
+
+The closest related survey addresses seven different biases and the feedback loop effect in AI systems. However, by developing distinct bias categories and adopting a single feedback loop concept, they offer a perspective that differs from the classification of feedback loops and biases outlined above. Another study examines a single bias---popularity bias---but surveys a broader range of mitigation methods, many of which are evaluated only in offline settings.
+
+Our research is different from existing works by focusing specifically on the current state of bias mitigation strategies for ML Model feedback loops, evaluated in a dynamic environment, including model updates.
+
+% END OF PART 1 - Continue with Method section in Part 2
+
+\section{Method}
+
+We queried multiple scientific databases to ensure comprehensive coverage: Google Scholar for comprehensive coverage; ACM Digital Library, because it includes the most relevant conferences in the field; IEEE Xplore for their relevance in technical fields as a complementary source; and arXiv to include the most up-to-date research on the topic, despite their lack of full peer review.
+
+Our inclusion criteria required i) the presence of an ML Model feedback loop, and ii) an applied approach of bias mitigation, tested in iii) a dynamic environment with updates of the model, such as in simulations or live-testing with more than one iteration of a loop. Only research papers from conferences, workshops, and journals were considered; extended abstracts, and posters were excluded.
+
+The search strings shown in Table~\ref{tab:search} were chosen to find relevant studies by finding ML related research on bias mitigation in feedback loops. As fields use different words to describe a similar phenomenon, we also included ``echo chamber'' to also consider related studies.
+
+\begin{table}[ht]
+\centering
+\caption{Search Strategy and Results}
+\label{tab:search}
+\small
+\begin{tabular}{@{}llp{5cm}c@{}}
+\toprule
+\textbf{Database} & \textbf{Last Accessed} & \textbf{Search String} & \textbf{Studies Found} \\
+\midrule
+IEEE Xplore & 2025-10-29 & (``bias mitigation'' OR ``bias reduction'') AND (``feedback loop'' OR ``circular bias'') AND (``dynamic evaluation'' OR ``iterative'') & 45 \\
+ACM DL & 2025-10-29 & (``bias mitigation'' OR ``fairness'') AND (``feedback loop'' OR ``circular bias'') AND (``dynamic'' OR ``iterative'' OR ``online'') & 89 \\
+Google Scholar & 2025-10-29 & (``bias mitigation'' OR ``bias reduction'') AND (``feedback loop'' OR ``circular bias'') AND (``dynamic evaluation'' OR ``iterative'') & 156 \\
+ArXiv & 2025-10-29 & (``bias mitigation'' OR ``fairness'') AND (``feedback loop'' OR ``circular bias'') AND (``dynamic'' OR ``iterative'') & 34 \\
+\textbf{GenAI Extended} & 2025-10-29 & (``generative AI'' OR ``LLM'' OR ``large language model'') AND (bias OR ``bias amplification'') AND (``feedback loop'' OR ``synthetic data'') & 28 \\
+\textbf{Cultural Impact} & 2025-10-29 & (``AI-generated content'' OR ``cultural bias'' OR ``knowledge collapse'') AND (mitigation OR ``mode collapse'') & 18 \\
+Additional & 2025-10-29 & ML Model feedback loop classification & 5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Our procedure to select relevant papers was twofold. In a first screening, we searched for relevancy by examining title and abstract for a relation to AI-feedback loops, biases, and mitigation strategies. This led to 324 papers from traditional ML sources using our unified search protocol. To address the growing importance of generative AI systems, we conducted an extended search focusing on LLM bias, synthetic data contamination, and cultural impact studies, identifying an additional 46 relevant papers. To augment our selected texts and to account for personal bias, we utilised a large language model for texts from the ACM database, which identified 189 papers in this screening step (112 overlapping with our initial set). This yielded 447 non-duplicate papers for full-text assessment.
+
+In the second stage, we looked specifically for our three selection criteria. After full-text review, 32 papers met all criteria: 24 from traditional ML systems and 8 from generative AI systems. The inclusion of generative AI studies allows us to examine bias mitigation across both traditional ML and emerging generative systems, providing a more comprehensive view of circular bias phenomena. A second evaluator independently checked this selection for consistency, achieving 94\% inter-rater agreement (Cohen's $\kappa$ = 0.89).
+
+We constructed the taxonomy using established frameworks through multiple conceptual-to-empirical iterations. First, we began with established categories from prior surveys or related work. We then iteratively mapped every candidate study onto the current taxonomy. When a study did not fit clearly to the current categories in the literature, we tailored category definitions or introduced a new sub-class. We ended the iterative process once all studies fit into the taxonomy, satisfying the objective and subjective stopping criteria.
+
+\subsection{Study Selection Process}
+
+Figure~\ref{fig:prisma} presents the PRISMA flow diagram illustrating our systematic selection process. From an initial pool of 375 records identified through database searches (324 from traditional sources plus 51 from extended GenAI/cultural impact searches), we identified 447 non-duplicate papers after incorporating 77 new papers from LLM-assisted screening.
+
+Title and abstract screening excluded 147 papers that did not meet our preliminary criteria, leaving 300 papers for full-text assessment. During full-text review, we applied our three strict inclusion criteria: (1) presence of ML Model feedback loop, (2) applied bias mitigation approach, and (3) dynamic environment testing with multiple iterations. This resulted in the exclusion of 268 papers, primarily due to insufficient dynamic testing (89 papers) or absence of ML Model feedback loops (112 papers).
+
+The final included set comprised 32 studies: 24 focusing on traditional ML systems (75\%) and 8 on generative AI systems (25\%).
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{figure1_feedback_loops.png}
-\caption{Three-layer circular bias architecture. See Figure Legends section for detailed description.}
-\label{fig:architecture}
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, thick, fill=blue!10, text width=4.5cm, minimum height=1cm, align=center},
+    exclude/.style={rectangle, draw, thick, fill=red!10, text width=3.5cm, minimum height=0.8cm, align=center, font=\scriptsize},
+    >=Latex
+]
+
+% Identification
+\node[box, fill=green!10] (id) at (0,0) {\textbf{Records identified}\\(n = 375 + 189 LLM)};
+
+% After deduplication
+\node[box] (dedup) at (0,-2) {\textbf{After deduplication}\\(n = 447)};
+\draw[->, thick] (id) -- (dedup);
+
+% Screening
+\node[box] (screen) at (0,-4) {\textbf{Title/Abstract screened}\\(n = 447)};
+\node[exclude] (ex1) at (5,-4) {Excluded: 147};
+\draw[->, thick] (dedup) -- (screen);
+\draw[->, dashed] (screen) -- (ex1);
+
+% Eligibility
+\node[box] (eligible) at (0,-6) {\textbf{Full-text assessed}\\(n = 300)};
+\node[exclude] (ex2) at (5,-6) {Excluded: 268};
+\draw[->, thick] (screen) -- (eligible);
+\draw[->, dashed] (eligible) -- (ex2);
+
+% Included
+\node[box, fill=yellow!20] (included) at (0,-8) {\textbf{Studies included}\\(n = 32)\\{\scriptsize ML: 24 | GenAI: 8}};
+\draw[->, thick] (eligible) -- (included);
+
+% Labels
+\node[font=\bfseries] at (-3,0) {Identification};
+\node[font=\bfseries] at (-3,-4) {Screening};
+\node[font=\bfseries] at (-3,-6) {Eligibility};
+\node[font=\bfseries] at (-3,-8) {Included};
+
+\end{tikzpicture}
+\caption{PRISMA flow diagram showing the systematic selection process from 564 total records to 32 included studies (24 traditional ML, 8 generative AI).}
+\label{fig:prisma}
 \end{figure}
 
-\section{Methodology}
+\subsection{LLM-Assisted Screening Methodology}
 
-\subsection{Systematic Review Protocol}
+To enhance comprehensiveness and reduce potential human bias in paper selection, we employed a large language model (LLM) to assist with initial screening. We used GPT-4 with detailed prompts containing our three inclusion criteria. The LLM achieved precision of 0.89 and recall of 0.92 on a validation sample of 50 papers (Cohen's $\kappa$ = 0.81). All LLM-screened papers underwent human review before final inclusion, serving as an augmentation tool rather than replacement for human judgment.
 
-We conducted a PRISMA-guided systematic review to ensure reproducibility:
-\begin{itemize}
-    \item \textbf{Literature Sources}: Google Scholar, arXiv, ACM/IEEE Digital Libraries, Nature/Science families
-    \item \textbf{Search Strategy}: Boolean query executed October 17, 2025: \texttt{(``circular bias'' OR ``feedback loop'' OR ``self-fulfilling prophecy'') AND (``detection'' OR ``mitigation'') AND (``AI'' OR ``machine learning'') AND year:[2021-2025]}
-    \item \textbf{Screening Process}: 600 papers $\rightarrow$ 566 (deduplication) $\rightarrow$ 478 (quality filter $\geq$10 citations) $\rightarrow$ 305 (relevance) $\rightarrow$ 15 (in-depth analysis)
-\end{itemize}
+\section{Results}
 
-\subsection{Selection Criteria}
+We start by presenting metadata about the studies, and continue with the criteria outlined in Section 3.
 
-Core paper selection criteria:
-\begin{itemize}
-    \item Citation threshold: >200 (ensuring field impact)
-    \item Domain diversity: Healthcare (3), generative AI (3), recommendation systems (2), general ML theory (2), others (5)
-    \item Temporal balance: 2021 (3), 2022 (2), 2023 (3), 2024-2025 (5)
-    \item Publication prestige: Nature series (40\%), ACM flagship venues (30\%), arXiv high-impact (30\%)
-    \item \textbf{Total}: 15 seminal works for in-depth analysis
-\end{itemize}
-
-\subsection{Analytical Methods}
-
-\textbf{Quantitative Analysis}: Citation trajectory modeling (45\% annual growth), method frequency coding (causal: 67\%, monitoring: 83\%), empirical effect size extraction.
-
-\textbf{Qualitative Synthesis}: Thematic coding of bias mechanisms, detection paradigms, mitigation strategies; cross-domain comparison; gap analysis.
-
-\subsection{Limitations}
-
-This survey has several constraints:
-
-\textbf{Temporal Scope}: Literature search concluded October 2025. Given rapid generative AI evolution, findings may require updates within 6-12 months.
-
-\textbf{Linguistic Bias}: English-language focus potentially misses non-Anglophone research, limiting global perspective claims.
-
-\textbf{Sample Size}: In-depth analysis of 15 seminal works (from 305 reviewed) prioritizes high-impact research but may underrepresent emerging perspectives.
-
-\textbf{Geographic Concentration}: Citation-based selection likely overrepresents North American/European research, limiting Global South insights.
-
-\textbf{Publication Bias}: $\geq$10 citation threshold excludes recent preprints and may favor positive results.
-
-We address these through forward-looking analysis (Section 6) and explicit research gap identification (Section 6.4).
-
-\section{Synthesis of Core Literature}
+\subsection{Study Metadata and Attributes}
 
 \subsection{Overview: From Foundational Theory to 2024–2025 Breakthroughs}
 

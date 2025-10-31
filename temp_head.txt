@@ -1,0 +1,80 @@
+﻿# Sleuth - AI Bias Detector
+
+<!-- Badges Section -->
+[![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
+[![GitHub stars](https://img.shields.io/github/stars/hongping-zh/circular-bias-detection?style=social)](https://github.com/hongping-zh/circular-bias-detection)
+[![CI](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml/badge.svg)](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml)
+[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue)](https://pypi.org/project/circular-bias-detector/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
+[![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
+[![JOSS Status](https://img.shields.io/badge/JOSS-under%20review-yellow)](https://github.com/openjournals/joss-reviews/issues/9272)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
+
+## Detect AI Evaluation Bias in 30 Seconds
+
+**Stop deploying AI models with inflated performance scores.**
+
+Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets until your benchmark numbers look good鈥攁 hidden form of bias that breaks AI evaluations.
+
+---
+
+## 馃搵 Statement of Need
+
+**The Problem:** Modern AI development involves running hundreds of experiments鈥攖weaking learning rates, adjusting prompts, changing datasets鈥攗ntil performance metrics look impressive. But this iterative optimization creates **circular bias**: the evaluation process itself becomes part of the optimization, making results unreliable and non-reproducible.
+
+**Why This Matters:** 
+- Research papers get rejected when reviewers detect biased evaluation protocols
+- AI models fail in production when real-world performance drops 20-30% below reported benchmarks  
+- Benchmark leaderboards become unreliable when teams overfit to test sets through repeated submissions
+- Reproducibility crisis in ML research undermines scientific progress
+
+**What Sleuth Does:** Provides the **first automated statistical framework** to detect circular bias by analyzing your evaluation logs. No manual auditing, no guesswork鈥攋ust rigorous statistical tests (PSI, CCS, 蟻_PC) that quantify whether your results are trustworthy.
+
+**Who Needs This:**
+- 馃帗 Researchers preparing papers for publication (avoid desk rejection)
+- 馃懆鈥嶁殩锔?Peer reviewers and editors assessing methodological rigor
+- 馃彚 ML engineers deploying models to production (ensure real performance)
+- 馃弳 Benchmark organizers auditing leaderboard integrity
+- 馃搳 Research integrity officers investigating reproducibility concerns
+
+---
+
+## 鉁?Core Features
+
+- **馃敩 Rigorous Statistical Testing** - Three complementary indicators (PSI, CCS, 蟻_PC) with bootstrap confidence intervals (n=1000) and p-values
+- **馃敀 Privacy-Preserving** - 100% client-side processing in browser鈥攜our evaluation data never leaves your computer
+- **鈿?Zero Installation** - Web app runs instantly in browser via Pyodide/WebAssembly; or install Python package with `pip install circular-bias-detector`
+- **馃搳 Publication-Ready Outputs** - Generate PDF reports with statistical tables, heatmaps, and interactive visualizations
+- **馃寪 Domain-Agnostic** - Works with any AI task: computer vision, NLP, LLMs, reinforcement learning, recommender systems
+- **馃搱 Bootstrap Uncertainty** - Formal hypothesis testing with 95% confidence intervals and statistical significance stars
+<p align="center">
+  <a href="https://hongping-zh.github.io/circular-bias-detection/?utm_source=github&utm_medium=readme&utm_campaign=hero_live_demo">
+    <img src="https://img.shields.io/badge/%F0%9F%94%8D%20LIVE%20DEMO-Try%20Sleuth-brightgreen?style=for-the-badge" alt="Live Demo">
+  </a>
+  <a href="https://colab.research.google.com/github/hongping-zh/circular-bias-detection/blob/main/examples/quickstart_colab.ipynb?utm_source=github&utm_medium=readme&utm_campaign=hero_colab">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" style="height:28px;">
+  </a>
+</p>
+
+<p align="center">
+  <b>Detect circular bias in AI evaluations instantly.</b> Free web app + Python SDK. Stop shipping inflated benchmark scores.
+</p>
+
+<p align="center">
+  <sub>For researchers, reviewers, and ML engineers 鈥?Works with CSVs 鈥?Privacy-preserving</sub>
+</p>
+
+---
+
+## Why Sleuth?
+- Find hidden evaluation bias from hyperparam/prompt/dataset tweaking.
+- 3 indicators (PSI, CCS, 蟻_PC) with interpretation and fixes.
+- Use in 30 seconds via Web App, or programmatically via Python/CLI.
+---
+
+## 鈿?Quick Start
+
+**Option 1: Web App (Fastest鈥?0 seconds)**
