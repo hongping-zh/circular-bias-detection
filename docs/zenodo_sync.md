@@ -1,4 +1,4 @@
-# Zenodo Auto-Sync Guide (GitHub ‚Üí Zenodo)
+# Zenodo Auto-Sync Guide (GitHub ‚Ü?Zenodo)
 
 Use this guide to archive every GitHub release on Zenodo and keep DOIs in sync for JOSS and long-term citation.
 
@@ -6,7 +6,7 @@ Use this guide to archive every GitHub release on Zenodo and keep DOIs in sync f
 
 ## 1) Enable GitHub-Zenodo Integration
 
-1. Go to Zenodo: Account ‚Üí GitHub
+1. Go to Zenodo: Account ‚Ü?GitHub
 2. Toggle on repository: `hongping-zh/circular-bias-detection`
 3. Leave "Archive every GitHub release" enabled
 
@@ -25,7 +25,7 @@ Use this guide to archive every GitHub release on Zenodo and keep DOIs in sync f
 
 ## 3) Create a Tagged GitHub Release
 
-1. In GitHub ‚Üí Releases ‚Üí Draft a new release
+1. In GitHub ‚Ü?Releases ‚Ü?Draft a new release
 2. Tag format: `vX.Y.Z` (e.g., `v0.1.0`)
 3. Title and notes: summarize changes
 4. Publish
@@ -69,7 +69,7 @@ Example (Version DOI):
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
 ```
 
-Example (Concept DOI ‚Äì replace with your concept DOI once available):
+Example (Concept DOI ‚Ä?replace with your concept DOI once available):
 
 ```markdown
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.CONCEPT_ID.svg)](https://doi.org/10.5281/zenodo.CONCEPT_ID)
@@ -83,7 +83,7 @@ Example (Concept DOI ‚Äì replace with your concept DOI once available):
 
 - Prefer `.zenodo.json` as the single source of metadata for Zenodo
 - Mirror essential citation info in `CITATION.cff`
-- Reuse the Version DOI in papers‚Äô ‚ÄúCode/Data availability‚Äù sections for reproducibility
+- Reuse the Version DOI in papers‚Ä?‚ÄúCode/Data availability‚Ä?sections for reproducibility
 
 ---
 
@@ -91,4 +91,4 @@ Example (Concept DOI ‚Äì replace with your concept DOI once available):
 
 - Release archived but no DOI? Re-check Zenodo GitHub integration toggles
 - Wrong metadata on Zenodo? Update `.zenodo.json` and publish a new release
-- CI failing on version mismatch? Ensure `CITATION.cff: version` = tag without `v` (e.g., tag `v0.1.0` ‚Üí version `0.1.0`)
+- CI failing on version mismatch? Ensure `CITATION.cff: version` = tag without `v` (e.g., tag `v0.1.0` ‚Ü?version `0.1.0`)

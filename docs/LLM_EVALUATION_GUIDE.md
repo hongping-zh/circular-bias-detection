@@ -13,7 +13,7 @@ Unlike traditional ML models, LLM evaluation involves many degrees of freedom:
 
 | Factor | Traditional ML | LLM Evaluation | Risk Level |
 |--------|---------------|----------------|------------|
-| **Prompt Design** | N/A | Vanilla ‚Üí Few-shot ‚Üí CoT ‚Üí System prompts | ‚ö†Ô∏è HIGH |
+| **Prompt Design** | N/A | Vanilla ‚Ü?Few-shot ‚Ü?CoT ‚Ü?System prompts | ‚ö†Ô∏è HIGH |
 | **Sampling Params** | Fixed | Temperature, top_p, top_k tuning | ‚ö†Ô∏è HIGH |
 | **Context Length** | Fixed | max_tokens adaptation | ‚ö†Ô∏è MEDIUM |
 | **Dataset** | Train/test split | In-context examples selection | ‚ö†Ô∏è HIGH |
@@ -83,9 +83,9 @@ results = detector.detect_bias(
     performance_matrix=performance_matrix,
     constraint_matrix=constraint_matrix,
     algorithm_names=df['algorithm'].unique().tolist(),
-    enable_bootstrap=True,      # ‚ú® Get confidence intervals
+    enable_bootstrap=True,      # ‚ú?Get confidence intervals
     n_bootstrap=1000,
-    enable_adaptive_thresholds=True  # ‚ú® Data-driven thresholds
+    enable_adaptive_thresholds=True  # ‚ú?Data-driven thresholds
 )
 
 # Display results
@@ -145,7 +145,7 @@ print(f"œÅ_PC = {results['rho_pc_score']:+.4f} "
 **Symptoms:**
 - œÅ_PC > 0.7 (very high correlation)
 - Performance improves with each prompt variant
-- Prompt changes: vanilla ‚Üí few-shot ‚Üí CoT ‚Üí role-play
+- Prompt changes: vanilla ‚Ü?few-shot ‚Ü?CoT ‚Ü?role-play
 
 **Example:**
 ```python
@@ -155,14 +155,14 @@ print(f"œÅ_PC = {results['rho_pc_score']:+.4f} "
 # Time 4: Role-play + examples, score = 0.85
 
 # ‚ö†Ô∏è  Each prompt variant was chosen because previous score was insufficient
-# ‚úÖ CORRECT: Pre-specify prompt variants, evaluate all, report all
+# ‚ú?CORRECT: Pre-specify prompt variants, evaluate all, report all
 ```
 
 ### Scenario 2: Temperature Tuning
 
 **Symptoms:**
 - CCS < 0.8 (constraint inconsistency)
-- Temperature increases over time: 0.7 ‚Üí 0.8 ‚Üí 0.9 ‚Üí 1.0
+- Temperature increases over time: 0.7 ‚Ü?0.8 ‚Ü?0.9 ‚Ü?1.0
 - Scores improve with temperature
 
 **Example:**
@@ -177,7 +177,7 @@ print(f"œÅ_PC = {results['rho_pc_score']:+.4f} "
 ### Scenario 3: Context Length Optimization
 
 **Symptoms:**
-- max_tokens varies: 512 ‚Üí 768 ‚Üí 1024 ‚Üí 2048
+- max_tokens varies: 512 ‚Ü?768 ‚Ü?1024 ‚Ü?2048
 - High œÅ_PC with max_tokens as constraint
 - Longer contexts = higher scores
 
@@ -200,7 +200,7 @@ LLM evaluation has higher natural variability. Use adaptive thresholds:
 results = detector.detect_bias(
     performance_matrix=performance_matrix,
     constraint_matrix=constraint_matrix,
-    enable_adaptive_thresholds=True,  # ‚ú® Compute from data
+    enable_adaptive_thresholds=True,  # ‚ú?Compute from data
     enable_bootstrap=True,
     n_bootstrap=1000
 )
@@ -218,7 +218,7 @@ print(f"Adaptive œÅ_PC threshold: {results['metadata']['thresholds']['rho_pc']:.
 
 ## üöÄ Best Practices for Bias-Free LLM Evaluation
 
-### ‚úÖ DO:
+### ‚ú?DO:
 
 1. **Pre-register evaluation protocol**
    - Specify all prompt variants before experiments
@@ -255,34 +255,34 @@ print(f"Adaptive œÅ_PC threshold: {results['metadata']['thresholds']['rho_pc']:.
    ]
    ```
 
-### ‚ùå DON'T:
+### ‚ù?DON'T:
 
 1. **Don't tune sampling parameters based on observed scores**
    ```python
-   # ‚ùå WRONG:
+   # ‚ù?WRONG:
    if score < 0.75:
        temperature = 0.9  # Increase to improve
    
-   # ‚úÖ CORRECT:
+   # ‚ú?CORRECT:
    temperature = 0.7  # Fixed before experiments
    ```
 
 2. **Don't iterate prompt engineering on test set**
    ```python
-   # ‚ùå WRONG:
+   # ‚ù?WRONG:
    for prompt_variant in ['vanilla', 'few_shot', 'cot']:
        score = evaluate(test_set, prompt_variant)
        if score > best_score:
            best_prompt = prompt_variant
    
-   # ‚úÖ CORRECT:
+   # ‚ú?CORRECT:
    # Tune prompts on dev set, evaluate once on test set
    ```
 
 3. **Don't adjust constraints mid-evaluation**
    ```python
-   # ‚ùå WRONG: max_tokens changed from 512 ‚Üí 2048 during evaluation
-   # ‚úÖ CORRECT: Fix max_tokens=1024 for all runs
+   # ‚ù?WRONG: max_tokens changed from 512 ‚Ü?2048 during evaluation
+   # ‚ú?CORRECT: Fix max_tokens=1024 for all runs
    ```
 
 ---
@@ -332,7 +332,7 @@ bias_check = detector.detect_bias(..., enable_bootstrap=True)
 
 # Step 4: Report
 if not bias_check['overall_bias']:
-    print("‚úÖ Evaluation is bias-free - safe to publish")
+    print("‚ú?Evaluation is bias-free - safe to publish")
 else:
     print("‚ö†Ô∏è  Circular bias detected - revise protocol")
 ```
@@ -348,7 +348,7 @@ else:
 
 ---
 
-## ‚ùì FAQ
+## ‚ù?FAQ
 
 **Q: Should I include prompt_variant as a constraint?**  
 A: Yes! If prompts changed over time, include as categorical constraint (encode as numeric).
@@ -384,4 +384,4 @@ Before publishing LLM evaluation results, verify:
 
 ---
 
-**‚úÖ Following these guidelines will ensure your LLM evaluation is scientifically rigorous and free from circular bias!**
+**‚ú?Following these guidelines will ensure your LLM evaluation is scientifically rigorous and free from circular bias!**
