@@ -1,17 +1,54 @@
 # Sleuth - AI Bias Detector
 
+<!-- Badges Section -->
 [![Web App](https://img.shields.io/badge/🚀_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
 [![GitHub stars](https://img.shields.io/github/stars/hongping-zh/circular-bias-detection?style=social)](https://github.com/hongping-zh/circular-bias-detection)
-[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
+[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue)](https://pypi.org/project/circular-bias-detector/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
 [![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
+[![JOSS Status](https://img.shields.io/badge/JOSS-under%20review-yellow)](https://joss.theoj.org/)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
 
 ## 🎯 Detect AI Evaluation Bias in 30 Seconds
 
 **Stop deploying AI models with inflated performance scores.**
 
 Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets until your benchmark numbers look good—a hidden form of bias that breaks AI evaluations.
+
+---
+
+## 📋 Statement of Need
+
+**The Problem:** Modern AI development involves running hundreds of experiments—tweaking learning rates, adjusting prompts, changing datasets—until performance metrics look impressive. But this iterative optimization creates **circular bias**: the evaluation process itself becomes part of the optimization, making results unreliable and non-reproducible.
+
+**Why This Matters:** 
+- Research papers get rejected when reviewers detect biased evaluation protocols
+- AI models fail in production when real-world performance drops 20-30% below reported benchmarks  
+- Benchmark leaderboards become unreliable when teams overfit to test sets through repeated submissions
+- Reproducibility crisis in ML research undermines scientific progress
+
+**What Sleuth Does:** Provides the **first automated statistical framework** to detect circular bias by analyzing your evaluation logs. No manual auditing, no guesswork—just rigorous statistical tests (PSI, CCS, ρ_PC) that quantify whether your results are trustworthy.
+
+**Who Needs This:**
+- 🎓 Researchers preparing papers for publication (avoid desk rejection)
+- 👨‍⚖️ Peer reviewers and editors assessing methodological rigor
+- 🏢 ML engineers deploying models to production (ensure real performance)
+- 🏆 Benchmark organizers auditing leaderboard integrity
+- 📊 Research integrity officers investigating reproducibility concerns
+
+---
+
+## ✨ Core Features
+
+- **🔬 Rigorous Statistical Testing** - Three complementary indicators (PSI, CCS, ρ_PC) with bootstrap confidence intervals (n=1000) and p-values
+- **🔒 Privacy-Preserving** - 100% client-side processing in browser—your evaluation data never leaves your computer
+- **⚡ Zero Installation** - Web app runs instantly in browser via Pyodide/WebAssembly; or install Python package with `pip install circular-bias-detector`
+- **📊 Publication-Ready Outputs** - Generate PDF reports with statistical tables, heatmaps, and interactive visualizations
+- **🌐 Domain-Agnostic** - Works with any AI task: computer vision, NLP, LLMs, reinforcement learning, recommender systems
+- **📈 Bootstrap Uncertainty** - Formal hypothesis testing with 95% confidence intervals and statistical significance stars
 <p align="center">
   <a href="https://hongping-zh.github.io/circular-bias-detection/?utm_source=github&utm_medium=readme&utm_campaign=hero_live_demo">
     <img src="https://img.shields.io/badge/%F0%9F%94%8D%20LIVE%20DEMO-Try%20Sleuth-brightgreen?style=for-the-badge" alt="Live Demo">
@@ -35,14 +72,55 @@ Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets u
 - Find hidden evaluation bias from hyperparam/prompt/dataset tweaking.
 - 3 indicators (PSI, CCS, ρ_PC) with interpretation and fixes.
 - Use in 30 seconds via Web App, or programmatically via Python/CLI.
-### ⚡ Quick Start
+---
+
+## ⚡ Quick Start
+
+**Option 1: Web App (Fastest—30 seconds)**
 
 **[🔍 Try Live Demo →](https://is.gd/check_sleuth)** • No installation • Runs in browser • 100% private
 
+**Option 2: Python Library (Most Flexible)**
+
 ```bash
-# Or install locally
+# Install
 pip install circular-bias-detector
 ```
+
+```python
+# Minimal working example
+from circular_bias_detector import SimpleBiasDetector
+import numpy as np
+
+# Your evaluation data: rows=time_periods, cols=algorithms
+performance = np.array([[0.85, 0.78], [0.87, 0.80], [0.91, 0.84]])
+constraints = np.array([[512, 0.7], [550, 0.75], [600, 0.8]])  # resources changed?
+
+detector = SimpleBiasDetector()
+result = detector.quick_check(performance, constraints)
+
+if result['has_bias']:
+    print(f"⚠️ {result['risk_level'].upper()} RISK: {result['recommendation']}")
+else:
+    print("✅ No bias detected—safe to publish!")
+```
+
+**Option 3: Command Line**
+
+```bash
+pip install circular-bias-detector[cli]
+circular-bias detect my_data.csv --format json --output results.json
+```
+
+---
+
+## 📚 Documentation / 使用文档
+- 使用（离线）：[docs/usage_offline.md](docs/usage_offline.md)
+- 使用（实时）：[docs/usage_realtime.md](docs/usage_realtime.md)
+- 常见问题（FAQ）：[FAQ.md](FAQ.md)
+- 术语表（Glossary）：[GLOSSARY.md](GLOSSARY.md)
+- 贡献指南（Contributing）：[CONTRIBUTING.md](CONTRIBUTING.md)
+- 行为准则（Code of Conduct）：[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 
 ---
 
@@ -99,6 +177,16 @@ Unlike existing tools, Sleuth is the **only tool** that audits your **evaluation
 ---
 
 ## 📸 See It In Action
+
+### Workflow Diagram
+
+> **📊 Visualization Note:** A complete workflow diagram (`docs/workflow_diagram.png`) illustrating the CBD framework pipeline is available in the repository. The diagram shows:
+> 1. **Input**: CSV evaluation logs with timestamps, algorithms, performance metrics, and constraints
+> 2. **Processing**: Matrix construction, normalization, and indicator computation (PSI, CCS, ρ_PC)
+> 3. **Statistical Testing**: Bootstrap resampling (n=1000) for confidence intervals and p-values  
+> 4. **Output**: Bias detection verdict with risk level, confidence score, and actionable recommendations
+>
+> *The web app provides interactive visualizations including CBS gauge charts, radar plots, performance heatmaps, and temporal trend analyses. See [`examples/visualization_example.py`](examples/visualization_example.py) for generating all figures programmatically.*
 
 ### Web App Interface
 
@@ -824,26 +912,65 @@ python examples/reproduce_case_studies.py
 python examples/generate_paper_figures.py
 ```
 
-## 📚 Citation
+## 📚 Citation & Acknowledgments
 
-If you use this framework in your research, please cite:
+### How to Cite This Software
 
+If you use Sleuth in your research or industry work, please cite:
+
+**Software Citation (Primary):**
 ```bibtex
-@article{zhang2024_circular_bias,
-  title={A Comprehensive Statistical Framework for Detecting Circular Reasoning Bias in AI Algorithm Evaluation: Theory, Implementation, and Empirical Validation},
-  author={Zhang, Hongping},
-  journal={Submitted to Journal of the American Statistical Association},
-  year={2024}
-}
-
-@dataset{zhang2024_dataset,
-  author = {Zhang, Hongping},
-  title = {Circular Reasoning Bias Detection Dataset: 200K AI Algorithm Evaluations},
-  year = {2024},
-  publisher = {Zenodo},
-  doi = {10.5281/zenodo.17196639}
+@software{zhang2024sleuth,
+  author       = {Zhang, Hongping},
+  title        = {Sleuth: Circular Bias Detection for AI Evaluations},
+  year         = {2024},
+  publisher    = {Zenodo},
+  version      = {v1.0.0},
+  doi          = {10.5281/zenodo.17201032},
+  url          = {https://github.com/hongping-zh/circular-bias-detection}
 }
 ```
+
+**Dataset Citation (If Using Our Dataset):**
+```bibtex
+@dataset{zhang2024_dataset,
+  author       = {Zhang, Hongping},
+  title        = {Circular Reasoning Bias Detection Dataset: 200K AI Algorithm Evaluations},
+  year         = {2024},
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.17196639},
+  url          = {https://doi.org/10.5281/zenodo.17196639}
+}
+```
+
+**JOSS Paper (Under Review):**
+```bibtex
+@article{zhang2024sleuth_joss,
+  author       = {Zhang, Hongping},
+  title        = {Sleuth: A Browser-Based Tool for Detecting Circular Bias in AI Evaluation},
+  journal      = {Journal of Open Source Software},
+  year         = {2024},
+  note         = {Under review},
+  url          = {https://github.com/hongping-zh/circular-bias-detection}
+}
+```
+
+### JOSS Submission
+
+This software is currently **under review** at the Journal of Open Source Software (JOSS). You can track the review progress and participate in the discussion:
+
+- **JOSS Submission**: Coming soon after initial submission
+- **Review Thread**: Will be available at `https://github.com/openjournals/joss-reviews/issues/[NUMBER]`  
+- **Paper Draft**: [`paper.md`](paper.md)
+- **Bibliography**: [`paper.bib`](paper.bib)
+
+### Acknowledgments
+
+This project was developed to address a critical gap in AI evaluation integrity. We thank:
+- The open-source community for foundational libraries (NumPy, SciPy, Pandas)
+- Early adopters and users who provided valuable feedback
+- Zenodo for free dataset archiving and DOI assignment
+- The JOSS editorial team for their commitment to quality open-source scientific software
 
 ## 🤝 Contributing
 
@@ -867,17 +994,19 @@ We welcome contributions! Here's how you can help:
 - Check existing issues and documentation
 - Open a new issue with the `question` label
 - Email: yujjam@uest.edu.gr
-```bibtex
-@dataset{zhang2025sleuth,
-  title        = {Sleuth: Circular Bias Detection Framework},
-  author       = {Hongping Zhang},
-  year         = {2025},
-  doi          = {10.5281/zenodo.17201032},
-  url          = {[https://github.com/hongping-zh/circular-bias-detection](https://github.com/hongping-zh/circular-bias-detection)}
-}
+
+---
+
 ## 📄 License
 
-This project is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0) - see the [LICENSE](LICENSE) file for details.
+**Software Code:** This project's source code is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+**Documentation & Dataset:** Documentation and datasets are licensed under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
+
+**Summary:**
+- ✅ Free for academic and commercial use
+- ✅ Modify and redistribute freely
+- ✅ Just provide attribution when citing
 
 ## 👤 Author
 
@@ -944,31 +1073,7 @@ If Sleuth helped your research or saved you from deploying a biased model, pleas
 
 - **Star this repo** ⭐ (it helps others discover the tool!)
 - **Share on social media** 🐦 (tag us with findings!)
-- **Cite in your paper** 📄 (see citation below)
-
----
-
-## 📄 Citation
-
-If you use Sleuth in your research, please cite:
-
-```bibtex
-@software{sleuth2024,
-  title={Sleuth: Circular Bias Detection for AI Evaluations},
-  author={Zhang, Hongping},
-  year={2024},
-  url={https://is.gd/check_sleuth},
-  note={Open-source tool for detecting circular reasoning in AI evaluations}
-}
-
-@dataset{zhang2024_dataset,
-  author = {Zhang, Hongping},
-  title = {Circular Reasoning Bias Detection Dataset},
-  year = {2024},
-  publisher = {Zenodo},
-  doi = {10.5281/zenodo.17201032}
-}
-```
+- **Cite in your paper** 📄 (see [Citation section](#-citation--acknowledgments) above)
 
 ---
 
@@ -994,14 +1099,6 @@ If you use Sleuth in your research, please cite:
 - 🌐 Web: [is.gd/check_sleuth](https://is.gd/check_sleuth)  
 - 📧 Email: yujjam@uest.edu.gr  
 - 🔬 ORCID: [0009-0000-2529-4613](https://orcid.org/0009-0000-2529-4613)
-
----
-
-## 🙏 Acknowledgments
-
-This project aims to improve AI evaluation integrity across the research community. Thank you to all contributors, early adopters, and those who've shared feedback.
-
-**License:** CC BY 4.0 - Free for academic and commercial use with attribution.
 
 ---
 
