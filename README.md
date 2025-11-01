@@ -1,4 +1,4 @@
-# Sleuth - AI Bias Detector
+﻿# Sleuth - AI Bias Detector
 
 <!-- Badges Section -->
 [![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
@@ -35,18 +35,18 @@ Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets u
 
 **Who Needs This:**
 - 🎓 Researchers preparing papers for publication (avoid desk rejection)
-- 👨‍⚖�?Peer reviewers and editors assessing methodological rigor
+- 👨‍⚖�?Peer reviewers and editors assessing methodological rigor
 - 🏢 ML engineers deploying models to production (ensure real performance)
 - 🏆 Benchmark organizers auditing leaderboard integrity
 - 📊 Research integrity officers investigating reproducibility concerns
 
 ---
 
-## �?Core Features
+## �?Core Features
 
 - **🔬 Rigorous Statistical Testing** - Three complementary indicators (PSI, CCS, ρ_PC) with bootstrap confidence intervals (n=1000) and p-values
 - **🔒 Privacy-Preserving** - 100% client-side processing in browser—your evaluation data never leaves your computer
-- **�?Zero Installation** - Web app runs instantly in browser via Pyodide/WebAssembly; or install Python package with `pip install circular-bias-detector`
+- **�?Zero Installation** - Web app runs instantly in browser via Pyodide/WebAssembly; or install Python package with `pip install circular-bias-detector`
 - **📊 Publication-Ready Outputs** - Generate PDF reports with statistical tables, heatmaps, and interactive visualizations
 - **🌐 Domain-Agnostic** - Works with any AI task: computer vision, NLP, LLMs, reinforcement learning, recommender systems
 - **📈 Bootstrap Uncertainty** - Formal hypothesis testing with 95% confidence intervals and statistical significance stars
@@ -64,7 +64,7 @@ Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets u
 </p>
 
 <p align="center">
-  <sub>For researchers, reviewers, and ML engineers �?Works with CSVs �?Privacy-preserving</sub>
+  <sub>For researchers, reviewers, and ML engineers �?Works with CSVs �?Privacy-preserving</sub>
 </p>
 
 ---
@@ -75,11 +75,11 @@ Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets u
 - Use in 30 seconds via Web App, or programmatically via Python/CLI.
 ---
 
-## �?Quick Start
+## �?Quick Start
 
-**Option 1: Web App (Fastest�?0 seconds)**
+**Option 1: Web App (Fastest�?0 seconds)**
 
-**[🔍 Try Live Demo →](https://is.gd/check_sleuth)** �?No installation �?Runs in browser �?100% private
+**[🔍 Try Live Demo →](https://is.gd/check_sleuth)** �?No installation �?Runs in browser �?100% private
 
 **Option 2: Python Library (Most Flexible)**
 
@@ -103,7 +103,7 @@ result = detector.quick_check(performance, constraints)
 if result['has_bias']:
     print(f"⚠️ {result['risk_level'].upper()} RISK: {result['recommendation']}")
 else:
-    print("�?No bias detected—safe to publish!")
+    print("�?No bias detected—safe to publish!")
 ```
 
 **Option 3: Command Line**
@@ -129,21 +129,21 @@ circular-bias detect my_data.csv --format json --output results.json
 
 You've been here before:
 
-1. Run AI evaluation �?scores aren't great
-2. Adjust temperature �?try again
-3. Tweak prompt �?run again  
-4. Change dataset �?repeat...
-5. After 50 iterations �?"95% accuracy!" 🎉
+1. Run AI evaluation �?scores aren't great
+2. Adjust temperature �?try again
+3. Tweak prompt �?run again  
+4. Change dataset �?repeat...
+5. After 50 iterations �?"95% accuracy!" 🎉
 
 **But is it real?**
 
 This is **circular reasoning bias** - and it's everywhere in ML research and production.
 
-- �?**Papers get rejected** - reviewers spot it instantly
-- �?**Models fail in production** - real-world performance drops 20-30%
-- �?**Wasted resources** - time, compute, and credibility
+- �?**Papers get rejected** - reviewers spot it instantly
+- �?**Models fail in production** - real-world performance drops 20-30%
+- �?**Wasted resources** - time, compute, and credibility
 
-## �?The Solution
+## �?The Solution
 
 **Sleuth detects 3 types of evaluation manipulation:**
 
@@ -163,17 +163,17 @@ Unlike existing tools, Sleuth is the **only tool** that audits your **evaluation
 
 | Framework | Focus | Circular Bias Detection | Target Users |
 |-----------|-------|-------------------------|--------------|
-| [AIF360](https://github.com/Trusted-AI/AIF360) | Model fairness (demographic parity, equalized odds) | �?| ML practitioners |
-| [Fairlearn](https://github.com/fairlearn/fairlearn) | Algorithmic fairness constraints | �?| Data scientists |
-| [Themis-ML](https://github.com/cosmicBboy/themis-ml) | Discrimination testing | �?| Researchers |
-| **This Framework** | **Evaluation protocol integrity** | �?| **Researchers, Reviewers, Auditors** |
+| [AIF360](https://github.com/Trusted-AI/AIF360) | Model fairness (demographic parity, equalized odds) | �?| ML practitioners |
+| [Fairlearn](https://github.com/fairlearn/fairlearn) | Algorithmic fairness constraints | �?| Data scientists |
+| [Themis-ML](https://github.com/cosmicBboy/themis-ml) | Discrimination testing | �?| Researchers |
+| **This Framework** | **Evaluation protocol integrity** | �?| **Researchers, Reviewers, Auditors** |
 
 **Use Sleuth for:**
 
-- �?**Pre-publication checks** - Avoid reviewer comments about biased evaluations
-- �?**Pre-production audits** - Ensure model performance is real before deployment
-- �?**Compliance reporting** - Generate PDF reports for stakeholders
-- �?**Research integrity** - Prove your results aren't p-hacked
+- �?**Pre-publication checks** - Avoid reviewer comments about biased evaluations
+- �?**Pre-production audits** - Ensure model performance is real before deployment
+- �?**Compliance reporting** - Generate PDF reports for stakeholders
+- �?**Research integrity** - Prove your results aren't p-hacked
 
 ---
 
@@ -192,21 +192,21 @@ flowchart LR
 
 ### Web App Interface
 
-> *[Screenshot placeholder: Upload �?Results �?Download Report flow]*
+> *[Screenshot placeholder: Upload �?Results �?Download Report flow]*
 
 ### Sample Results
 
 ```
 🔴 BIAS DETECTED - HIGH RISK
 
-PSI: 0.18 �?(threshold: 0.15)
-  �?Your hyperparameters changed during evaluation
+PSI: 0.18 �?(threshold: 0.15)
+  �?Your hyperparameters changed during evaluation
 
-CCS: 0.82 �?(threshold: 0.85)  
-  �?Evaluation constraints were inconsistent
+CCS: 0.82 �?(threshold: 0.85)  
+  �?Evaluation constraints were inconsistent
 
-ρ_PC: 0.65 �?(threshold: 0.50)
-  �?Performance correlates with constraint changes
+ρ_PC: 0.65 �?(threshold: 0.50)
+  �?Performance correlates with constraint changes
 
 RECOMMENDATION:
 1. Lock all hyperparameters (temperature, max_tokens, etc.)
@@ -249,7 +249,7 @@ if result['has_bias']:
     print(f"⚠️ {result['risk_level'].upper()} RISK")
     print(result['recommendation'])
 else:
-    print("�?Safe to deploy")
+    print("�?Safe to deploy")
 ```
 
 **Perfect for:** Jupyter notebooks, automated workflows, custom integrations
@@ -278,16 +278,16 @@ circular-bias detect data.csv --format json --output results.json
 ### Use Case 1: LLM Evaluation
 **Problem:** Adjusted temperature 30 times until GPT-4 benchmark scores improved  
 **Detection:** ρ_PC = 0.72 (high correlation between sampling params and performance)  
-**Fix:** Lock temperature=0.7, re-evaluate �?real score 3% lower but trustworthy
+**Fix:** Lock temperature=0.7, re-evaluate �?real score 3% lower but trustworthy
 
 ### Use Case 2: Computer Vision
-**Problem:** Changed dataset size from 10K �?50K �?100K samples  
+**Problem:** Changed dataset size from 10K �?50K �?100K samples  
 **Detection:** CCS = 0.68 (inconsistent constraints across iterations)  
-**Fix:** Fix dataset to 50K, re-run all models �?fair comparison achieved
+**Fix:** Fix dataset to 50K, re-run all models �?fair comparison achieved
 
 ### Use Case 3: Pre-Publication Check
 **Problem:** PhD student worried about reviewer rejection  
-**Detection:** All 3 indicators green �? 
+**Detection:** All 3 indicators green �? 
 **Result:** Paper accepted to NeurIPS with no evaluation concerns
 
 ---
@@ -378,7 +378,7 @@ if result['has_bias']:
     print(f"🔴 {result['risk_level'].upper()}")
     print(result['recommendation'])
 else:
-    print("�?No bias detected")
+    print("�?No bias detected")
 
 # 5. Get detailed report
 print(detector.generate_simple_report(result))
@@ -455,9 +455,9 @@ results = detector.detect_bias(
     performance_matrix=performance_matrix,
     constraint_matrix=constraint_matrix,
     algorithm_names=algorithms,
-    enable_bootstrap=True,        # �?Add CI and p-values
+    enable_bootstrap=True,        # �?Add CI and p-values
     n_bootstrap=1000,
-    enable_adaptive_thresholds=True  # �?Data-driven thresholds
+    enable_adaptive_thresholds=True  # �?Data-driven thresholds
 )
 
 # Results now include bootstrap statistics
@@ -498,8 +498,8 @@ print_validation_report(report)
 # Output:
 # Data Quality Score: 85.0/100 ⚠️  GOOD
 # Issues fixed:
-#  �?missing_values: forward_fill_then_mean
-#  �?outliers: IQR_clipping
+#  �?missing_values: forward_fill_then_mean
+#  �?outliers: IQR_clipping
 ```
 
 ### Enhanced Visualizations
@@ -571,25 +571,25 @@ if abs(results['rho_pc_score']) > 0.5:
 ```
 circular-bias-detection/
 ├── circular_bias_detector/     # Core implementation
-�?  ├── __init__.py
-�?  ├── core.py                 # PSI, CCS, ρ_PC algorithms
-�?  ├── detection.py            # Main detection framework
-�?  └── utils.py                # Utility functions
+�?  ├── __init__.py
+�?  ├── core.py                 # PSI, CCS, ρ_PC algorithms
+�?  ├── detection.py            # Main detection framework
+�?  └── utils.py                # Utility functions
 ├── circular_bias_cli/          # CLI tool
-�?  ├── main.py                 # CLI entry point
-�?  ├── adapters/               # Bridge to core library
-�?  └── utils/                  # Zenodo loader, etc.
+�?  ├── main.py                 # CLI entry point
+�?  ├── adapters/               # Bridge to core library
+�?  └── utils/                  # Zenodo loader, etc.
 ├── web-app/                    # Web application
-�?  ├── src/                    # React components
-�?  └── public/                 # Static assets
+�?  ├── src/                    # React components
+�?  └── public/                 # Static assets
 ├── examples/                   # Usage examples
-�?  ├── reproduce_simulations.py
-�?  ├── reproduce_case_studies.py
-�?  └── basic_usage_example.py
+�?  ├── reproduce_simulations.py
+�?  ├── reproduce_case_studies.py
+�?  └── basic_usage_example.py
 ├── tests/                      # Test suite
-�?  └── test_basic.py
+�?  └── test_basic.py
 ├── data/                       # Sample datasets
-�?  └── sample_data.csv
+�?  └── sample_data.csv
 ├── requirements.txt            # Dependencies
 ├── setup.py                    # Package installation
 ├── LICENSE                     # CC-BY-4.0 License
@@ -698,7 +698,7 @@ PSI Score:  0.0158
 CCS Score:  0.9422
 ρ_PC Score: +0.9921
 
-Overall Bias Detected: NO �?
+Overall Bias Detected: NO �?
 Confidence: 33.3%
 
 Interpretation:
@@ -793,8 +793,8 @@ Compute Performance-Structure Independence score.
 
 **Interpretation:**
 - PSI < 0.1: Stable parameters (good)
-- 0.1 �?PSI < 0.15: Moderate stability
-- PSI �?0.15: Unstable parameters (potential bias)
+- 0.1 �?PSI < 0.15: Moderate stability
+- PSI �?0.15: Unstable parameters (potential bias)
 
 ```python
 from circular_bias_detector.core import compute_psi
@@ -816,7 +816,7 @@ Compute Constraint-Consistency Score.
 
 **Interpretation:**
 - CCS > 0.85: Consistent constraints (good)
-- 0.7 �?CCS �?0.85: Moderate consistency
+- 0.7 �?CCS �?0.85: Moderate consistency
 - CCS < 0.7: Inconsistent constraints (potential bias)
 
 ```python
@@ -839,7 +839,7 @@ Compute Performance-Constraint correlation.
 
 **Interpretation:**
 - |ρ_PC| > 0.5: Strong dependency (potential bias)
-- 0.3 �?|ρ_PC| �?0.5: Moderate dependency
+- 0.3 �?|ρ_PC| �?0.5: Moderate dependency
 - |ρ_PC| < 0.3: Weak dependency (good)
 
 ### Utility Functions
@@ -896,7 +896,7 @@ python tests/test_basic.py
 
 **Expected output:** All tests should pass, confirming that core functionality works correctly.
 
-## 🏃‍♂�?Reproduction Scripts
+## 🏃‍♂�?Reproduction Scripts
 
 Reproduce all paper results:
 
@@ -1005,9 +1005,9 @@ We welcome contributions! Here's how you can help:
 **Documentation & Dataset:** Documentation and datasets are licensed under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
 
 **Summary:**
-- �?Free for academic and commercial use
-- �?Modify and redistribute freely
-- �?Just provide attribution when citing
+- �?Free for academic and commercial use
+- �?Modify and redistribute freely
+- �?Just provide attribution when citing
 
 ## 👤 Author
 
@@ -1034,12 +1034,12 @@ We welcome contributions! Here's how you can help:
 
 ### Key Features Added (v1.1+)
 
-- �?**Bootstrap Statistical Analysis**: Confidence intervals and p-values (n=1000)
-- �?**Adaptive Thresholds**: Data-driven cutoffs via permutation tests
-- �?**Data Validation**: Auto-detect and fix missing values, outliers, duplicates
-- �?**Enhanced Visualizations**: Heatmaps, interactive Plotly dashboards, correlation matrices
-- �?**LLM Evaluation Support**: Specialized guidance for prompt engineering bias
-- �?**Quality Scoring**: Automatic data quality assessment (0-100 scale)
+- �?**Bootstrap Statistical Analysis**: Confidence intervals and p-values (n=1000)
+- �?**Adaptive Thresholds**: Data-driven cutoffs via permutation tests
+- �?**Data Validation**: Auto-detect and fix missing values, outliers, duplicates
+- �?**Enhanced Visualizations**: Heatmaps, interactive Plotly dashboards, correlation matrices
+- �?**LLM Evaluation Support**: Specialized guidance for prompt engineering bias
+- �?**Quality Scoring**: Automatic data quality assessment (0-100 scale)
 
 ---
 
@@ -1062,17 +1062,17 @@ We welcome PRs! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 **Popular contribution areas:**
 - 🐛 Bug fixes
 - 📝 Documentation improvements  
-- �?New features
+- �?New features
 - 🧪 Test coverage
 - 🌐 Translations
 
 ---
 
-## �?Show Your Support
+## �?Show Your Support
 
 If Sleuth helped your research or saved you from deploying a biased model, please:
 
-- **Star this repo** �?(it helps others discover the tool!)
+- **Star this repo** �?(it helps others discover the tool!)
 - **Share on social media** 🐦 (tag us with findings!)
 - **Cite in your paper** 📄 (see [Citation section](#-citation--acknowledgments) above)
 
@@ -1109,7 +1109,7 @@ If Sleuth helped your research or saved you from deploying a biased model, pleas
 
 ### 🚀 Ready to Detect Bias?
 
-**[�?Try Sleuth Now](https://is.gd/check_sleuth)** �?**[�?Star on GitHub](https://github.com/hongping-zh/circular-bias-detection)** �?**[📖 Read the Docs](#-api-documentation)** �?**[💌 Get Support](#-community--support)**
+**[�?Try Sleuth Now](https://is.gd/check_sleuth)** �?**[�?Star on GitHub](https://github.com/hongping-zh/circular-bias-detection)** �?**[📖 Read the Docs](#-api-documentation)** �?**[💌 Get Support](#-community--support)**
 
 ---
 
