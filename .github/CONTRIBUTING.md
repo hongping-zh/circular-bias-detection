@@ -17,11 +17,10 @@
 ## Code Style & Tests
 - Follow PEP8/black (if configured).
 - Add/adjust tests for new features.
-- Ensure python -m pytest passes locally.
+- Ensure tests pass locally.
 
 ## Pull Requests
-- Small, focused PRs.
-- Fill PR template (if any), link to related Issues.
+- Small, focused PRs. Link related issues.
 - CI must pass.
 
 ## Security/Privacy
