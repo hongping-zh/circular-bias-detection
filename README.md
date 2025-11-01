@@ -1,1155 +1,1156 @@
-﻿# Sleuth - AI Bias Detector
-
-<!-- Badges Section -->
-[![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
-[![GitHub stars](https://img.shields.io/github/stars/hongping-zh/circular-bias-detection?style=social)](https://github.com/hongping-zh/circular-bias-detection)
-[![CI](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml/badge.svg)](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml)
-[![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyPI version](https://img.shields.io/badge/pypi-v1.0.0-blue)](https://pypi.org/project/circular-bias-detector/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![License: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
-[![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
-[![JOSS Status](https://img.shields.io/badge/JOSS-under%20review-yellow)](https://github.com/openjournals/joss-reviews/issues/9272)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
-
-## Detect AI Evaluation Bias in 30 Seconds
-
-## On this page
-
-- [Quick Links](#quick-links)
-- [Quick Start](#-quick-start)
-- [Examples](#examples)
-- [API/Docs](#documentation)
-- [Testing](#-testing)
-
-
-## Quick Links
-
-- Live Demo: https://is.gd/check_sleuth
-- 5分钟上手: 参见 README 的“5分钟上手”小节
-- 示例数据: data/tiny_sample.csv
-- Examples: examples/
-- API/Docs: docs/
-- JOSS 预审: https://github.com/openjournals/joss-reviews/issues/9272
-- Software DOI: https://doi.org/10.5281/zenodo.17201032
-- Dataset DOI: https://doi.org/10.5281/zenodo.17196639
-
-## Screenshot
-
-![Sleuth Web App Screenshot](assets/screenshot.png)
-
-
-**Stop deploying AI models with inflated performance scores.**
-
-Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets until your benchmark numbers look good—a hidden form of bias that breaks AI evaluations.
-
----
-
-## 📋 Statement of Need
-
-**The Problem:** Modern AI development involves running hundreds of experiments—tweaking learning rates, adjusting prompts, changing datasets—until performance metrics look impressive. But this iterative optimization creates **circular bias**: the evaluation process itself becomes part of the optimization, making results unreliable and non-reproducible.
-
-**Why This Matters:** 
-- Research papers get rejected when reviewers detect biased evaluation protocols
-- AI models fail in production when real-world performance drops 20-30% below reported benchmarks  
-- Benchmark leaderboards become unreliable when teams overfit to test sets through repeated submissions
-- Reproducibility crisis in ML research undermines scientific progress
-
-**What Sleuth Does:** Provides the **first automated statistical framework** to detect circular bias by analyzing your evaluation logs. No manual auditing, no guesswork—just rigorous statistical tests (PSI, CCS, ρ_PC) that quantify whether your results are trustworthy.
-
-**Who Needs This:**
-- 🎓 Researchers preparing papers for publication (avoid desk rejection)
-- 👨‍⚖- Peer reviewers and editors assessing methodological rigor
-- 🏢 ML engineers deploying models to production (ensure real performance)
-- 🏆 Benchmark organizers auditing leaderboard integrity
-- 📊 Research integrity officers investigating reproducibility concerns
-
----
-
-## - Core Features
-
-- **🔬 Rigorous Statistical Testing** - Three complementary indicators (PSI, CCS, ρ_PC) with bootstrap confidence intervals (n=1000) and p-values
-- **🔒 Privacy-Preserving** - 100% client-side processing in browser—your evaluation data never leaves your computer
-- **- Zero Installation** - Web app runs instantly in browser via Pyodide/WebAssembly; or install Python package with `pip install circular-bias-detector`
-- **📊 Publication-Ready Outputs** - Generate PDF reports with statistical tables, heatmaps, and interactive visualizations
-- **🌐 Domain-Agnostic** - Works with any AI task: computer vision, NLP, LLMs, reinforcement learning, recommender systems
-- **📈 Bootstrap Uncertainty** - Formal hypothesis testing with 95% confidence intervals and statistical significance stars
-<p align="center">
-  <a href="https://hongping-zh.github.io/circular-bias-detection/?utm_source=github&utm_medium=readme&utm_campaign=hero_live_demo">
-    <img src="https://img.shields.io/badge/%F0%9F%94%8D%20LIVE%20DEMO-Try%20Sleuth-brightgreen?style=for-the-badge" alt="Live Demo">
-  </a>
-  <a href="https://colab.research.google.com/github/hongping-zh/circular-bias-detection/blob/main/examples/quickstart_colab.ipynb?utm_source=github&utm_medium=readme&utm_campaign=hero_colab">
-    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" style="height:28px;">
-  </a>
-</p>
-
-<p align="center">
-  <b>Detect circular bias in AI evaluations instantly.</b> Free web app + Python SDK. Stop shipping inflated benchmark scores.
-</p>
-
-<p align="center">
-  <sub>For researchers, reviewers, and ML engineers - Works with CSVs - Privacy-preserving</sub>
-</p>
-
----
-
-## Why Sleuth?
-- Find hidden evaluation bias from hyperparam/prompt/dataset tweaking.
-- 3 indicators (PSI, CCS, ρ_PC) with interpretation and fixes.
-- Use in 30 seconds via Web App, or programmatically via Python/CLI.
----
-
-## - Quick Start
-
-**Option 1: Web App (Fastest- 0 seconds)**
-
-**[🔍 Try Live Demo →](https://is.gd/check_sleuth)** - No installation - Runs in browser - 100% private
-
-**Option 2: Python Library (Most Flexible)**
-
-```bash
-# Install
-pip install circular-bias-detector
-```
-
-```python
-# Minimal working example
-from circular_bias_detector import SimpleBiasDetector
-import numpy as np
-
-# Your evaluation data: rows=time_periods, cols=algorithms
-performance = np.array([[0.85, 0.78], [0.87, 0.80], [0.91, 0.84]])
-constraints = np.array([[512, 0.7], [550, 0.75], [600, 0.8]])  # resources changed?
-
-detector = SimpleBiasDetector()
-result = detector.quick_check(performance, constraints)
-
-if result['has_bias']:
-    print(f"⚠️ {result['risk_level'].upper()} RISK: {result['recommendation']}")
-else:
-    print("- No bias detected—safe to publish!")
-```
-
-**Option 3: Command Line**
-
-```bash
-pip install circular-bias-detector[cli]
-circular-bias detect my_data.csv --format json --output results.json
-```
-
----
-
-## 📚 Documentation / 使用文档
-- 使用（离线）：[docs/usage_offline.md](docs/usage_offline.md)
-- 使用（实时）：[docs/usage_realtime.md](docs/usage_realtime.md)
-- 常见问题（FAQ）：[FAQ.md](FAQ.md)
-- 术语表（Glossary）：[GLOSSARY.md](GLOSSARY.md)
-- 贡献指南（Contributing）：[CONTRIBUTING.md](CONTRIBUTING.md)
-- 行为准则（Code of Conduct）：[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-
----
-
-## 🚨 The Problem
-
-You've been here before:
-
-1. Run AI evaluation - scores aren't great
-2. Adjust temperature - try again
-3. Tweak prompt - run again  
-4. Change dataset - repeat...
-5. After 50 iterations - "95% accuracy!" 🎉
-
-**But is it real?**
-
-This is **circular reasoning bias** - and it's everywhere in ML research and production.
-
-- - **Papers get rejected** - reviewers spot it instantly
-- - **Models fail in production** - real-world performance drops 20-30%
-- - **Wasted resources** - time, compute, and credibility
-
-## - The Solution
-
-**Sleuth detects 3 types of evaluation manipulation:**
-
-| Indicator | What It Catches | Risk Level |
-|-----------|----------------|------------|
-| **PSI** (Parameter Stability) | Hyperparameters changed during eval | 🔴 High |
-| **CCS** (Constraint Consistency) | Evaluation conditions varied | 🟡 Medium |
-| **ρ_PC** (Performance-Constraint Correlation) | Results depend on resource changes | 🔴 High |
-
-**Result:** Yes/No answer + specific recommendations on how to fix it.
-
----
-
-## 🆚 Why Sleuth?
-
-Unlike existing tools, Sleuth is the **only tool** that audits your **evaluation process** (not just model outputs):
-
-| Framework | Focus | Circular Bias Detection | Target Users |
-|-----------|-------|-------------------------|--------------|
-| [AIF360](https://github.com/Trusted-AI/AIF360) | Model fairness (demographic parity, equalized odds) | - | ML practitioners |
-| [Fairlearn](https://github.com/fairlearn/fairlearn) | Algorithmic fairness constraints | - | Data scientists |
-| [Themis-ML](https://github.com/cosmicBboy/themis-ml) | Discrimination testing | - | Researchers |
-| **This Framework** | **Evaluation protocol integrity** | - | **Researchers, Reviewers, Auditors** |
-
-**Use Sleuth for:**
-
-- - **Pre-publication checks** - Avoid reviewer comments about biased evaluations
-- - **Pre-production audits** - Ensure model performance is real before deployment
-- - **Compliance reporting** - Generate PDF reports for stakeholders
-- - **Research integrity** - Prove your results aren't p-hacked
-
----
-
-## 📸 See It In Action
-
-### Workflow Diagram
-
-```mermaid
-flowchart LR
-    A[Inputs: CSV/JSONL logs (X, S, optional Y)] --> B[Pre-checks & Validation]
-    B --> C[Indicators: PSI, CCS, ρ_PC]
-    C --> D[Bootstrap CI & p-values]
-    D --> E[Decision & Risk Level]
-    E --> F[Report: Tables / Plots / Export]
-```
-
-### Web App Interface
-
-> *[Screenshot placeholder: Upload - Results - Download Report flow]*
-
-### Sample Results
-
-```
-🔴 BIAS DETECTED - HIGH RISK
-
-PSI: 0.18 - (threshold: 0.15)
-  - Your hyperparameters changed during evaluation
-
-CCS: 0.82 - (threshold: 0.85)  
-  - Evaluation constraints were inconsistent
-
-ρ_PC: 0.65 - (threshold: 0.50)
-  - Performance correlates with constraint changes
-
-RECOMMENDATION:
-1. Lock all hyperparameters (temperature, max_tokens, etc.)
-2. Use identical evaluation environment for all runs
-3. Re-evaluate with fixed settings
-```
-
----
-
-## 🚀 Three Ways to Use Sleuth
-
-### 1️⃣ **Web App** (Easiest - No Code)
-
-**[Launch Web App →](https://is.gd/check_sleuth)**
-
-1. Upload CSV or use sample data
-2. Click "Detect Bias"
-3. Get instant results
-4. Download report
-
-**Perfect for:** Quick checks, demos, non-programmers
-
----
-
-### 2️⃣ **Python Library** (Most Flexible)
-
-```python
-from circular_bias_detector import SimpleBiasDetector
-import numpy as np
-
-# Your evaluation data
-performance = np.array([[0.85, 0.78], [0.87, 0.80], [0.91, 0.84]])
-constraints = np.array([[512, 0.7], [550, 0.75], [600, 0.8]])
-
-# Detect bias
-detector = SimpleBiasDetector()
-result = detector.quick_check(performance, constraints)
-
-if result['has_bias']:
-    print(f"⚠️ {result['risk_level'].upper()} RISK")
-    print(result['recommendation'])
-else:
-    print("- Safe to deploy")
-```
-
-**Perfect for:** Jupyter notebooks, automated workflows, custom integrations
-
----
-
-### 3️⃣ **CLI Tool** (Best for Automation)
-
-```bash
-# Install
-pip install circular-bias-detector[cli]
-
-# Detect bias
-circular-bias detect my_evaluation_data.csv
-
-# Get JSON output for CI/CD
-circular-bias detect data.csv --format json --output results.json
-```
-
-**Perfect for:** CI/CD pipelines, batch processing, command-line workflows
-
----
-
-## 🎓 Real-World Use Cases
-
-### Use Case 1: LLM Evaluation
-**Problem:** Adjusted temperature 30 times until GPT-4 benchmark scores improved  
-**Detection:** ρ_PC = 0.72 (high correlation between sampling params and performance)  
-**Fix:** Lock temperature=0.7, re-evaluate - real score 3% lower but trustworthy
-
-### Use Case 2: Computer Vision
-**Problem:** Changed dataset size from 10K - 50K - 100K samples  
-**Detection:** CCS = 0.68 (inconsistent constraints across iterations)  
-**Fix:** Fix dataset to 50K, re-run all models - fair comparison achieved
-
-### Use Case 3: Pre-Publication Check
-**Problem:** PhD student worried about reviewer rejection  
-**Detection:** All 3 indicators green - **Result:** Paper accepted to NeurIPS with no evaluation concerns
-
----
-
-## 📊 Dataset & Examples
-
-### Quick Start Data
-
-**Sample datasets included:**
-- `data/sample_data.csv` - Basic example (ImageNet evaluations)
-- `data/llm_eval_sample.csv` - LLM evaluation (GPT, Llama, Claude, Mistral)
-
-**Try them in the web app:** [Launch Sleuth →](https://is.gd/check_sleuth)
-
-### Full Research Dataset (200K+ Records)
-
-For academic research, access the complete dataset on Zenodo:
-
-- 📦 **Computer Vision**: ImageNet classification evaluations
-- 📦 **NLP**: GLUE benchmark sequences
-- 📦 **Recommender Systems**: MovieLens-100K protocols
-- 📦 **Simulations**: 13 controlled bias scenarios
-
-**[Download from Zenodo →](https://doi.org/10.5281/zenodo.17201032)**
-
-### CSV Data Format (Simple!)
-
-Your CSV should have these columns:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `time_period` | int | Sequential evaluation period (1, 2, 3, ...) |
-| `algorithm` | str | Algorithm name |
-| `performance` | float | Performance metric (0-1 scale) |
-| `constraint_compute` | float | Computational resource limit |
-| `constraint_memory` | float | Memory limit (GB) |
-| `constraint_dataset_size` | int | Training dataset size |
-| `evaluation_protocol` | str | Protocol version identifier |
-
-**Example CSV:**
-```csv
-time_period,algorithm,performance,constraint_compute,constraint_memory
-1,ModelA,0.85,512,8.0
-1,ModelB,0.78,512,8.0
-2,ModelA,0.87,550,8.5
-2,ModelB,0.80,550,8.5
-```
-
-**See full example:** `data/sample_data.csv`
-
----
-
-## 💻 Installation & Usage
-
-### Quick Install
-
-```bash
-pip install circular-bias-detector
-```
-
-### Full Install (from source)
-
-```bash
-git clone https://github.com/hongping-zh/circular-bias-detection.git
-cd circular-bias-detection
-pip install -r requirements.txt
-```
-
-### 5-Minute Tutorial
-
-```python
-import pandas as pd
-from circular_bias_detector import SimpleBiasDetector
-
-# 1. Load your evaluation data
-df = pd.read_csv('data/sample_data.csv')
-
-# 2. Prepare matrices
-performance = df.pivot('time_period', 'algorithm', 'performance').values
-constraints = df.groupby('time_period')[['constraint_compute', 'constraint_memory']].first().values
-
-# 3. Detect bias
-detector = SimpleBiasDetector()
-result = detector.quick_check(performance, constraints)
-
-# 4. Check results
-if result['has_bias']:
-    print(f"🔴 {result['risk_level'].upper()}")
-    print(result['recommendation'])
-else:
-    print("- No bias detected")
-
-# 5. Get detailed report
-print(detector.generate_simple_report(result))
-```
-
-**More examples:** See [`examples/`](examples/) directory
-
-### Advanced Usage: Bootstrap Confidence Intervals
-
-**NEW:** Compute statistical significance with bootstrap resampling (n=1000):
-
-```python
-from circular_bias_detector.core import (
-    bootstrap_psi, 
-    bootstrap_ccs, 
-    bootstrap_rho_pc,
-    compute_adaptive_thresholds
-)
-
-# Bootstrap confidence intervals and p-values
-psi_results = bootstrap_psi(performance_matrix, n_bootstrap=1000)
-ccs_results = bootstrap_ccs(constraint_matrix, n_bootstrap=1000)
-rho_results = bootstrap_rho_pc(performance_matrix, constraint_matrix, n_bootstrap=1000)
-
-# Display with confidence intervals
-print(f"PSI = {psi_results['psi']:.4f} "
-      f"[{psi_results['ci_lower']:.4f}-{psi_results['ci_upper']:.4f}], "
-      f"p={psi_results['p_value']:.3f}")
-
-print(f"CCS = {ccs_results['ccs']:.4f} "
-      f"[{ccs_results['ci_lower']:.4f}-{ccs_results['ci_upper']:.4f}], "
-      f"p={ccs_results['p_value']:.3f}")
-
-print(f"ρ_PC = {rho_results['rho_pc']:+.4f} "
-      f"[{rho_results['ci_lower']:+.4f}-{rho_results['ci_upper']:+.4f}], "
-      f"p={rho_results['p_value']:.3f}")
-
-# Compute data-adaptive thresholds (95th percentile)
-adaptive = compute_adaptive_thresholds(
-    performance_matrix, 
-    constraint_matrix,
-    quantile=0.95
-)
-
-print(f"\nAdaptive Thresholds:")
-print(f"  PSI:  {adaptive['psi_threshold']:.4f}")
-print(f"  CCS:  {adaptive['ccs_threshold']:.4f}")
-print(f"  ρ_PC: {adaptive['rho_pc_threshold']:.4f}")
-```
-
-**Example output:**
-```
-PSI = 0.0238 [0.0113-0.0676], p=0.355
-CCS = 0.8860 [0.8723-0.9530], p=0.342
-ρ_PC = +0.9983 [+0.9972-+1.0000], p=0.772
-
-Adaptive Thresholds:
-  PSI:  0.0625
-  CCS:  0.8860
-  ρ_PC: 0.9983
-```
-
-See `examples/bootstrap_example.py` for a complete demonstration with LLM evaluation data.
-
-### Enhanced API: Integrated Bootstrap and Adaptive Thresholds
-
-**NEW:** Use BiasDetector with built-in bootstrap and adaptive thresholds:
-
-```python
-detector = BiasDetector()
-
-# Enable bootstrap confidence intervals
-results = detector.detect_bias(
-    performance_matrix=performance_matrix,
-    constraint_matrix=constraint_matrix,
-    algorithm_names=algorithms,
-    enable_bootstrap=True,        # - Add CI and p-values
-    n_bootstrap=1000,
-    enable_adaptive_thresholds=True  # - Data-driven thresholds
-)
-
-# Results now include bootstrap statistics
-print(f"PSI: {results['psi_score']:.4f} "
-      f"[{results['psi_ci_lower']:.4f}-{results['psi_ci_upper']:.4f}], "
-      f"p={results['psi_pvalue']:.3f}")
-
-# Generate enhanced report
-report = detector.generate_report(results)
-print(report)  # Includes CI and significance stars
-```
-
-### Data Validation and Auto-Cleaning
-
-**NEW:** Automatically detect and fix data quality issues:
-
-```python
-from circular_bias_detector.utils import (
-    validate_and_clean_data,
-    print_validation_report
-)
-
-# Load raw data
-df = pd.read_csv('raw_data.csv')
-
-# Validate and clean
-df_clean, report = validate_and_clean_data(
-    df,
-    performance_cols=['algorithm'],
-    constraint_cols=['constraint_compute', 'constraint_memory'],
-    time_col='time_period',
-    algorithm_col='algorithm',
-    auto_fix=True  # Automatically fix issues
-)
-
-# Print report
-print_validation_report(report)
-# Output:
-# Data Quality Score: 85.0/100 ⚠️  GOOD
-# Issues fixed:
-#  - missing_values: forward_fill_then_mean
-#  - outliers: IQR_clipping
-```
-
-### Enhanced Visualizations
-
-**NEW:** Generate publication-quality figures and interactive dashboards:
-
-```python
-from circular_bias_detector.visualization import (
-    plot_performance_heatmap,
-    plot_constraint_heatmap,
-    plot_interactive_dashboard,
-    plot_correlation_matrix
-)
-
-# 1. Performance heatmap
-plot_performance_heatmap(
-    performance_matrix,
-    algorithm_names=algorithms,
-    save_path='performance_heatmap.png'
-)
-
-# 2. Interactive Plotly dashboard (with hover tooltips)
-plot_interactive_dashboard(
-    performance_matrix,
-    constraint_matrix,
-    results,
-    algorithm_names=algorithms,
-    save_html='dashboard.html'  # Open in browser
-)
-
-# 3. Correlation matrix
-plot_correlation_matrix(
-    performance_matrix,
-    constraint_matrix,
-    save_path='correlation.png'
-)
-```
-
-See `examples/visualization_example.py` for complete code.
-
-### LLM Evaluation Example
-
-Analyze bias in large language model benchmarking:
-
-```python
-# Load LLM evaluation data
-df = pd.read_csv('data/llm_eval_sample.csv')
-
-# Include LLM-specific constraints
-constraint_matrix = df.groupby('time_period')[[
-    'constraint_compute',
-    'constraint_memory', 
-    'constraint_dataset_size',
-    'max_tokens',           # LLM-specific
-    'temperature'           # LLM-specific
-]].first().values
-
-# Detect if prompt engineering inflated scores
-results = detector.detect_bias(performance_matrix, constraint_matrix)
-
-# High ρ_PC suggests sampling parameters were tuned to improve scores
-if abs(results['rho_pc_score']) > 0.5:
-    print("⚠️  High correlation detected: sampling parameters may have been "
-          "iteratively adjusted to inflate benchmark scores.")
-```
-
-## 📁 Repository Structure
-
-```
-circular-bias-detection/
-├── circular_bias_detector/     # Core implementation
-- ├── __init__.py
-- ├── core.py                 # PSI, CCS, ρ_PC algorithms
-- ├── detection.py            # Main detection framework
-- └── utils.py                # Utility functions
-├── circular_bias_cli/          # CLI tool
-- ├── main.py                 # CLI entry point
-- ├── adapters/               # Bridge to core library
-- └── utils/                  # Zenodo loader, etc.
-├── web-app/                    # Web application
-- ├── src/                    # React components
-- └── public/                 # Static assets
-├── examples/                   # Usage examples
-- ├── reproduce_simulations.py
-- ├── reproduce_case_studies.py
-- └── basic_usage_example.py
-├── tests/                      # Test suite
-- └── test_basic.py
-├── data/                       # Sample datasets
-- └── sample_data.csv
-├── requirements.txt            # Dependencies
-├── setup.py                    # Package installation
-├── LICENSE                     # CC-BY-4.0 License
-└── README.md                   # This file
-```
-
----
-
-## 💻 CLI Tool
-
-### Installation
-
-```bash
-# Install with CLI dependencies
-pip install circular-bias-detector[cli]
-
-# Or install from source
-git clone https://github.com/hongping-zh/circular-bias-detection.git
-cd circular-bias-detection
-pip install -e .[cli]
-```
-
-### Quick Start
-
-```bash
-# Analyze local CSV file
-circular-bias detect data/sample_data.csv
-
-# Use Zenodo dataset (automatic download & caching)
-circular-bias detect zenodo://17201032
-
-# Specify algorithm and thresholds
-circular-bias detect data.csv --algorithm psi --psi-threshold 0.2
-
-# Export results as JSON
-circular-bias detect data.csv --format json --output results.json
-```
-
-### Available Commands
-
-#### `detect` - Run bias detection
-
-```bash
-circular-bias detect <data-source> [options]
-
-# Data sources:
-#   - Local file: data/my_data.csv
-#   - Zenodo: zenodo://17201032
-#   - Zenodo specific file: zenodo://17201032/scenario_high_bias.csv
-
-# Options:
-#   --algorithm {psi,ccs,rho_pc,decision}  Algorithm to run (default: decision)
-#   --psi-threshold FLOAT                   PSI threshold (default: 0.15)
-#   --ccs-threshold FLOAT                   CCS threshold (default: 0.85)
-#   --rho-threshold FLOAT                   ρ_PC threshold (default: 0.5)
-#   --format {text,json,csv}                Output format (default: text)
-#   --output FILE                           Save results to file
-```
-
-**Example:**
-```bash
-circular-bias detect zenodo://17201032 \
-    --algorithm decision \
-    --psi-threshold 0.15 \
-    --format json \
-    --output results.json
-```
-
-#### `info` - Show dataset information
-
-```bash
-circular-bias info <source>
-
-# Examples:
-circular-bias info zenodo://17201032
-circular-bias info data/sample_data.csv
-```
-
-#### `cache` - Manage cached data
-
-```bash
-# List cached datasets
-circular-bias cache list
-
-# Clear all cache
-circular-bias cache clear
-
-# Clear specific dataset
-circular-bias cache clear --record-id 17201032
-```
-
-#### `list-algorithms` - Show available algorithms
-
-```bash
-circular-bias list-algorithms
-```
-
-### CLI Output Example
-
-```
-============================================================
-CIRCULAR BIAS DETECTION RESULTS
-============================================================
-
-PSI Score:  0.0158
-CCS Score:  0.9422
-ρ_PC Score: +0.9921
-
-Overall Bias Detected: NO - Confidence: 33.3%
-
-Interpretation:
-No circular bias detected (confidence: 33.3%). 
-Evaluation appears sound.
-
-Details:
-  algorithms_evaluated: ['ResNet', 'VGG', 'DenseNet', 'EfficientNet']
-  time_periods: 5
-  indicators_triggered: 1
-============================================================
-```
-
-### Data Format Requirements
-
-CSV file must contain these columns:
-
-| Column | Type | Description |
-|--------|------|-------------|
-| `time_period` | int | Evaluation period (1, 2, 3, ...) |
-| `algorithm` | str | Algorithm name |
-| `performance` | float | Performance metric [0-1] |
-| `constraint_compute` | float | Computational constraint |
-| `constraint_memory` | float | Memory constraint (GB) |
-| `constraint_dataset_size` | int | Dataset size |
-| `evaluation_protocol` | str | Protocol version |
-
-**See `data/sample_data.csv` for example.**
-
----
-
-## 📖 API Documentation
-
-### BiasDetector Class
-
-The main interface for bias detection.
-
-#### `__init__(psi_threshold=0.15, ccs_threshold=0.85, rho_pc_threshold=0.5)`
-
-Initialize the bias detector with custom thresholds.
-
-**Parameters:**
-- `psi_threshold` (float): Threshold for PSI score (default: 0.15). Higher values indicate instability.
-- `ccs_threshold` (float): Threshold for CCS score (default: 0.85). Lower values indicate inconsistency.
-- `rho_pc_threshold` (float): Threshold for ρ_PC correlation (default: 0.5). Higher absolute values indicate dependency.
-
-#### `detect_bias(performance_matrix, constraint_matrix, algorithm_names=None)`
-
-Detect circular reasoning bias in evaluation data.
-
-**Parameters:**
-- `performance_matrix` (np.ndarray): Performance values, shape (T, K) where T = time periods, K = algorithms
-- `constraint_matrix` (np.ndarray): Constraint specifications, shape (T, p) where p = number of constraints
-- `algorithm_names` (list, optional): Names of algorithms for reporting
-
-**Returns:**
-- `dict`: Dictionary containing:
-  - `psi_score` (float): Performance-Structure Independence score
-  - `ccs_score` (float): Constraint-Consistency score
-  - `rho_pc_score` (float): Performance-Constraint correlation
-  - `overall_bias` (bool): Whether bias is detected
-  - `confidence` (float): Detection confidence (0-1)
-  - `details` (dict): Additional diagnostic information
-
-**Example:**
-```python
-detector = BiasDetector(psi_threshold=0.2)
-results = detector.detect_bias(perf_matrix, const_matrix, ['A1', 'A2'])
-```
-
-#### `generate_report(results)`
-
-Generate a human-readable report from detection results.
-
-**Parameters:**
-- `results` (dict): Output from `detect_bias()`
-
-**Returns:**
-- `str`: Formatted text report
-
-### Core Functions
-
-#### `compute_psi(theta_matrix)`
-
-Compute Performance-Structure Independence score.
-
-**Parameters:**
-- `theta_matrix` (np.ndarray): Parameter matrix, shape (T, K)
-
-**Returns:**
-- `float`: PSI score (higher = more unstable)
-
-**Interpretation:**
-- PSI < 0.1: Stable parameters (good)
-- 0.1 - PSI < 0.15: Moderate stability
-- PSI - 0.15: Unstable parameters (potential bias)
-
-```python
-from circular_bias_detector.core import compute_psi
-import numpy as np
-
-theta = np.array([[0.7, 0.8], [0.71, 0.81], [0.72, 0.79]])
-psi_score = compute_psi(theta)
-```
-
-#### `compute_ccs(constraint_matrix)`
-
-Compute Constraint-Consistency Score.
-
-**Parameters:**
-- `constraint_matrix` (np.ndarray): Constraint values, shape (T, p)
-
-**Returns:**
-- `float`: CCS score (0-1, higher = more consistent)
-
-**Interpretation:**
-- CCS > 0.85: Consistent constraints (good)
-- 0.7 - CCS - 0.85: Moderate consistency
-- CCS < 0.7: Inconsistent constraints (potential bias)
-
-```python
-from circular_bias_detector.core import compute_ccs
-
-constraints = np.array([[100, 8], [102, 8.1], [101, 8.2]])
-ccs_score = compute_ccs(constraints)
-```
-
-#### `compute_rho_pc(performance_matrix, constraint_matrix)`
-
-Compute Performance-Constraint correlation.
-
-**Parameters:**
-- `performance_matrix` (np.ndarray): Performance values, shape (T, K)
-- `constraint_matrix` (np.ndarray): Constraint values, shape (T, p)
-
-**Returns:**
-- `float`: Correlation coefficient (-1 to 1)
-
-**Interpretation:**
-- |ρ_PC| > 0.5: Strong dependency (potential bias)
-- 0.3 - |ρ_PC| - 0.5: Moderate dependency
-- |ρ_PC| < 0.3: Weak dependency (good)
-
-### Utility Functions
-
-#### `create_synthetic_data(n_time_periods, n_algorithms, n_constraints, bias_intensity, random_seed=None)`
-
-Generate synthetic evaluation data for testing.
-
-**Parameters:**
-- `n_time_periods` (int): Number of evaluation periods
-- `n_algorithms` (int): Number of algorithms
-- `n_constraints` (int): Number of constraint types
-- `bias_intensity` (float): Bias level (0=none, 1=high)
-- `random_seed` (int, optional): Random seed for reproducibility
-
-**Returns:**
-- `tuple`: (performance_matrix, constraint_matrix)
-
-**Example:**
-```python
-from circular_bias_detector.utils import create_synthetic_data
-
-perf, const = create_synthetic_data(
-    n_time_periods=20,
-    n_algorithms=5,
-    n_constraints=3,
-    bias_intensity=0.7,
-    random_seed=42
-)
-```
-
-## 📈 Experimental Results
-
-Our framework successfully detected bias in:
-- **93.2%** of synthetically biased scenarios
-- **Computer Vision**: 89% detection rate in constraint manipulation
-- **NLP**: 87% detection rate in metric cherry-picking  
-- **Recommender Systems**: 91% detection rate in dataset curation
-
-## 🧪 Running Tests
-
-Run the test suite to verify installation:
-
-```bash
-# Run all tests
-python -m pytest tests/
-
-# Run with verbose output
-python -m pytest tests/ -v
-
-# Run specific test file
-python tests/test_basic.py
-```
-
-**Expected output:** All tests should pass, confirming that core functionality works correctly.
-
-## 🏃‍♂- Reproduction Scripts
-
-Reproduce all paper results:
-
-```bash
-# Run basic usage example
-python examples/basic_usage_example.py
-
-# Monte Carlo simulations
-python examples/reproduce_simulations.py
-
-# Real-world case studies
-python examples/reproduce_case_studies.py
-
-# Generate figures and tables (if available)
-python examples/generate_paper_figures.py
-```
-
-## 📚 Citation & Acknowledgments
-
-### How to Cite This Software
-
-If you use Sleuth in your research or industry work, please cite:
-
-**Software Citation (Primary):**
-```bibtex
-@software{zhang2024sleuth,
-  author       = {Zhang, Hongping},
-  title        = {Sleuth: Circular Bias Detection for AI Evaluations},
-  year         = {2024},
-  publisher    = {Zenodo},
-  version      = {v1.0.0},
-  doi          = {10.5281/zenodo.17201032},
-  url          = {https://github.com/hongping-zh/circular-bias-detection}
-}
-```
-
-**Dataset Citation (If Using Our Dataset):**
-```bibtex
-@dataset{zhang2024_dataset,
-  author       = {Zhang, Hongping},
-  title        = {Circular Reasoning Bias Detection Dataset: 200K AI Algorithm Evaluations},
-  year         = {2024},
-  publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.17196639},
-  url          = {https://doi.org/10.5281/zenodo.17196639}
-}
-```
-
-**JOSS Paper (Under Review):**
-```bibtex
-@article{zhang2024sleuth_joss,
-  author       = {Zhang, Hongping},
-  title        = {Sleuth: A Browser-Based Tool for Detecting Circular Bias in AI Evaluation},
-  journal      = {Journal of Open Source Software},
-  year         = {2024},
-  note         = {Under review},
-  url          = {https://github.com/hongping-zh/circular-bias-detection}
-}
-```
-
-### JOSS Submission
-
-This software is currently **under review** at the Journal of Open Source Software (JOSS).
-
-- **Review Thread**: https://github.com/openjournals/joss-reviews/issues/9272  
-- **Paper Draft**: [`paper.md`](paper.md)
-- **Bibliography**: [`paper.bib`](paper.bib)
-
-### Acknowledgments
-
-This project was developed to address a critical gap in AI evaluation integrity. We thank:
-- The open-source community for foundational libraries (NumPy, SciPy, Pandas)
-- Early adopters and users who provided valuable feedback
-- Zenodo for free dataset archiving and DOI assignment
-- The JOSS editorial team for their commitment to quality open-source scientific software
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-**Reporting Issues:**
-- Use the [GitHub issue tracker](https://github.com/hongping-zh/circular-bias-detection/issues)
-- Provide a clear description and reproducible example
-- Include system information and error messages
-
-**Contributing Code:**
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes and add tests
-4. Ensure all tests pass (`python -m pytest tests/`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to your branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-**Seeking Support:**
-- Check existing issues and documentation
-- Open a new issue with the `question` label
-- Email: yujjam@uest.edu.gr
-
----
-
-## 📄 License
-
-**Software Code:** This project's source code is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
-**Documentation & Dataset:** Documentation and datasets are licensed under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
-
-**Summary:**
-- - Free for academic and commercial use
-- - Modify and redistribute freely
-- - Just provide attribution when citing
-
-## 👤 Author
-
-**Hongping Zhang**
-- ORCID: [0009-0000-2529-4613](https://orcid.org/0009-0000-2529-4613)
-- Email: yujjam@uest.edu.gr
-
-## 📚 Additional Resources
-
-### Documentation
-
-- **[LLM Evaluation Guide](docs/LLM_EVALUATION_GUIDE.md)** - Comprehensive guide for detecting bias in large language model evaluation
-- **[API Documentation](#api-documentation)** - Detailed API reference
-- **[Examples Directory](examples/)** - Working code examples
-
-### Example Scripts
-
-| Script | Description |
-|--------|-------------|
-| `examples/llm_evaluation_example.py` | LLM bias detection with bootstrap |
-| `examples/visualization_example.py` | Generate all visualizations |
-| `examples/bootstrap_example.py` | Bootstrap confidence intervals |
-| `examples/basic_usage_example.py` | Getting started tutorial |
-
-### Key Features Added (v1.1+)
-
-- - **Bootstrap Statistical Analysis**: Confidence intervals and p-values (n=1000)
-- - **Adaptive Thresholds**: Data-driven cutoffs via permutation tests
-- - **Data Validation**: Auto-detect and fix missing values, outliers, duplicates
-- - **Enhanced Visualizations**: Heatmaps, interactive Plotly dashboards, correlation matrices
-- - **LLM Evaluation Support**: Specialized guidance for prompt engineering bias
-- - **Quality Scoring**: Automatic data quality assessment (0-100 scale)
-
----
-
-## 💬 Community & Support
-
-### Found a Bug?
-[Open an issue](https://github.com/hongping-zh/circular-bias-detection/issues) with:
-- Clear description
-- Reproducible example
-- Expected vs actual behavior
-
-### Have a Question?
-- 📖 Check the [documentation](#api-documentation)
-- 💬 [GitHub Discussions](https://github.com/hongping-zh/circular-bias-detection/discussions)
-- 📧 Email: yujjam@uest.edu.gr
-
-### Want to Contribute?
-We welcome PRs! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-**Popular contribution areas:**
-- 🐛 Bug fixes
-- 📝 Documentation improvements  
-- - New features
-- 🧪 Test coverage
-- 🌐 Translations
-
----
-
-## - Show Your Support
-
-If Sleuth helped your research or saved you from deploying a biased model, please:
-
-- **Star this repo** - (it helps others discover the tool!)
-- **Share on social media** 🐦 (tag us with findings!)
-- **Cite in your paper** 📄 (see [Citation section](#-citation--acknowledgments) above)
-
----
-
-## 🏆 Recognition
-
-**Detection Success Rates:**
-- 93.2% in synthetic scenarios
-- 89% in computer vision tasks
-- 87% in NLP benchmarks
-- 91% in recommender systems
-
-**Used by:**
-- Academic researchers (500+ users)
-- AI/ML engineers
-- PhD students
-- Journal reviewers
-
----
-
-## 📞 Contact
-
-**Hongping Zhang**  
-- 🌐 Web: [is.gd/check_sleuth](https://is.gd/check_sleuth)  
-- 📧 Email: yujjam@uest.edu.gr  
-- 🔬 ORCID: [0009-0000-2529-4613](https://orcid.org/0009-0000-2529-4613)
-
----
-
-<div align="center">
-
----
-
-### 🚀 Ready to Detect Bias?
-
-**[- Try Sleuth Now](https://is.gd/check_sleuth)** - **[- Star on GitHub](https://github.com/hongping-zh/circular-bias-detection)** - **[📖 Read the Docs](#-api-documentation)** - **[💌 Get Support](#-community--support)**
-
----
-
-<img src="https://img.shields.io/badge/Made_with-❤️_for_AI_Research-red?style=for-the-badge" alt="Made with love"/>
-
-<sub>Empowering researchers worldwide to ensure AI evaluation integrity</sub>
-
-</div>
-
-## 馃搧 鐩綍缁撴瀯璇存槑
-
-- circular_bias_detector/ 鏍稿績搴撲唬鐮侊紙core/metrics.py銆乧ore/bootstrap.py 绛夛紝鎸囨爣涓?CBS 璁＄畻銆佸彲瑙嗗寲锛夈€?- circular_bias_cli/ 鍛戒护琛屽叆鍙ｄ笌閫傞厤鍣紙main.py銆乤dapters/銆乽tils/锛夈€?- examples/ 鍙繍琛岀ず渚嬨€佸鐜拌剼鏈笌 Notebook锛堝 basic_usage_example.py銆乺eproduce_simulations.py锛夈€?- tests/ 鍗曞厓娴嬭瘯涓庣鍒扮娴嬭瘯銆?- web-app/ 娴忚鍣ㄧ搴旂敤锛圴ite + React + Pyodide锛夛紝src/ 婧愮爜锛宲ublic/ 闈欐€佽祫婧愶紝dist/ 鏋勫缓浜х墿銆?- data/ 绀轰緥 CSV 涓庢暟鎹瓧鍏革紝鐢ㄤ簬蹇€熻瘯鐢ㄣ€?- experiments/ 璁烘枃/鎶ュ憡澶嶇幇瀹為獙鑴氭湰涓庤〃鍥剧敓鎴愩€?- docs/ 浣跨敤涓庢妧鏈枃妗ｏ紙鍙瀯寤轰负鏂囨。绔欑偣锛夈€?- paper/ 璁烘枃鐩稿叧鏉愭枡锛堝浘銆佸弬鑰冩枃鐚€佹姇绋挎枃浠讹級锛汮OSS 璁烘枃姝ｆ枃涓烘牴鐩綍鐨?paper.md銆?
-> 鎻愮ず锛氳嫢浠呮兂蹇€熶笂鎵嬶紝鐩存帴鏌ョ湅 examples/ 涓?web-app/銆?
-## 鈴憋笍 5鍒嗛挓涓婃墜
-
-- 鏂瑰紡A锛歐eb App锛堥浂瀹夎锛?  1. 鎵撳紑鍦ㄧ嚎婕旂ず鎴栨湰鍦板惎鍔?web-app锛堝厛鎵ц npm install锛涘啀鎵ц npm run dev锛夈€?  2. 鍦ㄩ〉闈㈠鍏ヨ瘎浼版棩蹇?CSV锛堟垨浣跨敤 data/sample_data.csv锛夈€?  3. 鏌ョ湅 CBS 浠〃鐩樸€侀浄杈惧浘涓庢椂闂村簭鍒楋紝骞跺鍑虹粨鏋溿€?
-- 鏂瑰紡B锛歅ython/CLI锛堟湰鍦扮绾匡級
-  1. 瀹夎锛歱ip install circular-bias-detector
-  2. 鏈€灏忕ず渚嬶細浣跨敤 examples/ 涓嬬殑鑴氭湰杩愯锛屾垨鍦?Python 涓皟鐢?compute_cbs銆?  3. CLI 绀轰緥锛歝ircular-bias --input data/sample_data.csv --output out.json
-  4. 鏇村绀轰緥锛歟xamples/basic_usage_example.py銆乪xamples/bootstrap_example.py銆乪xamples/reproduce_simulations.py
+﻿-#- -S-l-e-u-t-h- --- -A-I- -B-i-a-s- -D-e-t-e-c-t-o-r--
+--
+-<-!----- -B-a-d-g-e-s- -S-e-c-t-i-o-n- ----->--
+-[-!-[-W-e-b- -A-p-p-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-%-F-0-%-9-F-%-9-4-%-8-D-_-T-r-y-_-L-i-v-e-_-D-e-m-o---b-r-i-g-h-t-g-r-e-e-n-?-s-t-y-l-e-=-f-o-r---t-h-e---b-a-d-g-e-)-]-(-h-t-t-p-s-:-/-/-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-)--
+-[-!-[-G-i-t-H-u-b- -s-t-a-r-s-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-g-i-t-h-u-b-/-s-t-a-r-s-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-?-s-t-y-l-e-=-s-o-c-i-a-l-)-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-)--
+-[-!-[-C-I-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/-a-c-t-i-o-n-s-/-w-o-r-k-f-l-o-w-s-/-c-i-.-y-m-l-/-b-a-d-g-e-.-s-v-g-)-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/-a-c-t-i-o-n-s-/-w-o-r-k-f-l-o-w-s-/-c-i-.-y-m-l-)--
+-[-!-[-P-y-t-h-o-n- -V-e-r-s-i-o-n-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-p-y-t-h-o-n---3-.-8-+---b-l-u-e-.-s-v-g-)-]-(-h-t-t-p-s-:-/-/-w-w-w-.-p-y-t-h-o-n-.-o-r-g-/-d-o-w-n-l-o-a-d-s-/-)--
+-[-!-[-P-y-P-I- -v-e-r-s-i-o-n-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-p-y-p-i---v-1-.-0-.-0---b-l-u-e-)-]-(-h-t-t-p-s-:-/-/-p-y-p-i-.-o-r-g-/-p-r-o-j-e-c-t-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r-/-)--
+-[-!-[-L-i-c-e-n-s-e-:- -M-I-T-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-L-i-c-e-n-s-e---M-I-T---y-e-l-l-o-w-.-s-v-g-)-]-(-h-t-t-p-s-:-/-/-o-p-e-n-s-o-u-r-c-e-.-o-r-g-/-l-i-c-e-n-s-e-s-/-M-I-T-)--
+-[-!-[-L-i-c-e-n-s-e-:- -C-C- -B-Y- -4-.-0-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-D-o-c-s---C-C-%-2-0-B-Y-%-2-0-4-.-0---l-i-g-h-t-g-r-e-y-.-s-v-g-)-]-(-h-t-t-p-s-:-/-/-c-r-e-a-t-i-v-e-c-o-m-m-o-n-s-.-o-r-g-/-l-i-c-e-n-s-e-s-/-b-y-/-4-.-0-/-)--
+-[-!-[-S-o-f-t-w-a-r-e- -D-O-I-]-(-h-t-t-p-s-:-/-/-z-e-n-o-d-o-.-o-r-g-/-b-a-d-g-e-/-D-O-I-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-2-0-1-0-3-2-.-s-v-g-)-]-(-h-t-t-p-s-:-/-/-d-o-i-.-o-r-g-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-2-0-1-0-3-2-)--
+-[-!-[-D-a-t-a-s-e-t- -D-O-I-]-(-h-t-t-p-s-:-/-/-z-e-n-o-d-o-.-o-r-g-/-b-a-d-g-e-/-D-O-I-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-1-9-6-6-3-9-.-s-v-g-)-]-(-h-t-t-p-s-:-/-/-d-o-i-.-o-r-g-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-1-9-6-6-3-9-)--
+-[-!-[-J-O-S-S- -S-t-a-t-u-s-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-J-O-S-S---u-n-d-e-r-%-2-0-r-e-v-i-e-w---y-e-l-l-o-w-)-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-o-p-e-n-j-o-u-r-n-a-l-s-/-j-o-s-s---r-e-v-i-e-w-s-/-i-s-s-u-e-s-/-9-2-7-2-)--
+-[-!-[-T-e-s-t-s-]-(-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-t-e-s-t-s---p-a-s-s-i-n-g---b-r-i-g-h-t-g-r-e-e-n-.-s-v-g-)-]-(-t-e-s-t-s-/-)--
+--
+-#-#- -D-e-t-e-c-t- -A-I- -E-v-a-l-u-a-t-i-o-n- -B-i-a-s- -i-n- -3-0- -S-e-c-o-n-d-s--
+--
+-#-#- -O-n- -t-h-i-s- -p-a-g-e-
+-
+--- -[-Q-u-i-c-k- -L-i-n-k-s-]-(-#-q-u-i-c-k---l-i-n-k-s-)-
+--- -[-Q-u-i-c-k- -S-t-a-r-t-]-(-#---q-u-i-c-k---s-t-a-r-t-)-
+--- -[-E-x-a-m-p-l-e-s-]-(-#-e-x-a-m-p-l-e-s-)-
+--- -[-A-P-I-/-D-o-c-s-]-(-#-d-o-c-u-m-e-n-t-a-t-i-o-n-)-
+--- -[-T-e-s-t-i-n-g-]-(-#---t-e-s-t-i-n-g-)--
+--
+--
+-#-#- -Q-u-i-c-k- -L-i-n-k-s-
+-
+--- -L-i-v-e- -D-e-m-o-:- -h-t-t-p-s-:-/-/-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-
+--- -5-分-钟-上-手-:- -参-见- -R-E-A-D-M-E- -的-“-5-分-钟-上-手-”-小-节-
+--- -示-例-数-据-:- -d-a-t-a-/-t-i-n-y-_-s-a-m-p-l-e-.-c-s-v-
+--- -E-x-a-m-p-l-e-s-:- -e-x-a-m-p-l-e-s-/-
+--- -A-P-I-/-D-o-c-s-:- -d-o-c-s-/-
+--- -J-O-S-S- -预-审-:- -h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-o-p-e-n-j-o-u-r-n-a-l-s-/-j-o-s-s---r-e-v-i-e-w-s-/-i-s-s-u-e-s-/-9-2-7-2-
+--- -S-o-f-t-w-a-r-e- -D-O-I-:- -h-t-t-p-s-:-/-/-d-o-i-.-o-r-g-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-2-0-1-0-3-2-
+--- -D-a-t-a-s-e-t- -D-O-I-:- -h-t-t-p-s-:-/-/-d-o-i-.-o-r-g-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-1-9-6-6-3-9-
+-
+-#-#- -S-c-r-e-e-n-s-h-o-t-
+-
+-!-[-S-l-e-u-t-h- -W-e-b- -A-p-p- -S-c-r-e-e-n-s-h-o-t-]-(-a-s-s-e-t-s-/-s-c-r-e-e-n-s-h-o-t-.-p-n-g-)--
+--
+--
+-*-*-S-t-o-p- -d-e-p-l-o-y-i-n-g- -A-I- -m-o-d-e-l-s- -w-i-t-h- -i-n-f-l-a-t-e-d- -p-e-r-f-o-r-m-a-n-c-e- -s-c-o-r-e-s-.-*-*--
+--
+-S-l-e-u-t-h- -c-a-t-c-h-e-s- -w-h-e-n- -y-o-u-'-v-e- -b-e-e-n- -t-w-e-a-k-i-n-g- -h-y-p-e-r-p-a-r-a-m-e-t-e-r-s-,- -p-r-o-m-p-t-s-,- -o-r- -d-a-t-a-s-e-t-s- -u-n-t-i-l- -y-o-u-r- -b-e-n-c-h-m-a-r-k- -n-u-m-b-e-r-s- -l-o-o-k- -g-o-o-d-—-a- -h-i-d-d-e-n- -f-o-r-m- -o-f- -b-i-a-s- -t-h-a-t- -b-r-e-a-k-s- -A-I- -e-v-a-l-u-a-t-i-o-n-s-.--
+--
+--------
+--
+-#-#- -�-�- -S-t-a-t-e-m-e-n-t- -o-f- -N-e-e-d--
+--
+-*-*-T-h-e- -P-r-o-b-l-e-m-:-*-*- -M-o-d-e-r-n- -A-I- -d-e-v-e-l-o-p-m-e-n-t- -i-n-v-o-l-v-e-s- -r-u-n-n-i-n-g- -h-u-n-d-r-e-d-s- -o-f- -e-x-p-e-r-i-m-e-n-t-s-—-t-w-e-a-k-i-n-g- -l-e-a-r-n-i-n-g- -r-a-t-e-s-,- -a-d-j-u-s-t-i-n-g- -p-r-o-m-p-t-s-,- -c-h-a-n-g-i-n-g- -d-a-t-a-s-e-t-s-—-u-n-t-i-l- -p-e-r-f-o-r-m-a-n-c-e- -m-e-t-r-i-c-s- -l-o-o-k- -i-m-p-r-e-s-s-i-v-e-.- -B-u-t- -t-h-i-s- -i-t-e-r-a-t-i-v-e- -o-p-t-i-m-i-z-a-t-i-o-n- -c-r-e-a-t-e-s- -*-*-c-i-r-c-u-l-a-r- -b-i-a-s-*-*-:- -t-h-e- -e-v-a-l-u-a-t-i-o-n- -p-r-o-c-e-s-s- -i-t-s-e-l-f- -b-e-c-o-m-e-s- -p-a-r-t- -o-f- -t-h-e- -o-p-t-i-m-i-z-a-t-i-o-n-,- -m-a-k-i-n-g- -r-e-s-u-l-t-s- -u-n-r-e-l-i-a-b-l-e- -a-n-d- -n-o-n---r-e-p-r-o-d-u-c-i-b-l-e-.--
+--
+-*-*-W-h-y- -T-h-i-s- -M-a-t-t-e-r-s-:-*-*- --
+--- -R-e-s-e-a-r-c-h- -p-a-p-e-r-s- -g-e-t- -r-e-j-e-c-t-e-d- -w-h-e-n- -r-e-v-i-e-w-e-r-s- -d-e-t-e-c-t- -b-i-a-s-e-d- -e-v-a-l-u-a-t-i-o-n- -p-r-o-t-o-c-o-l-s--
+--- -A-I- -m-o-d-e-l-s- -f-a-i-l- -i-n- -p-r-o-d-u-c-t-i-o-n- -w-h-e-n- -r-e-a-l---w-o-r-l-d- -p-e-r-f-o-r-m-a-n-c-e- -d-r-o-p-s- -2-0---3-0-%- -b-e-l-o-w- -r-e-p-o-r-t-e-d- -b-e-n-c-h-m-a-r-k-s- - --
+--- -B-e-n-c-h-m-a-r-k- -l-e-a-d-e-r-b-o-a-r-d-s- -b-e-c-o-m-e- -u-n-r-e-l-i-a-b-l-e- -w-h-e-n- -t-e-a-m-s- -o-v-e-r-f-i-t- -t-o- -t-e-s-t- -s-e-t-s- -t-h-r-o-u-g-h- -r-e-p-e-a-t-e-d- -s-u-b-m-i-s-s-i-o-n-s--
+--- -R-e-p-r-o-d-u-c-i-b-i-l-i-t-y- -c-r-i-s-i-s- -i-n- -M-L- -r-e-s-e-a-r-c-h- -u-n-d-e-r-m-i-n-e-s- -s-c-i-e-n-t-i-f-i-c- -p-r-o-g-r-e-s-s--
+--
+-*-*-W-h-a-t- -S-l-e-u-t-h- -D-o-e-s-:-*-*- -P-r-o-v-i-d-e-s- -t-h-e- -*-*-f-i-r-s-t- -a-u-t-o-m-a-t-e-d- -s-t-a-t-i-s-t-i-c-a-l- -f-r-a-m-e-w-o-r-k-*-*- -t-o- -d-e-t-e-c-t- -c-i-r-c-u-l-a-r- -b-i-a-s- -b-y- -a-n-a-l-y-z-i-n-g- -y-o-u-r- -e-v-a-l-u-a-t-i-o-n- -l-o-g-s-.- -N-o- -m-a-n-u-a-l- -a-u-d-i-t-i-n-g-,- -n-o- -g-u-e-s-s-w-o-r-k-—-j-u-s-t- -r-i-g-o-r-o-u-s- -s-t-a-t-i-s-t-i-c-a-l- -t-e-s-t-s- -(-P-S-I-,- -C-C-S-,- -ρ-_-P-C-)- -t-h-a-t- -q-u-a-n-t-i-f-y- -w-h-e-t-h-e-r- -y-o-u-r- -r-e-s-u-l-t-s- -a-r-e- -t-r-u-s-t-w-o-r-t-h-y-.--
+--
+-*-*-W-h-o- -N-e-e-d-s- -T-h-i-s-:-*-*--
+--- -�-�- -R-e-s-e-a-r-c-h-e-r-s- -p-r-e-p-a-r-i-n-g- -p-a-p-e-r-s- -f-o-r- -p-u-b-l-i-c-a-t-i-o-n- -(-a-v-o-i-d- -d-e-s-k- -r-e-j-e-c-t-i-o-n-)--
+--- -�-�-‍-⚖--- -P-e-e-r- -r-e-v-i-e-w-e-r-s- -a-n-d- -e-d-i-t-o-r-s- -a-s-s-e-s-s-i-n-g- -m-e-t-h-o-d-o-l-o-g-i-c-a-l- -r-i-g-o-r--
+--- -�-�- -M-L- -e-n-g-i-n-e-e-r-s- -d-e-p-l-o-y-i-n-g- -m-o-d-e-l-s- -t-o- -p-r-o-d-u-c-t-i-o-n- -(-e-n-s-u-r-e- -r-e-a-l- -p-e-r-f-o-r-m-a-n-c-e-)--
+--- -�-�- -B-e-n-c-h-m-a-r-k- -o-r-g-a-n-i-z-e-r-s- -a-u-d-i-t-i-n-g- -l-e-a-d-e-r-b-o-a-r-d- -i-n-t-e-g-r-i-t-y--
+--- -�-�- -R-e-s-e-a-r-c-h- -i-n-t-e-g-r-i-t-y- -o-f-f-i-c-e-r-s- -i-n-v-e-s-t-i-g-a-t-i-n-g- -r-e-p-r-o-d-u-c-i-b-i-l-i-t-y- -c-o-n-c-e-r-n-s--
+--
+--------
+--
+-#-#- --- -C-o-r-e- -F-e-a-t-u-r-e-s--
+--
+--- -*-*-�-�- -R-i-g-o-r-o-u-s- -S-t-a-t-i-s-t-i-c-a-l- -T-e-s-t-i-n-g-*-*- --- -T-h-r-e-e- -c-o-m-p-l-e-m-e-n-t-a-r-y- -i-n-d-i-c-a-t-o-r-s- -(-P-S-I-,- -C-C-S-,- -ρ-_-P-C-)- -w-i-t-h- -b-o-o-t-s-t-r-a-p- -c-o-n-f-i-d-e-n-c-e- -i-n-t-e-r-v-a-l-s- -(-n-=-1-0-0-0-)- -a-n-d- -p---v-a-l-u-e-s--
+--- -*-*-�-�- -P-r-i-v-a-c-y---P-r-e-s-e-r-v-i-n-g-*-*- --- -1-0-0-%- -c-l-i-e-n-t---s-i-d-e- -p-r-o-c-e-s-s-i-n-g- -i-n- -b-r-o-w-s-e-r-—-y-o-u-r- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a- -n-e-v-e-r- -l-e-a-v-e-s- -y-o-u-r- -c-o-m-p-u-t-e-r--
+--- -*-*--- -Z-e-r-o- -I-n-s-t-a-l-l-a-t-i-o-n-*-*- --- -W-e-b- -a-p-p- -r-u-n-s- -i-n-s-t-a-n-t-l-y- -i-n- -b-r-o-w-s-e-r- -v-i-a- -P-y-o-d-i-d-e-/-W-e-b-A-s-s-e-m-b-l-y-;- -o-r- -i-n-s-t-a-l-l- -P-y-t-h-o-n- -p-a-c-k-a-g-e- -w-i-t-h- -`-p-i-p- -i-n-s-t-a-l-l- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r-`--
+--- -*-*-�-�- -P-u-b-l-i-c-a-t-i-o-n---R-e-a-d-y- -O-u-t-p-u-t-s-*-*- --- -G-e-n-e-r-a-t-e- -P-D-F- -r-e-p-o-r-t-s- -w-i-t-h- -s-t-a-t-i-s-t-i-c-a-l- -t-a-b-l-e-s-,- -h-e-a-t-m-a-p-s-,- -a-n-d- -i-n-t-e-r-a-c-t-i-v-e- -v-i-s-u-a-l-i-z-a-t-i-o-n-s--
+--- -*-*-�-�- -D-o-m-a-i-n---A-g-n-o-s-t-i-c-*-*- --- -W-o-r-k-s- -w-i-t-h- -a-n-y- -A-I- -t-a-s-k-:- -c-o-m-p-u-t-e-r- -v-i-s-i-o-n-,- -N-L-P-,- -L-L-M-s-,- -r-e-i-n-f-o-r-c-e-m-e-n-t- -l-e-a-r-n-i-n-g-,- -r-e-c-o-m-m-e-n-d-e-r- -s-y-s-t-e-m-s--
+--- -*-*-�-�- -B-o-o-t-s-t-r-a-p- -U-n-c-e-r-t-a-i-n-t-y-*-*- --- -F-o-r-m-a-l- -h-y-p-o-t-h-e-s-i-s- -t-e-s-t-i-n-g- -w-i-t-h- -9-5-%- -c-o-n-f-i-d-e-n-c-e- -i-n-t-e-r-v-a-l-s- -a-n-d- -s-t-a-t-i-s-t-i-c-a-l- -s-i-g-n-i-f-i-c-a-n-c-e- -s-t-a-r-s--
+-<-p- -a-l-i-g-n-=-"-c-e-n-t-e-r-"->--
+- - -<-a- -h-r-e-f-=-"-h-t-t-p-s-:-/-/-h-o-n-g-p-i-n-g---z-h-.-g-i-t-h-u-b-.-i-o-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/-?-u-t-m-_-s-o-u-r-c-e-=-g-i-t-h-u-b-&-u-t-m-_-m-e-d-i-u-m-=-r-e-a-d-m-e-&-u-t-m-_-c-a-m-p-a-i-g-n-=-h-e-r-o-_-l-i-v-e-_-d-e-m-o-"->--
+- - - - -<-i-m-g- -s-r-c-=-"-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-%-F-0-%-9-F-%-9-4-%-8-D-%-2-0-L-I-V-E-%-2-0-D-E-M-O---T-r-y-%-2-0-S-l-e-u-t-h---b-r-i-g-h-t-g-r-e-e-n-?-s-t-y-l-e-=-f-o-r---t-h-e---b-a-d-g-e-"- -a-l-t-=-"-L-i-v-e- -D-e-m-o-"->--
+- - -<-/-a->--
+- - -<-a- -h-r-e-f-=-"-h-t-t-p-s-:-/-/-c-o-l-a-b-.-r-e-s-e-a-r-c-h-.-g-o-o-g-l-e-.-c-o-m-/-g-i-t-h-u-b-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/-b-l-o-b-/-m-a-i-n-/-e-x-a-m-p-l-e-s-/-q-u-i-c-k-s-t-a-r-t-_-c-o-l-a-b-.-i-p-y-n-b-?-u-t-m-_-s-o-u-r-c-e-=-g-i-t-h-u-b-&-u-t-m-_-m-e-d-i-u-m-=-r-e-a-d-m-e-&-u-t-m-_-c-a-m-p-a-i-g-n-=-h-e-r-o-_-c-o-l-a-b-"->--
+- - - - -<-i-m-g- -s-r-c-=-"-h-t-t-p-s-:-/-/-c-o-l-a-b-.-r-e-s-e-a-r-c-h-.-g-o-o-g-l-e-.-c-o-m-/-a-s-s-e-t-s-/-c-o-l-a-b---b-a-d-g-e-.-s-v-g-"- -a-l-t-=-"-O-p-e-n- -i-n- -C-o-l-a-b-"- -s-t-y-l-e-=-"-h-e-i-g-h-t-:-2-8-p-x-;-"->--
+- - -<-/-a->--
+-<-/-p->--
+--
+-<-p- -a-l-i-g-n-=-"-c-e-n-t-e-r-"->--
+- - -<-b->-D-e-t-e-c-t- -c-i-r-c-u-l-a-r- -b-i-a-s- -i-n- -A-I- -e-v-a-l-u-a-t-i-o-n-s- -i-n-s-t-a-n-t-l-y-.-<-/-b->- -F-r-e-e- -w-e-b- -a-p-p- -+- -P-y-t-h-o-n- -S-D-K-.- -S-t-o-p- -s-h-i-p-p-i-n-g- -i-n-f-l-a-t-e-d- -b-e-n-c-h-m-a-r-k- -s-c-o-r-e-s-.--
+-<-/-p->--
+--
+-<-p- -a-l-i-g-n-=-"-c-e-n-t-e-r-"->--
+- - -<-s-u-b->-F-o-r- -r-e-s-e-a-r-c-h-e-r-s-,- -r-e-v-i-e-w-e-r-s-,- -a-n-d- -M-L- -e-n-g-i-n-e-e-r-s- --- -W-o-r-k-s- -w-i-t-h- -C-S-V-s- --- -P-r-i-v-a-c-y---p-r-e-s-e-r-v-i-n-g-<-/-s-u-b->--
+-<-/-p->--
+--
+--------
+--
+-#-#- -W-h-y- -S-l-e-u-t-h-?--
+--- -F-i-n-d- -h-i-d-d-e-n- -e-v-a-l-u-a-t-i-o-n- -b-i-a-s- -f-r-o-m- -h-y-p-e-r-p-a-r-a-m-/-p-r-o-m-p-t-/-d-a-t-a-s-e-t- -t-w-e-a-k-i-n-g-.--
+--- -3- -i-n-d-i-c-a-t-o-r-s- -(-P-S-I-,- -C-C-S-,- -ρ-_-P-C-)- -w-i-t-h- -i-n-t-e-r-p-r-e-t-a-t-i-o-n- -a-n-d- -f-i-x-e-s-.--
+--- -U-s-e- -i-n- -3-0- -s-e-c-o-n-d-s- -v-i-a- -W-e-b- -A-p-p-,- -o-r- -p-r-o-g-r-a-m-m-a-t-i-c-a-l-l-y- -v-i-a- -P-y-t-h-o-n-/-C-L-I-.--
+--------
+--
+-#-#- --- -Q-u-i-c-k- -S-t-a-r-t--
+--
+-*-*-O-p-t-i-o-n- -1-:- -W-e-b- -A-p-p- -(-F-a-s-t-e-s-t--- -0- -s-e-c-o-n-d-s-)-*-*--
+--
+-*-*-[-�-�- -T-r-y- -L-i-v-e- -D-e-m-o- -→-]-(-h-t-t-p-s-:-/-/-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-)-*-*- --- -N-o- -i-n-s-t-a-l-l-a-t-i-o-n- --- -R-u-n-s- -i-n- -b-r-o-w-s-e-r- --- -1-0-0-%- -p-r-i-v-a-t-e--
+--
+-*-*-O-p-t-i-o-n- -2-:- -P-y-t-h-o-n- -L-i-b-r-a-r-y- -(-M-o-s-t- -F-l-e-x-i-b-l-e-)-*-*--
+--
+-`-`-`-b-a-s-h--
+-#- -I-n-s-t-a-l-l--
+-p-i-p- -i-n-s-t-a-l-l- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r--
+-`-`-`--
+--
+-`-`-`-p-y-t-h-o-n--
+-#- -M-i-n-i-m-a-l- -w-o-r-k-i-n-g- -e-x-a-m-p-l-e--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r- -i-m-p-o-r-t- -S-i-m-p-l-e-B-i-a-s-D-e-t-e-c-t-o-r--
+-i-m-p-o-r-t- -n-u-m-p-y- -a-s- -n-p--
+--
+-#- -Y-o-u-r- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a-:- -r-o-w-s-=-t-i-m-e-_-p-e-r-i-o-d-s-,- -c-o-l-s-=-a-l-g-o-r-i-t-h-m-s--
+-p-e-r-f-o-r-m-a-n-c-e- -=- -n-p-.-a-r-r-a-y-(-[-[-0-.-8-5-,- -0-.-7-8-]-,- -[-0-.-8-7-,- -0-.-8-0-]-,- -[-0-.-9-1-,- -0-.-8-4-]-]-)--
+-c-o-n-s-t-r-a-i-n-t-s- -=- -n-p-.-a-r-r-a-y-(-[-[-5-1-2-,- -0-.-7-]-,- -[-5-5-0-,- -0-.-7-5-]-,- -[-6-0-0-,- -0-.-8-]-]-)- - -#- -r-e-s-o-u-r-c-e-s- -c-h-a-n-g-e-d-?--
+--
+-d-e-t-e-c-t-o-r- -=- -S-i-m-p-l-e-B-i-a-s-D-e-t-e-c-t-o-r-(-)--
+-r-e-s-u-l-t- -=- -d-e-t-e-c-t-o-r-.-q-u-i-c-k-_-c-h-e-c-k-(-p-e-r-f-o-r-m-a-n-c-e-,- -c-o-n-s-t-r-a-i-n-t-s-)--
+--
+-i-f- -r-e-s-u-l-t-[-'-h-a-s-_-b-i-a-s-'-]-:--
+- - - - -p-r-i-n-t-(-f-"-⚠-️- -{-r-e-s-u-l-t-[-'-r-i-s-k-_-l-e-v-e-l-'-]-.-u-p-p-e-r-(-)-}- -R-I-S-K-:- -{-r-e-s-u-l-t-[-'-r-e-c-o-m-m-e-n-d-a-t-i-o-n-'-]-}-"-)--
+-e-l-s-e-:--
+- - - - -p-r-i-n-t-(-"--- -N-o- -b-i-a-s- -d-e-t-e-c-t-e-d-—-s-a-f-e- -t-o- -p-u-b-l-i-s-h-!-"-)--
+-`-`-`--
+--
+-*-*-O-p-t-i-o-n- -3-:- -C-o-m-m-a-n-d- -L-i-n-e-*-*--
+--
+-`-`-`-b-a-s-h--
+-p-i-p- -i-n-s-t-a-l-l- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r-[-c-l-i-]--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -m-y-_-d-a-t-a-.-c-s-v- -----f-o-r-m-a-t- -j-s-o-n- -----o-u-t-p-u-t- -r-e-s-u-l-t-s-.-j-s-o-n--
+-`-`-`--
+--
+--------
+--
+-#-#- -�-�- -D-o-c-u-m-e-n-t-a-t-i-o-n- -/- -使-用-文-档--
+--- -使-用-（-离-线-）-：-[-d-o-c-s-/-u-s-a-g-e-_-o-f-f-l-i-n-e-.-m-d-]-(-d-o-c-s-/-u-s-a-g-e-_-o-f-f-l-i-n-e-.-m-d-)--
+--- -使-用-（-实-时-）-：-[-d-o-c-s-/-u-s-a-g-e-_-r-e-a-l-t-i-m-e-.-m-d-]-(-d-o-c-s-/-u-s-a-g-e-_-r-e-a-l-t-i-m-e-.-m-d-)--
+--- -常-见-问-题-（-F-A-Q-）-：-[-F-A-Q-.-m-d-]-(-F-A-Q-.-m-d-)--
+--- -术-语-表-（-G-l-o-s-s-a-r-y-）-：-[-G-L-O-S-S-A-R-Y-.-m-d-]-(-G-L-O-S-S-A-R-Y-.-m-d-)--
+--- -贡-献-指-南-（-C-o-n-t-r-i-b-u-t-i-n-g-）-：-[-C-O-N-T-R-I-B-U-T-I-N-G-.-m-d-]-(-C-O-N-T-R-I-B-U-T-I-N-G-.-m-d-)--
+--- -行-为-准-则-（-C-o-d-e- -o-f- -C-o-n-d-u-c-t-）-：-[-C-O-D-E-_-O-F-_-C-O-N-D-U-C-T-.-m-d-]-(-C-O-D-E-_-O-F-_-C-O-N-D-U-C-T-.-m-d-)--
+--
+--------
+--
+-#-#- -�-�- -T-h-e- -P-r-o-b-l-e-m--
+--
+-Y-o-u-'-v-e- -b-e-e-n- -h-e-r-e- -b-e-f-o-r-e-:--
+--
+-1-.- -R-u-n- -A-I- -e-v-a-l-u-a-t-i-o-n- --- -s-c-o-r-e-s- -a-r-e-n-'-t- -g-r-e-a-t--
+-2-.- -A-d-j-u-s-t- -t-e-m-p-e-r-a-t-u-r-e- --- -t-r-y- -a-g-a-i-n--
+-3-.- -T-w-e-a-k- -p-r-o-m-p-t- --- -r-u-n- -a-g-a-i-n- - --
+-4-.- -C-h-a-n-g-e- -d-a-t-a-s-e-t- --- -r-e-p-e-a-t-.-.-.--
+-5-.- -A-f-t-e-r- -5-0- -i-t-e-r-a-t-i-o-n-s- --- -"-9-5-%- -a-c-c-u-r-a-c-y-!-"- -�-�--
+--
+-*-*-B-u-t- -i-s- -i-t- -r-e-a-l-?-*-*--
+--
+-T-h-i-s- -i-s- -*-*-c-i-r-c-u-l-a-r- -r-e-a-s-o-n-i-n-g- -b-i-a-s-*-*- --- -a-n-d- -i-t-'-s- -e-v-e-r-y-w-h-e-r-e- -i-n- -M-L- -r-e-s-e-a-r-c-h- -a-n-d- -p-r-o-d-u-c-t-i-o-n-.--
+--
+--- --- -*-*-P-a-p-e-r-s- -g-e-t- -r-e-j-e-c-t-e-d-*-*- --- -r-e-v-i-e-w-e-r-s- -s-p-o-t- -i-t- -i-n-s-t-a-n-t-l-y--
+--- --- -*-*-M-o-d-e-l-s- -f-a-i-l- -i-n- -p-r-o-d-u-c-t-i-o-n-*-*- --- -r-e-a-l---w-o-r-l-d- -p-e-r-f-o-r-m-a-n-c-e- -d-r-o-p-s- -2-0---3-0-%--
+--- --- -*-*-W-a-s-t-e-d- -r-e-s-o-u-r-c-e-s-*-*- --- -t-i-m-e-,- -c-o-m-p-u-t-e-,- -a-n-d- -c-r-e-d-i-b-i-l-i-t-y--
+--
+-#-#- --- -T-h-e- -S-o-l-u-t-i-o-n--
+--
+-*-*-S-l-e-u-t-h- -d-e-t-e-c-t-s- -3- -t-y-p-e-s- -o-f- -e-v-a-l-u-a-t-i-o-n- -m-a-n-i-p-u-l-a-t-i-o-n-:-*-*--
+--
+-|- -I-n-d-i-c-a-t-o-r- -|- -W-h-a-t- -I-t- -C-a-t-c-h-e-s- -|- -R-i-s-k- -L-e-v-e-l- -|--
+-|-----------------------|---------------------------------|-------------------------|--
+-|- -*-*-P-S-I-*-*- -(-P-a-r-a-m-e-t-e-r- -S-t-a-b-i-l-i-t-y-)- -|- -H-y-p-e-r-p-a-r-a-m-e-t-e-r-s- -c-h-a-n-g-e-d- -d-u-r-i-n-g- -e-v-a-l- -|- -�-�- -H-i-g-h- -|--
+-|- -*-*-C-C-S-*-*- -(-C-o-n-s-t-r-a-i-n-t- -C-o-n-s-i-s-t-e-n-c-y-)- -|- -E-v-a-l-u-a-t-i-o-n- -c-o-n-d-i-t-i-o-n-s- -v-a-r-i-e-d- -|- -�-�- -M-e-d-i-u-m- -|--
+-|- -*-*-ρ-_-P-C-*-*- -(-P-e-r-f-o-r-m-a-n-c-e---C-o-n-s-t-r-a-i-n-t- -C-o-r-r-e-l-a-t-i-o-n-)- -|- -R-e-s-u-l-t-s- -d-e-p-e-n-d- -o-n- -r-e-s-o-u-r-c-e- -c-h-a-n-g-e-s- -|- -�-�- -H-i-g-h- -|--
+--
+-*-*-R-e-s-u-l-t-:-*-*- -Y-e-s-/-N-o- -a-n-s-w-e-r- -+- -s-p-e-c-i-f-i-c- -r-e-c-o-m-m-e-n-d-a-t-i-o-n-s- -o-n- -h-o-w- -t-o- -f-i-x- -i-t-.--
+--
+--------
+--
+-#-#- -�-�- -W-h-y- -S-l-e-u-t-h-?--
+--
+-U-n-l-i-k-e- -e-x-i-s-t-i-n-g- -t-o-o-l-s-,- -S-l-e-u-t-h- -i-s- -t-h-e- -*-*-o-n-l-y- -t-o-o-l-*-*- -t-h-a-t- -a-u-d-i-t-s- -y-o-u-r- -*-*-e-v-a-l-u-a-t-i-o-n- -p-r-o-c-e-s-s-*-*- -(-n-o-t- -j-u-s-t- -m-o-d-e-l- -o-u-t-p-u-t-s-)-:--
+--
+-|- -F-r-a-m-e-w-o-r-k- -|- -F-o-c-u-s- -|- -C-i-r-c-u-l-a-r- -B-i-a-s- -D-e-t-e-c-t-i-o-n- -|- -T-a-r-g-e-t- -U-s-e-r-s- -|--
+-|-----------------------|---------------|---------------------------------------------------|-----------------------------|--
+-|- -[-A-I-F-3-6-0-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-T-r-u-s-t-e-d---A-I-/-A-I-F-3-6-0-)- -|- -M-o-d-e-l- -f-a-i-r-n-e-s-s- -(-d-e-m-o-g-r-a-p-h-i-c- -p-a-r-i-t-y-,- -e-q-u-a-l-i-z-e-d- -o-d-d-s-)- -|- --- -|- -M-L- -p-r-a-c-t-i-t-i-o-n-e-r-s- -|--
+-|- -[-F-a-i-r-l-e-a-r-n-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-f-a-i-r-l-e-a-r-n-/-f-a-i-r-l-e-a-r-n-)- -|- -A-l-g-o-r-i-t-h-m-i-c- -f-a-i-r-n-e-s-s- -c-o-n-s-t-r-a-i-n-t-s- -|- --- -|- -D-a-t-a- -s-c-i-e-n-t-i-s-t-s- -|--
+-|- -[-T-h-e-m-i-s---M-L-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-c-o-s-m-i-c-B-b-o-y-/-t-h-e-m-i-s---m-l-)- -|- -D-i-s-c-r-i-m-i-n-a-t-i-o-n- -t-e-s-t-i-n-g- -|- --- -|- -R-e-s-e-a-r-c-h-e-r-s- -|--
+-|- -*-*-T-h-i-s- -F-r-a-m-e-w-o-r-k-*-*- -|- -*-*-E-v-a-l-u-a-t-i-o-n- -p-r-o-t-o-c-o-l- -i-n-t-e-g-r-i-t-y-*-*- -|- --- -|- -*-*-R-e-s-e-a-r-c-h-e-r-s-,- -R-e-v-i-e-w-e-r-s-,- -A-u-d-i-t-o-r-s-*-*- -|--
+--
+-*-*-U-s-e- -S-l-e-u-t-h- -f-o-r-:-*-*--
+--
+--- --- -*-*-P-r-e---p-u-b-l-i-c-a-t-i-o-n- -c-h-e-c-k-s-*-*- --- -A-v-o-i-d- -r-e-v-i-e-w-e-r- -c-o-m-m-e-n-t-s- -a-b-o-u-t- -b-i-a-s-e-d- -e-v-a-l-u-a-t-i-o-n-s--
+--- --- -*-*-P-r-e---p-r-o-d-u-c-t-i-o-n- -a-u-d-i-t-s-*-*- --- -E-n-s-u-r-e- -m-o-d-e-l- -p-e-r-f-o-r-m-a-n-c-e- -i-s- -r-e-a-l- -b-e-f-o-r-e- -d-e-p-l-o-y-m-e-n-t--
+--- --- -*-*-C-o-m-p-l-i-a-n-c-e- -r-e-p-o-r-t-i-n-g-*-*- --- -G-e-n-e-r-a-t-e- -P-D-F- -r-e-p-o-r-t-s- -f-o-r- -s-t-a-k-e-h-o-l-d-e-r-s--
+--- --- -*-*-R-e-s-e-a-r-c-h- -i-n-t-e-g-r-i-t-y-*-*- --- -P-r-o-v-e- -y-o-u-r- -r-e-s-u-l-t-s- -a-r-e-n-'-t- -p---h-a-c-k-e-d--
+--
+--------
+--
+-#-#- -�-�- -S-e-e- -I-t- -I-n- -A-c-t-i-o-n--
+--
+-#-#-#- -W-o-r-k-f-l-o-w- -D-i-a-g-r-a-m--
+--
+-`-`-`-m-e-r-m-a-i-d--
+-f-l-o-w-c-h-a-r-t- -L-R--
+- - - - -A-[-I-n-p-u-t-s-:- -C-S-V-/-J-S-O-N-L- -l-o-g-s- -(-X-,- -S-,- -o-p-t-i-o-n-a-l- -Y-)-]- ----->- -B-[-P-r-e---c-h-e-c-k-s- -&- -V-a-l-i-d-a-t-i-o-n-]--
+- - - - -B- ----->- -C-[-I-n-d-i-c-a-t-o-r-s-:- -P-S-I-,- -C-C-S-,- -ρ-_-P-C-]--
+- - - - -C- ----->- -D-[-B-o-o-t-s-t-r-a-p- -C-I- -&- -p---v-a-l-u-e-s-]--
+- - - - -D- ----->- -E-[-D-e-c-i-s-i-o-n- -&- -R-i-s-k- -L-e-v-e-l-]--
+- - - - -E- ----->- -F-[-R-e-p-o-r-t-:- -T-a-b-l-e-s- -/- -P-l-o-t-s- -/- -E-x-p-o-r-t-]--
+-`-`-`--
+--
+-#-#-#- -W-e-b- -A-p-p- -I-n-t-e-r-f-a-c-e--
+--
+->- -*-[-S-c-r-e-e-n-s-h-o-t- -p-l-a-c-e-h-o-l-d-e-r-:- -U-p-l-o-a-d- --- -R-e-s-u-l-t-s- --- -D-o-w-n-l-o-a-d- -R-e-p-o-r-t- -f-l-o-w-]-*--
+--
+-#-#-#- -S-a-m-p-l-e- -R-e-s-u-l-t-s--
+--
+-`-`-`--
+-�-�- -B-I-A-S- -D-E-T-E-C-T-E-D- --- -H-I-G-H- -R-I-S-K--
+--
+-P-S-I-:- -0-.-1-8- --- -(-t-h-r-e-s-h-o-l-d-:- -0-.-1-5-)--
+- - --- -Y-o-u-r- -h-y-p-e-r-p-a-r-a-m-e-t-e-r-s- -c-h-a-n-g-e-d- -d-u-r-i-n-g- -e-v-a-l-u-a-t-i-o-n--
+--
+-C-C-S-:- -0-.-8-2- --- -(-t-h-r-e-s-h-o-l-d-:- -0-.-8-5-)- - --
+- - --- -E-v-a-l-u-a-t-i-o-n- -c-o-n-s-t-r-a-i-n-t-s- -w-e-r-e- -i-n-c-o-n-s-i-s-t-e-n-t--
+--
+-ρ-_-P-C-:- -0-.-6-5- --- -(-t-h-r-e-s-h-o-l-d-:- -0-.-5-0-)--
+- - --- -P-e-r-f-o-r-m-a-n-c-e- -c-o-r-r-e-l-a-t-e-s- -w-i-t-h- -c-o-n-s-t-r-a-i-n-t- -c-h-a-n-g-e-s--
+--
+-R-E-C-O-M-M-E-N-D-A-T-I-O-N-:--
+-1-.- -L-o-c-k- -a-l-l- -h-y-p-e-r-p-a-r-a-m-e-t-e-r-s- -(-t-e-m-p-e-r-a-t-u-r-e-,- -m-a-x-_-t-o-k-e-n-s-,- -e-t-c-.-)--
+-2-.- -U-s-e- -i-d-e-n-t-i-c-a-l- -e-v-a-l-u-a-t-i-o-n- -e-n-v-i-r-o-n-m-e-n-t- -f-o-r- -a-l-l- -r-u-n-s--
+-3-.- -R-e---e-v-a-l-u-a-t-e- -w-i-t-h- -f-i-x-e-d- -s-e-t-t-i-n-g-s--
+-`-`-`--
+--
+--------
+--
+-#-#- -�-�- -T-h-r-e-e- -W-a-y-s- -t-o- -U-s-e- -S-l-e-u-t-h--
+--
+-#-#-#- -1-️-⃣- -*-*-W-e-b- -A-p-p-*-*- -(-E-a-s-i-e-s-t- --- -N-o- -C-o-d-e-)--
+--
+-*-*-[-L-a-u-n-c-h- -W-e-b- -A-p-p- -→-]-(-h-t-t-p-s-:-/-/-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-)-*-*--
+--
+-1-.- -U-p-l-o-a-d- -C-S-V- -o-r- -u-s-e- -s-a-m-p-l-e- -d-a-t-a--
+-2-.- -C-l-i-c-k- -"-D-e-t-e-c-t- -B-i-a-s-"--
+-3-.- -G-e-t- -i-n-s-t-a-n-t- -r-e-s-u-l-t-s--
+-4-.- -D-o-w-n-l-o-a-d- -r-e-p-o-r-t--
+--
+-*-*-P-e-r-f-e-c-t- -f-o-r-:-*-*- -Q-u-i-c-k- -c-h-e-c-k-s-,- -d-e-m-o-s-,- -n-o-n---p-r-o-g-r-a-m-m-e-r-s--
+--
+--------
+--
+-#-#-#- -2-️-⃣- -*-*-P-y-t-h-o-n- -L-i-b-r-a-r-y-*-*- -(-M-o-s-t- -F-l-e-x-i-b-l-e-)--
+--
+-`-`-`-p-y-t-h-o-n--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r- -i-m-p-o-r-t- -S-i-m-p-l-e-B-i-a-s-D-e-t-e-c-t-o-r--
+-i-m-p-o-r-t- -n-u-m-p-y- -a-s- -n-p--
+--
+-#- -Y-o-u-r- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a--
+-p-e-r-f-o-r-m-a-n-c-e- -=- -n-p-.-a-r-r-a-y-(-[-[-0-.-8-5-,- -0-.-7-8-]-,- -[-0-.-8-7-,- -0-.-8-0-]-,- -[-0-.-9-1-,- -0-.-8-4-]-]-)--
+-c-o-n-s-t-r-a-i-n-t-s- -=- -n-p-.-a-r-r-a-y-(-[-[-5-1-2-,- -0-.-7-]-,- -[-5-5-0-,- -0-.-7-5-]-,- -[-6-0-0-,- -0-.-8-]-]-)--
+--
+-#- -D-e-t-e-c-t- -b-i-a-s--
+-d-e-t-e-c-t-o-r- -=- -S-i-m-p-l-e-B-i-a-s-D-e-t-e-c-t-o-r-(-)--
+-r-e-s-u-l-t- -=- -d-e-t-e-c-t-o-r-.-q-u-i-c-k-_-c-h-e-c-k-(-p-e-r-f-o-r-m-a-n-c-e-,- -c-o-n-s-t-r-a-i-n-t-s-)--
+--
+-i-f- -r-e-s-u-l-t-[-'-h-a-s-_-b-i-a-s-'-]-:--
+- - - - -p-r-i-n-t-(-f-"-⚠-️- -{-r-e-s-u-l-t-[-'-r-i-s-k-_-l-e-v-e-l-'-]-.-u-p-p-e-r-(-)-}- -R-I-S-K-"-)--
+- - - - -p-r-i-n-t-(-r-e-s-u-l-t-[-'-r-e-c-o-m-m-e-n-d-a-t-i-o-n-'-]-)--
+-e-l-s-e-:--
+- - - - -p-r-i-n-t-(-"--- -S-a-f-e- -t-o- -d-e-p-l-o-y-"-)--
+-`-`-`--
+--
+-*-*-P-e-r-f-e-c-t- -f-o-r-:-*-*- -J-u-p-y-t-e-r- -n-o-t-e-b-o-o-k-s-,- -a-u-t-o-m-a-t-e-d- -w-o-r-k-f-l-o-w-s-,- -c-u-s-t-o-m- -i-n-t-e-g-r-a-t-i-o-n-s--
+--
+--------
+--
+-#-#-#- -3-️-⃣- -*-*-C-L-I- -T-o-o-l-*-*- -(-B-e-s-t- -f-o-r- -A-u-t-o-m-a-t-i-o-n-)--
+--
+-`-`-`-b-a-s-h--
+-#- -I-n-s-t-a-l-l--
+-p-i-p- -i-n-s-t-a-l-l- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r-[-c-l-i-]--
+--
+-#- -D-e-t-e-c-t- -b-i-a-s--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -m-y-_-e-v-a-l-u-a-t-i-o-n-_-d-a-t-a-.-c-s-v--
+--
+-#- -G-e-t- -J-S-O-N- -o-u-t-p-u-t- -f-o-r- -C-I-/-C-D--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -d-a-t-a-.-c-s-v- -----f-o-r-m-a-t- -j-s-o-n- -----o-u-t-p-u-t- -r-e-s-u-l-t-s-.-j-s-o-n--
+-`-`-`--
+--
+-*-*-P-e-r-f-e-c-t- -f-o-r-:-*-*- -C-I-/-C-D- -p-i-p-e-l-i-n-e-s-,- -b-a-t-c-h- -p-r-o-c-e-s-s-i-n-g-,- -c-o-m-m-a-n-d---l-i-n-e- -w-o-r-k-f-l-o-w-s--
+--
+--------
+--
+-#-#- -�-�- -R-e-a-l---W-o-r-l-d- -U-s-e- -C-a-s-e-s--
+--
+-#-#-#- -U-s-e- -C-a-s-e- -1-:- -L-L-M- -E-v-a-l-u-a-t-i-o-n--
+-*-*-P-r-o-b-l-e-m-:-*-*- -A-d-j-u-s-t-e-d- -t-e-m-p-e-r-a-t-u-r-e- -3-0- -t-i-m-e-s- -u-n-t-i-l- -G-P-T---4- -b-e-n-c-h-m-a-r-k- -s-c-o-r-e-s- -i-m-p-r-o-v-e-d- - --
+-*-*-D-e-t-e-c-t-i-o-n-:-*-*- -ρ-_-P-C- -=- -0-.-7-2- -(-h-i-g-h- -c-o-r-r-e-l-a-t-i-o-n- -b-e-t-w-e-e-n- -s-a-m-p-l-i-n-g- -p-a-r-a-m-s- -a-n-d- -p-e-r-f-o-r-m-a-n-c-e-)- - --
+-*-*-F-i-x-:-*-*- -L-o-c-k- -t-e-m-p-e-r-a-t-u-r-e-=-0-.-7-,- -r-e---e-v-a-l-u-a-t-e- --- -r-e-a-l- -s-c-o-r-e- -3-%- -l-o-w-e-r- -b-u-t- -t-r-u-s-t-w-o-r-t-h-y--
+--
+-#-#-#- -U-s-e- -C-a-s-e- -2-:- -C-o-m-p-u-t-e-r- -V-i-s-i-o-n--
+-*-*-P-r-o-b-l-e-m-:-*-*- -C-h-a-n-g-e-d- -d-a-t-a-s-e-t- -s-i-z-e- -f-r-o-m- -1-0-K- --- -5-0-K- --- -1-0-0-K- -s-a-m-p-l-e-s- - --
+-*-*-D-e-t-e-c-t-i-o-n-:-*-*- -C-C-S- -=- -0-.-6-8- -(-i-n-c-o-n-s-i-s-t-e-n-t- -c-o-n-s-t-r-a-i-n-t-s- -a-c-r-o-s-s- -i-t-e-r-a-t-i-o-n-s-)- - --
+-*-*-F-i-x-:-*-*- -F-i-x- -d-a-t-a-s-e-t- -t-o- -5-0-K-,- -r-e---r-u-n- -a-l-l- -m-o-d-e-l-s- --- -f-a-i-r- -c-o-m-p-a-r-i-s-o-n- -a-c-h-i-e-v-e-d--
+--
+-#-#-#- -U-s-e- -C-a-s-e- -3-:- -P-r-e---P-u-b-l-i-c-a-t-i-o-n- -C-h-e-c-k--
+-*-*-P-r-o-b-l-e-m-:-*-*- -P-h-D- -s-t-u-d-e-n-t- -w-o-r-r-i-e-d- -a-b-o-u-t- -r-e-v-i-e-w-e-r- -r-e-j-e-c-t-i-o-n- - --
+-*-*-D-e-t-e-c-t-i-o-n-:-*-*- -A-l-l- -3- -i-n-d-i-c-a-t-o-r-s- -g-r-e-e-n- --- -*-*-R-e-s-u-l-t-:-*-*- -P-a-p-e-r- -a-c-c-e-p-t-e-d- -t-o- -N-e-u-r-I-P-S- -w-i-t-h- -n-o- -e-v-a-l-u-a-t-i-o-n- -c-o-n-c-e-r-n-s--
+--
+--------
+--
+-#-#- -�-�- -D-a-t-a-s-e-t- -&- -E-x-a-m-p-l-e-s--
+--
+-#-#-#- -Q-u-i-c-k- -S-t-a-r-t- -D-a-t-a--
+--
+-*-*-S-a-m-p-l-e- -d-a-t-a-s-e-t-s- -i-n-c-l-u-d-e-d-:-*-*--
+--- -`-d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v-`- --- -B-a-s-i-c- -e-x-a-m-p-l-e- -(-I-m-a-g-e-N-e-t- -e-v-a-l-u-a-t-i-o-n-s-)--
+--- -`-d-a-t-a-/-l-l-m-_-e-v-a-l-_-s-a-m-p-l-e-.-c-s-v-`- --- -L-L-M- -e-v-a-l-u-a-t-i-o-n- -(-G-P-T-,- -L-l-a-m-a-,- -C-l-a-u-d-e-,- -M-i-s-t-r-a-l-)--
+--
+-*-*-T-r-y- -t-h-e-m- -i-n- -t-h-e- -w-e-b- -a-p-p-:-*-*- -[-L-a-u-n-c-h- -S-l-e-u-t-h- -→-]-(-h-t-t-p-s-:-/-/-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-)--
+--
+-#-#-#- -F-u-l-l- -R-e-s-e-a-r-c-h- -D-a-t-a-s-e-t- -(-2-0-0-K-+- -R-e-c-o-r-d-s-)--
+--
+-F-o-r- -a-c-a-d-e-m-i-c- -r-e-s-e-a-r-c-h-,- -a-c-c-e-s-s- -t-h-e- -c-o-m-p-l-e-t-e- -d-a-t-a-s-e-t- -o-n- -Z-e-n-o-d-o-:--
+--
+--- -�-�- -*-*-C-o-m-p-u-t-e-r- -V-i-s-i-o-n-*-*-:- -I-m-a-g-e-N-e-t- -c-l-a-s-s-i-f-i-c-a-t-i-o-n- -e-v-a-l-u-a-t-i-o-n-s--
+--- -�-�- -*-*-N-L-P-*-*-:- -G-L-U-E- -b-e-n-c-h-m-a-r-k- -s-e-q-u-e-n-c-e-s--
+--- -�-�- -*-*-R-e-c-o-m-m-e-n-d-e-r- -S-y-s-t-e-m-s-*-*-:- -M-o-v-i-e-L-e-n-s---1-0-0-K- -p-r-o-t-o-c-o-l-s--
+--- -�-�- -*-*-S-i-m-u-l-a-t-i-o-n-s-*-*-:- -1-3- -c-o-n-t-r-o-l-l-e-d- -b-i-a-s- -s-c-e-n-a-r-i-o-s--
+--
+-*-*-[-D-o-w-n-l-o-a-d- -f-r-o-m- -Z-e-n-o-d-o- -→-]-(-h-t-t-p-s-:-/-/-d-o-i-.-o-r-g-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-2-0-1-0-3-2-)-*-*--
+--
+-#-#-#- -C-S-V- -D-a-t-a- -F-o-r-m-a-t- -(-S-i-m-p-l-e-!-)--
+--
+-Y-o-u-r- -C-S-V- -s-h-o-u-l-d- -h-a-v-e- -t-h-e-s-e- -c-o-l-u-m-n-s-:--
+--
+-|- -F-i-e-l-d- -|- -T-y-p-e- -|- -D-e-s-c-r-i-p-t-i-o-n- -|--
+-|---------------|-------------|---------------------------|--
+-|- -`-t-i-m-e-_-p-e-r-i-o-d-`- -|- -i-n-t- -|- -S-e-q-u-e-n-t-i-a-l- -e-v-a-l-u-a-t-i-o-n- -p-e-r-i-o-d- -(-1-,- -2-,- -3-,- -.-.-.-)- -|--
+-|- -`-a-l-g-o-r-i-t-h-m-`- -|- -s-t-r- -|- -A-l-g-o-r-i-t-h-m- -n-a-m-e- -|--
+-|- -`-p-e-r-f-o-r-m-a-n-c-e-`- -|- -f-l-o-a-t- -|- -P-e-r-f-o-r-m-a-n-c-e- -m-e-t-r-i-c- -(-0---1- -s-c-a-l-e-)- -|--
+-|- -`-c-o-n-s-t-r-a-i-n-t-_-c-o-m-p-u-t-e-`- -|- -f-l-o-a-t- -|- -C-o-m-p-u-t-a-t-i-o-n-a-l- -r-e-s-o-u-r-c-e- -l-i-m-i-t- -|--
+-|- -`-c-o-n-s-t-r-a-i-n-t-_-m-e-m-o-r-y-`- -|- -f-l-o-a-t- -|- -M-e-m-o-r-y- -l-i-m-i-t- -(-G-B-)- -|--
+-|- -`-c-o-n-s-t-r-a-i-n-t-_-d-a-t-a-s-e-t-_-s-i-z-e-`- -|- -i-n-t- -|- -T-r-a-i-n-i-n-g- -d-a-t-a-s-e-t- -s-i-z-e- -|--
+-|- -`-e-v-a-l-u-a-t-i-o-n-_-p-r-o-t-o-c-o-l-`- -|- -s-t-r- -|- -P-r-o-t-o-c-o-l- -v-e-r-s-i-o-n- -i-d-e-n-t-i-f-i-e-r- -|--
+--
+-*-*-E-x-a-m-p-l-e- -C-S-V-:-*-*--
+-`-`-`-c-s-v--
+-t-i-m-e-_-p-e-r-i-o-d-,-a-l-g-o-r-i-t-h-m-,-p-e-r-f-o-r-m-a-n-c-e-,-c-o-n-s-t-r-a-i-n-t-_-c-o-m-p-u-t-e-,-c-o-n-s-t-r-a-i-n-t-_-m-e-m-o-r-y--
+-1-,-M-o-d-e-l-A-,-0-.-8-5-,-5-1-2-,-8-.-0--
+-1-,-M-o-d-e-l-B-,-0-.-7-8-,-5-1-2-,-8-.-0--
+-2-,-M-o-d-e-l-A-,-0-.-8-7-,-5-5-0-,-8-.-5--
+-2-,-M-o-d-e-l-B-,-0-.-8-0-,-5-5-0-,-8-.-5--
+-`-`-`--
+--
+-*-*-S-e-e- -f-u-l-l- -e-x-a-m-p-l-e-:-*-*- -`-d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v-`--
+--
+--------
+--
+-#-#- -�-�- -I-n-s-t-a-l-l-a-t-i-o-n- -&- -U-s-a-g-e--
+--
+-#-#-#- -Q-u-i-c-k- -I-n-s-t-a-l-l--
+--
+-`-`-`-b-a-s-h--
+-p-i-p- -i-n-s-t-a-l-l- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r--
+-`-`-`--
+--
+-#-#-#- -F-u-l-l- -I-n-s-t-a-l-l- -(-f-r-o-m- -s-o-u-r-c-e-)--
+--
+-`-`-`-b-a-s-h--
+-g-i-t- -c-l-o-n-e- -h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-.-g-i-t--
+-c-d- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n--
+-p-i-p- -i-n-s-t-a-l-l- ---r- -r-e-q-u-i-r-e-m-e-n-t-s-.-t-x-t--
+-`-`-`--
+--
+-#-#-#- -5---M-i-n-u-t-e- -T-u-t-o-r-i-a-l--
+--
+-`-`-`-p-y-t-h-o-n--
+-i-m-p-o-r-t- -p-a-n-d-a-s- -a-s- -p-d--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r- -i-m-p-o-r-t- -S-i-m-p-l-e-B-i-a-s-D-e-t-e-c-t-o-r--
+--
+-#- -1-.- -L-o-a-d- -y-o-u-r- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a--
+-d-f- -=- -p-d-.-r-e-a-d-_-c-s-v-(-'-d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v-'-)--
+--
+-#- -2-.- -P-r-e-p-a-r-e- -m-a-t-r-i-c-e-s--
+-p-e-r-f-o-r-m-a-n-c-e- -=- -d-f-.-p-i-v-o-t-(-'-t-i-m-e-_-p-e-r-i-o-d-'-,- -'-a-l-g-o-r-i-t-h-m-'-,- -'-p-e-r-f-o-r-m-a-n-c-e-'-)-.-v-a-l-u-e-s--
+-c-o-n-s-t-r-a-i-n-t-s- -=- -d-f-.-g-r-o-u-p-b-y-(-'-t-i-m-e-_-p-e-r-i-o-d-'-)-[-[-'-c-o-n-s-t-r-a-i-n-t-_-c-o-m-p-u-t-e-'-,- -'-c-o-n-s-t-r-a-i-n-t-_-m-e-m-o-r-y-'-]-]-.-f-i-r-s-t-(-)-.-v-a-l-u-e-s--
+--
+-#- -3-.- -D-e-t-e-c-t- -b-i-a-s--
+-d-e-t-e-c-t-o-r- -=- -S-i-m-p-l-e-B-i-a-s-D-e-t-e-c-t-o-r-(-)--
+-r-e-s-u-l-t- -=- -d-e-t-e-c-t-o-r-.-q-u-i-c-k-_-c-h-e-c-k-(-p-e-r-f-o-r-m-a-n-c-e-,- -c-o-n-s-t-r-a-i-n-t-s-)--
+--
+-#- -4-.- -C-h-e-c-k- -r-e-s-u-l-t-s--
+-i-f- -r-e-s-u-l-t-[-'-h-a-s-_-b-i-a-s-'-]-:--
+- - - - -p-r-i-n-t-(-f-"-�-�- -{-r-e-s-u-l-t-[-'-r-i-s-k-_-l-e-v-e-l-'-]-.-u-p-p-e-r-(-)-}-"-)--
+- - - - -p-r-i-n-t-(-r-e-s-u-l-t-[-'-r-e-c-o-m-m-e-n-d-a-t-i-o-n-'-]-)--
+-e-l-s-e-:--
+- - - - -p-r-i-n-t-(-"--- -N-o- -b-i-a-s- -d-e-t-e-c-t-e-d-"-)--
+--
+-#- -5-.- -G-e-t- -d-e-t-a-i-l-e-d- -r-e-p-o-r-t--
+-p-r-i-n-t-(-d-e-t-e-c-t-o-r-.-g-e-n-e-r-a-t-e-_-s-i-m-p-l-e-_-r-e-p-o-r-t-(-r-e-s-u-l-t-)-)--
+-`-`-`--
+--
+-*-*-M-o-r-e- -e-x-a-m-p-l-e-s-:-*-*- -S-e-e- -[-`-e-x-a-m-p-l-e-s-/-`-]-(-e-x-a-m-p-l-e-s-/-)- -d-i-r-e-c-t-o-r-y--
+--
+-#-#-#- -A-d-v-a-n-c-e-d- -U-s-a-g-e-:- -B-o-o-t-s-t-r-a-p- -C-o-n-f-i-d-e-n-c-e- -I-n-t-e-r-v-a-l-s--
+--
+-*-*-N-E-W-:-*-*- -C-o-m-p-u-t-e- -s-t-a-t-i-s-t-i-c-a-l- -s-i-g-n-i-f-i-c-a-n-c-e- -w-i-t-h- -b-o-o-t-s-t-r-a-p- -r-e-s-a-m-p-l-i-n-g- -(-n-=-1-0-0-0-)-:--
+--
+-`-`-`-p-y-t-h-o-n--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-.-c-o-r-e- -i-m-p-o-r-t- -(--
+- - - - -b-o-o-t-s-t-r-a-p-_-p-s-i-,- --
+- - - - -b-o-o-t-s-t-r-a-p-_-c-c-s-,- --
+- - - - -b-o-o-t-s-t-r-a-p-_-r-h-o-_-p-c-,--
+- - - - -c-o-m-p-u-t-e-_-a-d-a-p-t-i-v-e-_-t-h-r-e-s-h-o-l-d-s--
+-)--
+--
+-#- -B-o-o-t-s-t-r-a-p- -c-o-n-f-i-d-e-n-c-e- -i-n-t-e-r-v-a-l-s- -a-n-d- -p---v-a-l-u-e-s--
+-p-s-i-_-r-e-s-u-l-t-s- -=- -b-o-o-t-s-t-r-a-p-_-p-s-i-(-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,- -n-_-b-o-o-t-s-t-r-a-p-=-1-0-0-0-)--
+-c-c-s-_-r-e-s-u-l-t-s- -=- -b-o-o-t-s-t-r-a-p-_-c-c-s-(-c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-,- -n-_-b-o-o-t-s-t-r-a-p-=-1-0-0-0-)--
+-r-h-o-_-r-e-s-u-l-t-s- -=- -b-o-o-t-s-t-r-a-p-_-r-h-o-_-p-c-(-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,- -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-,- -n-_-b-o-o-t-s-t-r-a-p-=-1-0-0-0-)--
+--
+-#- -D-i-s-p-l-a-y- -w-i-t-h- -c-o-n-f-i-d-e-n-c-e- -i-n-t-e-r-v-a-l-s--
+-p-r-i-n-t-(-f-"-P-S-I- -=- -{-p-s-i-_-r-e-s-u-l-t-s-[-'-p-s-i-'-]-:-.-4-f-}- -"--
+- - - - - - -f-"-[-{-p-s-i-_-r-e-s-u-l-t-s-[-'-c-i-_-l-o-w-e-r-'-]-:-.-4-f-}---{-p-s-i-_-r-e-s-u-l-t-s-[-'-c-i-_-u-p-p-e-r-'-]-:-.-4-f-}-]-,- -"--
+- - - - - - -f-"-p-=-{-p-s-i-_-r-e-s-u-l-t-s-[-'-p-_-v-a-l-u-e-'-]-:-.-3-f-}-"-)--
+--
+-p-r-i-n-t-(-f-"-C-C-S- -=- -{-c-c-s-_-r-e-s-u-l-t-s-[-'-c-c-s-'-]-:-.-4-f-}- -"--
+- - - - - - -f-"-[-{-c-c-s-_-r-e-s-u-l-t-s-[-'-c-i-_-l-o-w-e-r-'-]-:-.-4-f-}---{-c-c-s-_-r-e-s-u-l-t-s-[-'-c-i-_-u-p-p-e-r-'-]-:-.-4-f-}-]-,- -"--
+- - - - - - -f-"-p-=-{-c-c-s-_-r-e-s-u-l-t-s-[-'-p-_-v-a-l-u-e-'-]-:-.-3-f-}-"-)--
+--
+-p-r-i-n-t-(-f-"-ρ-_-P-C- -=- -{-r-h-o-_-r-e-s-u-l-t-s-[-'-r-h-o-_-p-c-'-]-:-+-.-4-f-}- -"--
+- - - - - - -f-"-[-{-r-h-o-_-r-e-s-u-l-t-s-[-'-c-i-_-l-o-w-e-r-'-]-:-+-.-4-f-}---{-r-h-o-_-r-e-s-u-l-t-s-[-'-c-i-_-u-p-p-e-r-'-]-:-+-.-4-f-}-]-,- -"--
+- - - - - - -f-"-p-=-{-r-h-o-_-r-e-s-u-l-t-s-[-'-p-_-v-a-l-u-e-'-]-:-.-3-f-}-"-)--
+--
+-#- -C-o-m-p-u-t-e- -d-a-t-a---a-d-a-p-t-i-v-e- -t-h-r-e-s-h-o-l-d-s- -(-9-5-t-h- -p-e-r-c-e-n-t-i-l-e-)--
+-a-d-a-p-t-i-v-e- -=- -c-o-m-p-u-t-e-_-a-d-a-p-t-i-v-e-_-t-h-r-e-s-h-o-l-d-s-(--
+- - - - -p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,- --
+- - - - -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-,--
+- - - - -q-u-a-n-t-i-l-e-=-0-.-9-5--
+-)--
+--
+-p-r-i-n-t-(-f-"-\-n-A-d-a-p-t-i-v-e- -T-h-r-e-s-h-o-l-d-s-:-"-)--
+-p-r-i-n-t-(-f-"- - -P-S-I-:- - -{-a-d-a-p-t-i-v-e-[-'-p-s-i-_-t-h-r-e-s-h-o-l-d-'-]-:-.-4-f-}-"-)--
+-p-r-i-n-t-(-f-"- - -C-C-S-:- - -{-a-d-a-p-t-i-v-e-[-'-c-c-s-_-t-h-r-e-s-h-o-l-d-'-]-:-.-4-f-}-"-)--
+-p-r-i-n-t-(-f-"- - -ρ-_-P-C-:- -{-a-d-a-p-t-i-v-e-[-'-r-h-o-_-p-c-_-t-h-r-e-s-h-o-l-d-'-]-:-.-4-f-}-"-)--
+-`-`-`--
+--
+-*-*-E-x-a-m-p-l-e- -o-u-t-p-u-t-:-*-*--
+-`-`-`--
+-P-S-I- -=- -0-.-0-2-3-8- -[-0-.-0-1-1-3---0-.-0-6-7-6-]-,- -p-=-0-.-3-5-5--
+-C-C-S- -=- -0-.-8-8-6-0- -[-0-.-8-7-2-3---0-.-9-5-3-0-]-,- -p-=-0-.-3-4-2--
+-ρ-_-P-C- -=- -+-0-.-9-9-8-3- -[-+-0-.-9-9-7-2---+-1-.-0-0-0-0-]-,- -p-=-0-.-7-7-2--
+--
+-A-d-a-p-t-i-v-e- -T-h-r-e-s-h-o-l-d-s-:--
+- - -P-S-I-:- - -0-.-0-6-2-5--
+- - -C-C-S-:- - -0-.-8-8-6-0--
+- - -ρ-_-P-C-:- -0-.-9-9-8-3--
+-`-`-`--
+--
+-S-e-e- -`-e-x-a-m-p-l-e-s-/-b-o-o-t-s-t-r-a-p-_-e-x-a-m-p-l-e-.-p-y-`- -f-o-r- -a- -c-o-m-p-l-e-t-e- -d-e-m-o-n-s-t-r-a-t-i-o-n- -w-i-t-h- -L-L-M- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a-.--
+--
+-#-#-#- -E-n-h-a-n-c-e-d- -A-P-I-:- -I-n-t-e-g-r-a-t-e-d- -B-o-o-t-s-t-r-a-p- -a-n-d- -A-d-a-p-t-i-v-e- -T-h-r-e-s-h-o-l-d-s--
+--
+-*-*-N-E-W-:-*-*- -U-s-e- -B-i-a-s-D-e-t-e-c-t-o-r- -w-i-t-h- -b-u-i-l-t---i-n- -b-o-o-t-s-t-r-a-p- -a-n-d- -a-d-a-p-t-i-v-e- -t-h-r-e-s-h-o-l-d-s-:--
+--
+-`-`-`-p-y-t-h-o-n--
+-d-e-t-e-c-t-o-r- -=- -B-i-a-s-D-e-t-e-c-t-o-r-(-)--
+--
+-#- -E-n-a-b-l-e- -b-o-o-t-s-t-r-a-p- -c-o-n-f-i-d-e-n-c-e- -i-n-t-e-r-v-a-l-s--
+-r-e-s-u-l-t-s- -=- -d-e-t-e-c-t-o-r-.-d-e-t-e-c-t-_-b-i-a-s-(--
+- - - - -p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-=-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,--
+- - - - -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-=-c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-,--
+- - - - -a-l-g-o-r-i-t-h-m-_-n-a-m-e-s-=-a-l-g-o-r-i-t-h-m-s-,--
+- - - - -e-n-a-b-l-e-_-b-o-o-t-s-t-r-a-p-=-T-r-u-e-,- - - - - - - - -#- --- -A-d-d- -C-I- -a-n-d- -p---v-a-l-u-e-s--
+- - - - -n-_-b-o-o-t-s-t-r-a-p-=-1-0-0-0-,--
+- - - - -e-n-a-b-l-e-_-a-d-a-p-t-i-v-e-_-t-h-r-e-s-h-o-l-d-s-=-T-r-u-e- - -#- --- -D-a-t-a---d-r-i-v-e-n- -t-h-r-e-s-h-o-l-d-s--
+-)--
+--
+-#- -R-e-s-u-l-t-s- -n-o-w- -i-n-c-l-u-d-e- -b-o-o-t-s-t-r-a-p- -s-t-a-t-i-s-t-i-c-s--
+-p-r-i-n-t-(-f-"-P-S-I-:- -{-r-e-s-u-l-t-s-[-'-p-s-i-_-s-c-o-r-e-'-]-:-.-4-f-}- -"--
+- - - - - - -f-"-[-{-r-e-s-u-l-t-s-[-'-p-s-i-_-c-i-_-l-o-w-e-r-'-]-:-.-4-f-}---{-r-e-s-u-l-t-s-[-'-p-s-i-_-c-i-_-u-p-p-e-r-'-]-:-.-4-f-}-]-,- -"--
+- - - - - - -f-"-p-=-{-r-e-s-u-l-t-s-[-'-p-s-i-_-p-v-a-l-u-e-'-]-:-.-3-f-}-"-)--
+--
+-#- -G-e-n-e-r-a-t-e- -e-n-h-a-n-c-e-d- -r-e-p-o-r-t--
+-r-e-p-o-r-t- -=- -d-e-t-e-c-t-o-r-.-g-e-n-e-r-a-t-e-_-r-e-p-o-r-t-(-r-e-s-u-l-t-s-)--
+-p-r-i-n-t-(-r-e-p-o-r-t-)- - -#- -I-n-c-l-u-d-e-s- -C-I- -a-n-d- -s-i-g-n-i-f-i-c-a-n-c-e- -s-t-a-r-s--
+-`-`-`--
+--
+-#-#-#- -D-a-t-a- -V-a-l-i-d-a-t-i-o-n- -a-n-d- -A-u-t-o---C-l-e-a-n-i-n-g--
+--
+-*-*-N-E-W-:-*-*- -A-u-t-o-m-a-t-i-c-a-l-l-y- -d-e-t-e-c-t- -a-n-d- -f-i-x- -d-a-t-a- -q-u-a-l-i-t-y- -i-s-s-u-e-s-:--
+--
+-`-`-`-p-y-t-h-o-n--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-.-u-t-i-l-s- -i-m-p-o-r-t- -(--
+- - - - -v-a-l-i-d-a-t-e-_-a-n-d-_-c-l-e-a-n-_-d-a-t-a-,--
+- - - - -p-r-i-n-t-_-v-a-l-i-d-a-t-i-o-n-_-r-e-p-o-r-t--
+-)--
+--
+-#- -L-o-a-d- -r-a-w- -d-a-t-a--
+-d-f- -=- -p-d-.-r-e-a-d-_-c-s-v-(-'-r-a-w-_-d-a-t-a-.-c-s-v-'-)--
+--
+-#- -V-a-l-i-d-a-t-e- -a-n-d- -c-l-e-a-n--
+-d-f-_-c-l-e-a-n-,- -r-e-p-o-r-t- -=- -v-a-l-i-d-a-t-e-_-a-n-d-_-c-l-e-a-n-_-d-a-t-a-(--
+- - - - -d-f-,--
+- - - - -p-e-r-f-o-r-m-a-n-c-e-_-c-o-l-s-=-[-'-a-l-g-o-r-i-t-h-m-'-]-,--
+- - - - -c-o-n-s-t-r-a-i-n-t-_-c-o-l-s-=-[-'-c-o-n-s-t-r-a-i-n-t-_-c-o-m-p-u-t-e-'-,- -'-c-o-n-s-t-r-a-i-n-t-_-m-e-m-o-r-y-'-]-,--
+- - - - -t-i-m-e-_-c-o-l-=-'-t-i-m-e-_-p-e-r-i-o-d-'-,--
+- - - - -a-l-g-o-r-i-t-h-m-_-c-o-l-=-'-a-l-g-o-r-i-t-h-m-'-,--
+- - - - -a-u-t-o-_-f-i-x-=-T-r-u-e- - -#- -A-u-t-o-m-a-t-i-c-a-l-l-y- -f-i-x- -i-s-s-u-e-s--
+-)--
+--
+-#- -P-r-i-n-t- -r-e-p-o-r-t--
+-p-r-i-n-t-_-v-a-l-i-d-a-t-i-o-n-_-r-e-p-o-r-t-(-r-e-p-o-r-t-)--
+-#- -O-u-t-p-u-t-:--
+-#- -D-a-t-a- -Q-u-a-l-i-t-y- -S-c-o-r-e-:- -8-5-.-0-/-1-0-0- -⚠-️- - -G-O-O-D--
+-#- -I-s-s-u-e-s- -f-i-x-e-d-:--
+-#- - --- -m-i-s-s-i-n-g-_-v-a-l-u-e-s-:- -f-o-r-w-a-r-d-_-f-i-l-l-_-t-h-e-n-_-m-e-a-n--
+-#- - --- -o-u-t-l-i-e-r-s-:- -I-Q-R-_-c-l-i-p-p-i-n-g--
+-`-`-`--
+--
+-#-#-#- -E-n-h-a-n-c-e-d- -V-i-s-u-a-l-i-z-a-t-i-o-n-s--
+--
+-*-*-N-E-W-:-*-*- -G-e-n-e-r-a-t-e- -p-u-b-l-i-c-a-t-i-o-n---q-u-a-l-i-t-y- -f-i-g-u-r-e-s- -a-n-d- -i-n-t-e-r-a-c-t-i-v-e- -d-a-s-h-b-o-a-r-d-s-:--
+--
+-`-`-`-p-y-t-h-o-n--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-.-v-i-s-u-a-l-i-z-a-t-i-o-n- -i-m-p-o-r-t- -(--
+- - - - -p-l-o-t-_-p-e-r-f-o-r-m-a-n-c-e-_-h-e-a-t-m-a-p-,--
+- - - - -p-l-o-t-_-c-o-n-s-t-r-a-i-n-t-_-h-e-a-t-m-a-p-,--
+- - - - -p-l-o-t-_-i-n-t-e-r-a-c-t-i-v-e-_-d-a-s-h-b-o-a-r-d-,--
+- - - - -p-l-o-t-_-c-o-r-r-e-l-a-t-i-o-n-_-m-a-t-r-i-x--
+-)--
+--
+-#- -1-.- -P-e-r-f-o-r-m-a-n-c-e- -h-e-a-t-m-a-p--
+-p-l-o-t-_-p-e-r-f-o-r-m-a-n-c-e-_-h-e-a-t-m-a-p-(--
+- - - - -p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,--
+- - - - -a-l-g-o-r-i-t-h-m-_-n-a-m-e-s-=-a-l-g-o-r-i-t-h-m-s-,--
+- - - - -s-a-v-e-_-p-a-t-h-=-'-p-e-r-f-o-r-m-a-n-c-e-_-h-e-a-t-m-a-p-.-p-n-g-'--
+-)--
+--
+-#- -2-.- -I-n-t-e-r-a-c-t-i-v-e- -P-l-o-t-l-y- -d-a-s-h-b-o-a-r-d- -(-w-i-t-h- -h-o-v-e-r- -t-o-o-l-t-i-p-s-)--
+-p-l-o-t-_-i-n-t-e-r-a-c-t-i-v-e-_-d-a-s-h-b-o-a-r-d-(--
+- - - - -p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,--
+- - - - -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-,--
+- - - - -r-e-s-u-l-t-s-,--
+- - - - -a-l-g-o-r-i-t-h-m-_-n-a-m-e-s-=-a-l-g-o-r-i-t-h-m-s-,--
+- - - - -s-a-v-e-_-h-t-m-l-=-'-d-a-s-h-b-o-a-r-d-.-h-t-m-l-'- - -#- -O-p-e-n- -i-n- -b-r-o-w-s-e-r--
+-)--
+--
+-#- -3-.- -C-o-r-r-e-l-a-t-i-o-n- -m-a-t-r-i-x--
+-p-l-o-t-_-c-o-r-r-e-l-a-t-i-o-n-_-m-a-t-r-i-x-(--
+- - - - -p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,--
+- - - - -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-,--
+- - - - -s-a-v-e-_-p-a-t-h-=-'-c-o-r-r-e-l-a-t-i-o-n-.-p-n-g-'--
+-)--
+-`-`-`--
+--
+-S-e-e- -`-e-x-a-m-p-l-e-s-/-v-i-s-u-a-l-i-z-a-t-i-o-n-_-e-x-a-m-p-l-e-.-p-y-`- -f-o-r- -c-o-m-p-l-e-t-e- -c-o-d-e-.--
+--
+-#-#-#- -L-L-M- -E-v-a-l-u-a-t-i-o-n- -E-x-a-m-p-l-e--
+--
+-A-n-a-l-y-z-e- -b-i-a-s- -i-n- -l-a-r-g-e- -l-a-n-g-u-a-g-e- -m-o-d-e-l- -b-e-n-c-h-m-a-r-k-i-n-g-:--
+--
+-`-`-`-p-y-t-h-o-n--
+-#- -L-o-a-d- -L-L-M- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a--
+-d-f- -=- -p-d-.-r-e-a-d-_-c-s-v-(-'-d-a-t-a-/-l-l-m-_-e-v-a-l-_-s-a-m-p-l-e-.-c-s-v-'-)--
+--
+-#- -I-n-c-l-u-d-e- -L-L-M---s-p-e-c-i-f-i-c- -c-o-n-s-t-r-a-i-n-t-s--
+-c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x- -=- -d-f-.-g-r-o-u-p-b-y-(-'-t-i-m-e-_-p-e-r-i-o-d-'-)-[-[--
+- - - - -'-c-o-n-s-t-r-a-i-n-t-_-c-o-m-p-u-t-e-'-,--
+- - - - -'-c-o-n-s-t-r-a-i-n-t-_-m-e-m-o-r-y-'-,- --
+- - - - -'-c-o-n-s-t-r-a-i-n-t-_-d-a-t-a-s-e-t-_-s-i-z-e-'-,--
+- - - - -'-m-a-x-_-t-o-k-e-n-s-'-,- - - - - - - - - - - -#- -L-L-M---s-p-e-c-i-f-i-c--
+- - - - -'-t-e-m-p-e-r-a-t-u-r-e-'- - - - - - - - - - - -#- -L-L-M---s-p-e-c-i-f-i-c--
+-]-]-.-f-i-r-s-t-(-)-.-v-a-l-u-e-s--
+--
+-#- -D-e-t-e-c-t- -i-f- -p-r-o-m-p-t- -e-n-g-i-n-e-e-r-i-n-g- -i-n-f-l-a-t-e-d- -s-c-o-r-e-s--
+-r-e-s-u-l-t-s- -=- -d-e-t-e-c-t-o-r-.-d-e-t-e-c-t-_-b-i-a-s-(-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,- -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-)--
+--
+-#- -H-i-g-h- -ρ-_-P-C- -s-u-g-g-e-s-t-s- -s-a-m-p-l-i-n-g- -p-a-r-a-m-e-t-e-r-s- -w-e-r-e- -t-u-n-e-d- -t-o- -i-m-p-r-o-v-e- -s-c-o-r-e-s--
+-i-f- -a-b-s-(-r-e-s-u-l-t-s-[-'-r-h-o-_-p-c-_-s-c-o-r-e-'-]-)- ->- -0-.-5-:--
+- - - - -p-r-i-n-t-(-"-⚠-️- - -H-i-g-h- -c-o-r-r-e-l-a-t-i-o-n- -d-e-t-e-c-t-e-d-:- -s-a-m-p-l-i-n-g- -p-a-r-a-m-e-t-e-r-s- -m-a-y- -h-a-v-e- -b-e-e-n- -"--
+- - - - - - - - - - -"-i-t-e-r-a-t-i-v-e-l-y- -a-d-j-u-s-t-e-d- -t-o- -i-n-f-l-a-t-e- -b-e-n-c-h-m-a-r-k- -s-c-o-r-e-s-.-"-)--
+-`-`-`--
+--
+-#-#- -�-�- -R-e-p-o-s-i-t-o-r-y- -S-t-r-u-c-t-u-r-e--
+--
+-`-`-`--
+-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/--
+-├-─-─- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-/- - - - - -#- -C-o-r-e- -i-m-p-l-e-m-e-n-t-a-t-i-o-n--
+--- -├-─-─- -_-_-i-n-i-t-_-_-.-p-y--
+--- -├-─-─- -c-o-r-e-.-p-y- - - - - - - - - - - - - - - - - -#- -P-S-I-,- -C-C-S-,- -ρ-_-P-C- -a-l-g-o-r-i-t-h-m-s--
+--- -├-─-─- -d-e-t-e-c-t-i-o-n-.-p-y- - - - - - - - - - - - -#- -M-a-i-n- -d-e-t-e-c-t-i-o-n- -f-r-a-m-e-w-o-r-k--
+--- -└-─-─- -u-t-i-l-s-.-p-y- - - - - - - - - - - - - - - - -#- -U-t-i-l-i-t-y- -f-u-n-c-t-i-o-n-s--
+-├-─-─- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-c-l-i-/- - - - - - - - - - -#- -C-L-I- -t-o-o-l--
+--- -├-─-─- -m-a-i-n-.-p-y- - - - - - - - - - - - - - - - - -#- -C-L-I- -e-n-t-r-y- -p-o-i-n-t--
+--- -├-─-─- -a-d-a-p-t-e-r-s-/- - - - - - - - - - - - - - - -#- -B-r-i-d-g-e- -t-o- -c-o-r-e- -l-i-b-r-a-r-y--
+--- -└-─-─- -u-t-i-l-s-/- - - - - - - - - - - - - - - - - - -#- -Z-e-n-o-d-o- -l-o-a-d-e-r-,- -e-t-c-.--
+-├-─-─- -w-e-b---a-p-p-/- - - - - - - - - - - - - - - - - - - - -#- -W-e-b- -a-p-p-l-i-c-a-t-i-o-n--
+--- -├-─-─- -s-r-c-/- - - - - - - - - - - - - - - - - - - - -#- -R-e-a-c-t- -c-o-m-p-o-n-e-n-t-s--
+--- -└-─-─- -p-u-b-l-i-c-/- - - - - - - - - - - - - - - - - -#- -S-t-a-t-i-c- -a-s-s-e-t-s--
+-├-─-─- -e-x-a-m-p-l-e-s-/- - - - - - - - - - - - - - - - - - - -#- -U-s-a-g-e- -e-x-a-m-p-l-e-s--
+--- -├-─-─- -r-e-p-r-o-d-u-c-e-_-s-i-m-u-l-a-t-i-o-n-s-.-p-y--
+--- -├-─-─- -r-e-p-r-o-d-u-c-e-_-c-a-s-e-_-s-t-u-d-i-e-s-.-p-y--
+--- -└-─-─- -b-a-s-i-c-_-u-s-a-g-e-_-e-x-a-m-p-l-e-.-p-y--
+-├-─-─- -t-e-s-t-s-/- - - - - - - - - - - - - - - - - - - - - - -#- -T-e-s-t- -s-u-i-t-e--
+--- -└-─-─- -t-e-s-t-_-b-a-s-i-c-.-p-y--
+-├-─-─- -d-a-t-a-/- - - - - - - - - - - - - - - - - - - - - - - -#- -S-a-m-p-l-e- -d-a-t-a-s-e-t-s--
+--- -└-─-─- -s-a-m-p-l-e-_-d-a-t-a-.-c-s-v--
+-├-─-─- -r-e-q-u-i-r-e-m-e-n-t-s-.-t-x-t- - - - - - - - - - - - -#- -D-e-p-e-n-d-e-n-c-i-e-s--
+-├-─-─- -s-e-t-u-p-.-p-y- - - - - - - - - - - - - - - - - - - - -#- -P-a-c-k-a-g-e- -i-n-s-t-a-l-l-a-t-i-o-n--
+-├-─-─- -L-I-C-E-N-S-E- - - - - - - - - - - - - - - - - - - - - -#- -C-C---B-Y---4-.-0- -L-i-c-e-n-s-e--
+-└-─-─- -R-E-A-D-M-E-.-m-d- - - - - - - - - - - - - - - - - - - -#- -T-h-i-s- -f-i-l-e--
+-`-`-`--
+--
+--------
+--
+-#-#- -�-�- -C-L-I- -T-o-o-l--
+--
+-#-#-#- -I-n-s-t-a-l-l-a-t-i-o-n--
+--
+-`-`-`-b-a-s-h--
+-#- -I-n-s-t-a-l-l- -w-i-t-h- -C-L-I- -d-e-p-e-n-d-e-n-c-i-e-s--
+-p-i-p- -i-n-s-t-a-l-l- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r-[-c-l-i-]--
+--
+-#- -O-r- -i-n-s-t-a-l-l- -f-r-o-m- -s-o-u-r-c-e--
+-g-i-t- -c-l-o-n-e- -h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-.-g-i-t--
+-c-d- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n--
+-p-i-p- -i-n-s-t-a-l-l- ---e- -.-[-c-l-i-]--
+-`-`-`--
+--
+-#-#-#- -Q-u-i-c-k- -S-t-a-r-t--
+--
+-`-`-`-b-a-s-h--
+-#- -A-n-a-l-y-z-e- -l-o-c-a-l- -C-S-V- -f-i-l-e--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v--
+--
+-#- -U-s-e- -Z-e-n-o-d-o- -d-a-t-a-s-e-t- -(-a-u-t-o-m-a-t-i-c- -d-o-w-n-l-o-a-d- -&- -c-a-c-h-i-n-g-)--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -z-e-n-o-d-o-:-/-/-1-7-2-0-1-0-3-2--
+--
+-#- -S-p-e-c-i-f-y- -a-l-g-o-r-i-t-h-m- -a-n-d- -t-h-r-e-s-h-o-l-d-s--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -d-a-t-a-.-c-s-v- -----a-l-g-o-r-i-t-h-m- -p-s-i- -----p-s-i---t-h-r-e-s-h-o-l-d- -0-.-2--
+--
+-#- -E-x-p-o-r-t- -r-e-s-u-l-t-s- -a-s- -J-S-O-N--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -d-a-t-a-.-c-s-v- -----f-o-r-m-a-t- -j-s-o-n- -----o-u-t-p-u-t- -r-e-s-u-l-t-s-.-j-s-o-n--
+-`-`-`--
+--
+-#-#-#- -A-v-a-i-l-a-b-l-e- -C-o-m-m-a-n-d-s--
+--
+-#-#-#-#- -`-d-e-t-e-c-t-`- --- -R-u-n- -b-i-a-s- -d-e-t-e-c-t-i-o-n--
+--
+-`-`-`-b-a-s-h--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -<-d-a-t-a---s-o-u-r-c-e->- -[-o-p-t-i-o-n-s-]--
+--
+-#- -D-a-t-a- -s-o-u-r-c-e-s-:--
+-#- - - --- -L-o-c-a-l- -f-i-l-e-:- -d-a-t-a-/-m-y-_-d-a-t-a-.-c-s-v--
+-#- - - --- -Z-e-n-o-d-o-:- -z-e-n-o-d-o-:-/-/-1-7-2-0-1-0-3-2--
+-#- - - --- -Z-e-n-o-d-o- -s-p-e-c-i-f-i-c- -f-i-l-e-:- -z-e-n-o-d-o-:-/-/-1-7-2-0-1-0-3-2-/-s-c-e-n-a-r-i-o-_-h-i-g-h-_-b-i-a-s-.-c-s-v--
+--
+-#- -O-p-t-i-o-n-s-:--
+-#- - - -----a-l-g-o-r-i-t-h-m- -{-p-s-i-,-c-c-s-,-r-h-o-_-p-c-,-d-e-c-i-s-i-o-n-}- - -A-l-g-o-r-i-t-h-m- -t-o- -r-u-n- -(-d-e-f-a-u-l-t-:- -d-e-c-i-s-i-o-n-)--
+-#- - - -----p-s-i---t-h-r-e-s-h-o-l-d- -F-L-O-A-T- - - - - - - - - - - - - - - - - - - -P-S-I- -t-h-r-e-s-h-o-l-d- -(-d-e-f-a-u-l-t-:- -0-.-1-5-)--
+-#- - - -----c-c-s---t-h-r-e-s-h-o-l-d- -F-L-O-A-T- - - - - - - - - - - - - - - - - - - -C-C-S- -t-h-r-e-s-h-o-l-d- -(-d-e-f-a-u-l-t-:- -0-.-8-5-)--
+-#- - - -----r-h-o---t-h-r-e-s-h-o-l-d- -F-L-O-A-T- - - - - - - - - - - - - - - - - - - -ρ-_-P-C- -t-h-r-e-s-h-o-l-d- -(-d-e-f-a-u-l-t-:- -0-.-5-)--
+-#- - - -----f-o-r-m-a-t- -{-t-e-x-t-,-j-s-o-n-,-c-s-v-}- - - - - - - - - - - - - - - - -O-u-t-p-u-t- -f-o-r-m-a-t- -(-d-e-f-a-u-l-t-:- -t-e-x-t-)--
+-#- - - -----o-u-t-p-u-t- -F-I-L-E- - - - - - - - - - - - - - - - - - - - - - - - - - - -S-a-v-e- -r-e-s-u-l-t-s- -t-o- -f-i-l-e--
+-`-`-`--
+--
+-*-*-E-x-a-m-p-l-e-:-*-*--
+-`-`-`-b-a-s-h--
+-c-i-r-c-u-l-a-r---b-i-a-s- -d-e-t-e-c-t- -z-e-n-o-d-o-:-/-/-1-7-2-0-1-0-3-2- -\--
+- - - - -----a-l-g-o-r-i-t-h-m- -d-e-c-i-s-i-o-n- -\--
+- - - - -----p-s-i---t-h-r-e-s-h-o-l-d- -0-.-1-5- -\--
+- - - - -----f-o-r-m-a-t- -j-s-o-n- -\--
+- - - - -----o-u-t-p-u-t- -r-e-s-u-l-t-s-.-j-s-o-n--
+-`-`-`--
+--
+-#-#-#-#- -`-i-n-f-o-`- --- -S-h-o-w- -d-a-t-a-s-e-t- -i-n-f-o-r-m-a-t-i-o-n--
+--
+-`-`-`-b-a-s-h--
+-c-i-r-c-u-l-a-r---b-i-a-s- -i-n-f-o- -<-s-o-u-r-c-e->--
+--
+-#- -E-x-a-m-p-l-e-s-:--
+-c-i-r-c-u-l-a-r---b-i-a-s- -i-n-f-o- -z-e-n-o-d-o-:-/-/-1-7-2-0-1-0-3-2--
+-c-i-r-c-u-l-a-r---b-i-a-s- -i-n-f-o- -d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v--
+-`-`-`--
+--
+-#-#-#-#- -`-c-a-c-h-e-`- --- -M-a-n-a-g-e- -c-a-c-h-e-d- -d-a-t-a--
+--
+-`-`-`-b-a-s-h--
+-#- -L-i-s-t- -c-a-c-h-e-d- -d-a-t-a-s-e-t-s--
+-c-i-r-c-u-l-a-r---b-i-a-s- -c-a-c-h-e- -l-i-s-t--
+--
+-#- -C-l-e-a-r- -a-l-l- -c-a-c-h-e--
+-c-i-r-c-u-l-a-r---b-i-a-s- -c-a-c-h-e- -c-l-e-a-r--
+--
+-#- -C-l-e-a-r- -s-p-e-c-i-f-i-c- -d-a-t-a-s-e-t--
+-c-i-r-c-u-l-a-r---b-i-a-s- -c-a-c-h-e- -c-l-e-a-r- -----r-e-c-o-r-d---i-d- -1-7-2-0-1-0-3-2--
+-`-`-`--
+--
+-#-#-#-#- -`-l-i-s-t---a-l-g-o-r-i-t-h-m-s-`- --- -S-h-o-w- -a-v-a-i-l-a-b-l-e- -a-l-g-o-r-i-t-h-m-s--
+--
+-`-`-`-b-a-s-h--
+-c-i-r-c-u-l-a-r---b-i-a-s- -l-i-s-t---a-l-g-o-r-i-t-h-m-s--
+-`-`-`--
+--
+-#-#-#- -C-L-I- -O-u-t-p-u-t- -E-x-a-m-p-l-e--
+--
+-`-`-`--
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
+-C-I-R-C-U-L-A-R- -B-I-A-S- -D-E-T-E-C-T-I-O-N- -R-E-S-U-L-T-S--
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
+--
+-P-S-I- -S-c-o-r-e-:- - -0-.-0-1-5-8--
+-C-C-S- -S-c-o-r-e-:- - -0-.-9-4-2-2--
+-ρ-_-P-C- -S-c-o-r-e-:- -+-0-.-9-9-2-1--
+--
+-O-v-e-r-a-l-l- -B-i-a-s- -D-e-t-e-c-t-e-d-:- -N-O- --- -C-o-n-f-i-d-e-n-c-e-:- -3-3-.-3-%--
+--
+-I-n-t-e-r-p-r-e-t-a-t-i-o-n-:--
+-N-o- -c-i-r-c-u-l-a-r- -b-i-a-s- -d-e-t-e-c-t-e-d- -(-c-o-n-f-i-d-e-n-c-e-:- -3-3-.-3-%-)-.- --
+-E-v-a-l-u-a-t-i-o-n- -a-p-p-e-a-r-s- -s-o-u-n-d-.--
+--
+-D-e-t-a-i-l-s-:--
+- - -a-l-g-o-r-i-t-h-m-s-_-e-v-a-l-u-a-t-e-d-:- -[-'-R-e-s-N-e-t-'-,- -'-V-G-G-'-,- -'-D-e-n-s-e-N-e-t-'-,- -'-E-f-f-i-c-i-e-n-t-N-e-t-'-]--
+- - -t-i-m-e-_-p-e-r-i-o-d-s-:- -5--
+- - -i-n-d-i-c-a-t-o-r-s-_-t-r-i-g-g-e-r-e-d-:- -1--
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--
+-`-`-`--
+--
+-#-#-#- -D-a-t-a- -F-o-r-m-a-t- -R-e-q-u-i-r-e-m-e-n-t-s--
+--
+-C-S-V- -f-i-l-e- -m-u-s-t- -c-o-n-t-a-i-n- -t-h-e-s-e- -c-o-l-u-m-n-s-:--
+--
+-|- -C-o-l-u-m-n- -|- -T-y-p-e- -|- -D-e-s-c-r-i-p-t-i-o-n- -|--
+-|-----------------|-------------|---------------------------|--
+-|- -`-t-i-m-e-_-p-e-r-i-o-d-`- -|- -i-n-t- -|- -E-v-a-l-u-a-t-i-o-n- -p-e-r-i-o-d- -(-1-,- -2-,- -3-,- -.-.-.-)- -|--
+-|- -`-a-l-g-o-r-i-t-h-m-`- -|- -s-t-r- -|- -A-l-g-o-r-i-t-h-m- -n-a-m-e- -|--
+-|- -`-p-e-r-f-o-r-m-a-n-c-e-`- -|- -f-l-o-a-t- -|- -P-e-r-f-o-r-m-a-n-c-e- -m-e-t-r-i-c- -[-0---1-]- -|--
+-|- -`-c-o-n-s-t-r-a-i-n-t-_-c-o-m-p-u-t-e-`- -|- -f-l-o-a-t- -|- -C-o-m-p-u-t-a-t-i-o-n-a-l- -c-o-n-s-t-r-a-i-n-t- -|--
+-|- -`-c-o-n-s-t-r-a-i-n-t-_-m-e-m-o-r-y-`- -|- -f-l-o-a-t- -|- -M-e-m-o-r-y- -c-o-n-s-t-r-a-i-n-t- -(-G-B-)- -|--
+-|- -`-c-o-n-s-t-r-a-i-n-t-_-d-a-t-a-s-e-t-_-s-i-z-e-`- -|- -i-n-t- -|- -D-a-t-a-s-e-t- -s-i-z-e- -|--
+-|- -`-e-v-a-l-u-a-t-i-o-n-_-p-r-o-t-o-c-o-l-`- -|- -s-t-r- -|- -P-r-o-t-o-c-o-l- -v-e-r-s-i-o-n- -|--
+--
+-*-*-S-e-e- -`-d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v-`- -f-o-r- -e-x-a-m-p-l-e-.-*-*--
+--
+--------
+--
+-#-#- -�-�- -A-P-I- -D-o-c-u-m-e-n-t-a-t-i-o-n--
+--
+-#-#-#- -B-i-a-s-D-e-t-e-c-t-o-r- -C-l-a-s-s--
+--
+-T-h-e- -m-a-i-n- -i-n-t-e-r-f-a-c-e- -f-o-r- -b-i-a-s- -d-e-t-e-c-t-i-o-n-.--
+--
+-#-#-#-#- -`-_-_-i-n-i-t-_-_-(-p-s-i-_-t-h-r-e-s-h-o-l-d-=-0-.-1-5-,- -c-c-s-_-t-h-r-e-s-h-o-l-d-=-0-.-8-5-,- -r-h-o-_-p-c-_-t-h-r-e-s-h-o-l-d-=-0-.-5-)-`--
+--
+-I-n-i-t-i-a-l-i-z-e- -t-h-e- -b-i-a-s- -d-e-t-e-c-t-o-r- -w-i-t-h- -c-u-s-t-o-m- -t-h-r-e-s-h-o-l-d-s-.--
+--
+-*-*-P-a-r-a-m-e-t-e-r-s-:-*-*--
+--- -`-p-s-i-_-t-h-r-e-s-h-o-l-d-`- -(-f-l-o-a-t-)-:- -T-h-r-e-s-h-o-l-d- -f-o-r- -P-S-I- -s-c-o-r-e- -(-d-e-f-a-u-l-t-:- -0-.-1-5-)-.- -H-i-g-h-e-r- -v-a-l-u-e-s- -i-n-d-i-c-a-t-e- -i-n-s-t-a-b-i-l-i-t-y-.--
+--- -`-c-c-s-_-t-h-r-e-s-h-o-l-d-`- -(-f-l-o-a-t-)-:- -T-h-r-e-s-h-o-l-d- -f-o-r- -C-C-S- -s-c-o-r-e- -(-d-e-f-a-u-l-t-:- -0-.-8-5-)-.- -L-o-w-e-r- -v-a-l-u-e-s- -i-n-d-i-c-a-t-e- -i-n-c-o-n-s-i-s-t-e-n-c-y-.--
+--- -`-r-h-o-_-p-c-_-t-h-r-e-s-h-o-l-d-`- -(-f-l-o-a-t-)-:- -T-h-r-e-s-h-o-l-d- -f-o-r- -ρ-_-P-C- -c-o-r-r-e-l-a-t-i-o-n- -(-d-e-f-a-u-l-t-:- -0-.-5-)-.- -H-i-g-h-e-r- -a-b-s-o-l-u-t-e- -v-a-l-u-e-s- -i-n-d-i-c-a-t-e- -d-e-p-e-n-d-e-n-c-y-.--
+--
+-#-#-#-#- -`-d-e-t-e-c-t-_-b-i-a-s-(-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,- -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-,- -a-l-g-o-r-i-t-h-m-_-n-a-m-e-s-=-N-o-n-e-)-`--
+--
+-D-e-t-e-c-t- -c-i-r-c-u-l-a-r- -r-e-a-s-o-n-i-n-g- -b-i-a-s- -i-n- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a-.--
+--
+-*-*-P-a-r-a-m-e-t-e-r-s-:-*-*--
+--- -`-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-`- -(-n-p-.-n-d-a-r-r-a-y-)-:- -P-e-r-f-o-r-m-a-n-c-e- -v-a-l-u-e-s-,- -s-h-a-p-e- -(-T-,- -K-)- -w-h-e-r-e- -T- -=- -t-i-m-e- -p-e-r-i-o-d-s-,- -K- -=- -a-l-g-o-r-i-t-h-m-s--
+--- -`-c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-`- -(-n-p-.-n-d-a-r-r-a-y-)-:- -C-o-n-s-t-r-a-i-n-t- -s-p-e-c-i-f-i-c-a-t-i-o-n-s-,- -s-h-a-p-e- -(-T-,- -p-)- -w-h-e-r-e- -p- -=- -n-u-m-b-e-r- -o-f- -c-o-n-s-t-r-a-i-n-t-s--
+--- -`-a-l-g-o-r-i-t-h-m-_-n-a-m-e-s-`- -(-l-i-s-t-,- -o-p-t-i-o-n-a-l-)-:- -N-a-m-e-s- -o-f- -a-l-g-o-r-i-t-h-m-s- -f-o-r- -r-e-p-o-r-t-i-n-g--
+--
+-*-*-R-e-t-u-r-n-s-:-*-*--
+--- -`-d-i-c-t-`-:- -D-i-c-t-i-o-n-a-r-y- -c-o-n-t-a-i-n-i-n-g-:--
+- - --- -`-p-s-i-_-s-c-o-r-e-`- -(-f-l-o-a-t-)-:- -P-e-r-f-o-r-m-a-n-c-e---S-t-r-u-c-t-u-r-e- -I-n-d-e-p-e-n-d-e-n-c-e- -s-c-o-r-e--
+- - --- -`-c-c-s-_-s-c-o-r-e-`- -(-f-l-o-a-t-)-:- -C-o-n-s-t-r-a-i-n-t---C-o-n-s-i-s-t-e-n-c-y- -s-c-o-r-e--
+- - --- -`-r-h-o-_-p-c-_-s-c-o-r-e-`- -(-f-l-o-a-t-)-:- -P-e-r-f-o-r-m-a-n-c-e---C-o-n-s-t-r-a-i-n-t- -c-o-r-r-e-l-a-t-i-o-n--
+- - --- -`-o-v-e-r-a-l-l-_-b-i-a-s-`- -(-b-o-o-l-)-:- -W-h-e-t-h-e-r- -b-i-a-s- -i-s- -d-e-t-e-c-t-e-d--
+- - --- -`-c-o-n-f-i-d-e-n-c-e-`- -(-f-l-o-a-t-)-:- -D-e-t-e-c-t-i-o-n- -c-o-n-f-i-d-e-n-c-e- -(-0---1-)--
+- - --- -`-d-e-t-a-i-l-s-`- -(-d-i-c-t-)-:- -A-d-d-i-t-i-o-n-a-l- -d-i-a-g-n-o-s-t-i-c- -i-n-f-o-r-m-a-t-i-o-n--
+--
+-*-*-E-x-a-m-p-l-e-:-*-*--
+-`-`-`-p-y-t-h-o-n--
+-d-e-t-e-c-t-o-r- -=- -B-i-a-s-D-e-t-e-c-t-o-r-(-p-s-i-_-t-h-r-e-s-h-o-l-d-=-0-.-2-)--
+-r-e-s-u-l-t-s- -=- -d-e-t-e-c-t-o-r-.-d-e-t-e-c-t-_-b-i-a-s-(-p-e-r-f-_-m-a-t-r-i-x-,- -c-o-n-s-t-_-m-a-t-r-i-x-,- -[-'-A-1-'-,- -'-A-2-'-]-)--
+-`-`-`--
+--
+-#-#-#-#- -`-g-e-n-e-r-a-t-e-_-r-e-p-o-r-t-(-r-e-s-u-l-t-s-)-`--
+--
+-G-e-n-e-r-a-t-e- -a- -h-u-m-a-n---r-e-a-d-a-b-l-e- -r-e-p-o-r-t- -f-r-o-m- -d-e-t-e-c-t-i-o-n- -r-e-s-u-l-t-s-.--
+--
+-*-*-P-a-r-a-m-e-t-e-r-s-:-*-*--
+--- -`-r-e-s-u-l-t-s-`- -(-d-i-c-t-)-:- -O-u-t-p-u-t- -f-r-o-m- -`-d-e-t-e-c-t-_-b-i-a-s-(-)-`--
+--
+-*-*-R-e-t-u-r-n-s-:-*-*--
+--- -`-s-t-r-`-:- -F-o-r-m-a-t-t-e-d- -t-e-x-t- -r-e-p-o-r-t--
+--
+-#-#-#- -C-o-r-e- -F-u-n-c-t-i-o-n-s--
+--
+-#-#-#-#- -`-c-o-m-p-u-t-e-_-p-s-i-(-t-h-e-t-a-_-m-a-t-r-i-x-)-`--
+--
+-C-o-m-p-u-t-e- -P-e-r-f-o-r-m-a-n-c-e---S-t-r-u-c-t-u-r-e- -I-n-d-e-p-e-n-d-e-n-c-e- -s-c-o-r-e-.--
+--
+-*-*-P-a-r-a-m-e-t-e-r-s-:-*-*--
+--- -`-t-h-e-t-a-_-m-a-t-r-i-x-`- -(-n-p-.-n-d-a-r-r-a-y-)-:- -P-a-r-a-m-e-t-e-r- -m-a-t-r-i-x-,- -s-h-a-p-e- -(-T-,- -K-)--
+--
+-*-*-R-e-t-u-r-n-s-:-*-*--
+--- -`-f-l-o-a-t-`-:- -P-S-I- -s-c-o-r-e- -(-h-i-g-h-e-r- -=- -m-o-r-e- -u-n-s-t-a-b-l-e-)--
+--
+-*-*-I-n-t-e-r-p-r-e-t-a-t-i-o-n-:-*-*--
+--- -P-S-I- -<- -0-.-1-:- -S-t-a-b-l-e- -p-a-r-a-m-e-t-e-r-s- -(-g-o-o-d-)--
+--- -0-.-1- --- -P-S-I- -<- -0-.-1-5-:- -M-o-d-e-r-a-t-e- -s-t-a-b-i-l-i-t-y--
+--- -P-S-I- --- -0-.-1-5-:- -U-n-s-t-a-b-l-e- -p-a-r-a-m-e-t-e-r-s- -(-p-o-t-e-n-t-i-a-l- -b-i-a-s-)--
+--
+-`-`-`-p-y-t-h-o-n--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-.-c-o-r-e- -i-m-p-o-r-t- -c-o-m-p-u-t-e-_-p-s-i--
+-i-m-p-o-r-t- -n-u-m-p-y- -a-s- -n-p--
+--
+-t-h-e-t-a- -=- -n-p-.-a-r-r-a-y-(-[-[-0-.-7-,- -0-.-8-]-,- -[-0-.-7-1-,- -0-.-8-1-]-,- -[-0-.-7-2-,- -0-.-7-9-]-]-)--
+-p-s-i-_-s-c-o-r-e- -=- -c-o-m-p-u-t-e-_-p-s-i-(-t-h-e-t-a-)--
+-`-`-`--
+--
+-#-#-#-#- -`-c-o-m-p-u-t-e-_-c-c-s-(-c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-)-`--
+--
+-C-o-m-p-u-t-e- -C-o-n-s-t-r-a-i-n-t---C-o-n-s-i-s-t-e-n-c-y- -S-c-o-r-e-.--
+--
+-*-*-P-a-r-a-m-e-t-e-r-s-:-*-*--
+--- -`-c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-`- -(-n-p-.-n-d-a-r-r-a-y-)-:- -C-o-n-s-t-r-a-i-n-t- -v-a-l-u-e-s-,- -s-h-a-p-e- -(-T-,- -p-)--
+--
+-*-*-R-e-t-u-r-n-s-:-*-*--
+--- -`-f-l-o-a-t-`-:- -C-C-S- -s-c-o-r-e- -(-0---1-,- -h-i-g-h-e-r- -=- -m-o-r-e- -c-o-n-s-i-s-t-e-n-t-)--
+--
+-*-*-I-n-t-e-r-p-r-e-t-a-t-i-o-n-:-*-*--
+--- -C-C-S- ->- -0-.-8-5-:- -C-o-n-s-i-s-t-e-n-t- -c-o-n-s-t-r-a-i-n-t-s- -(-g-o-o-d-)--
+--- -0-.-7- --- -C-C-S- --- -0-.-8-5-:- -M-o-d-e-r-a-t-e- -c-o-n-s-i-s-t-e-n-c-y--
+--- -C-C-S- -<- -0-.-7-:- -I-n-c-o-n-s-i-s-t-e-n-t- -c-o-n-s-t-r-a-i-n-t-s- -(-p-o-t-e-n-t-i-a-l- -b-i-a-s-)--
+--
+-`-`-`-p-y-t-h-o-n--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-.-c-o-r-e- -i-m-p-o-r-t- -c-o-m-p-u-t-e-_-c-c-s--
+--
+-c-o-n-s-t-r-a-i-n-t-s- -=- -n-p-.-a-r-r-a-y-(-[-[-1-0-0-,- -8-]-,- -[-1-0-2-,- -8-.-1-]-,- -[-1-0-1-,- -8-.-2-]-]-)--
+-c-c-s-_-s-c-o-r-e- -=- -c-o-m-p-u-t-e-_-c-c-s-(-c-o-n-s-t-r-a-i-n-t-s-)--
+-`-`-`--
+--
+-#-#-#-#- -`-c-o-m-p-u-t-e-_-r-h-o-_-p-c-(-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,- -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-)-`--
+--
+-C-o-m-p-u-t-e- -P-e-r-f-o-r-m-a-n-c-e---C-o-n-s-t-r-a-i-n-t- -c-o-r-r-e-l-a-t-i-o-n-.--
+--
+-*-*-P-a-r-a-m-e-t-e-r-s-:-*-*--
+--- -`-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-`- -(-n-p-.-n-d-a-r-r-a-y-)-:- -P-e-r-f-o-r-m-a-n-c-e- -v-a-l-u-e-s-,- -s-h-a-p-e- -(-T-,- -K-)--
+--- -`-c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-`- -(-n-p-.-n-d-a-r-r-a-y-)-:- -C-o-n-s-t-r-a-i-n-t- -v-a-l-u-e-s-,- -s-h-a-p-e- -(-T-,- -p-)--
+--
+-*-*-R-e-t-u-r-n-s-:-*-*--
+--- -`-f-l-o-a-t-`-:- -C-o-r-r-e-l-a-t-i-o-n- -c-o-e-f-f-i-c-i-e-n-t- -(---1- -t-o- -1-)--
+--
+-*-*-I-n-t-e-r-p-r-e-t-a-t-i-o-n-:-*-*--
+--- -|-ρ-_-P-C-|- ->- -0-.-5-:- -S-t-r-o-n-g- -d-e-p-e-n-d-e-n-c-y- -(-p-o-t-e-n-t-i-a-l- -b-i-a-s-)--
+--- -0-.-3- --- -|-ρ-_-P-C-|- --- -0-.-5-:- -M-o-d-e-r-a-t-e- -d-e-p-e-n-d-e-n-c-y--
+--- -|-ρ-_-P-C-|- -<- -0-.-3-:- -W-e-a-k- -d-e-p-e-n-d-e-n-c-y- -(-g-o-o-d-)--
+--
+-#-#-#- -U-t-i-l-i-t-y- -F-u-n-c-t-i-o-n-s--
+--
+-#-#-#-#- -`-c-r-e-a-t-e-_-s-y-n-t-h-e-t-i-c-_-d-a-t-a-(-n-_-t-i-m-e-_-p-e-r-i-o-d-s-,- -n-_-a-l-g-o-r-i-t-h-m-s-,- -n-_-c-o-n-s-t-r-a-i-n-t-s-,- -b-i-a-s-_-i-n-t-e-n-s-i-t-y-,- -r-a-n-d-o-m-_-s-e-e-d-=-N-o-n-e-)-`--
+--
+-G-e-n-e-r-a-t-e- -s-y-n-t-h-e-t-i-c- -e-v-a-l-u-a-t-i-o-n- -d-a-t-a- -f-o-r- -t-e-s-t-i-n-g-.--
+--
+-*-*-P-a-r-a-m-e-t-e-r-s-:-*-*--
+--- -`-n-_-t-i-m-e-_-p-e-r-i-o-d-s-`- -(-i-n-t-)-:- -N-u-m-b-e-r- -o-f- -e-v-a-l-u-a-t-i-o-n- -p-e-r-i-o-d-s--
+--- -`-n-_-a-l-g-o-r-i-t-h-m-s-`- -(-i-n-t-)-:- -N-u-m-b-e-r- -o-f- -a-l-g-o-r-i-t-h-m-s--
+--- -`-n-_-c-o-n-s-t-r-a-i-n-t-s-`- -(-i-n-t-)-:- -N-u-m-b-e-r- -o-f- -c-o-n-s-t-r-a-i-n-t- -t-y-p-e-s--
+--- -`-b-i-a-s-_-i-n-t-e-n-s-i-t-y-`- -(-f-l-o-a-t-)-:- -B-i-a-s- -l-e-v-e-l- -(-0-=-n-o-n-e-,- -1-=-h-i-g-h-)--
+--- -`-r-a-n-d-o-m-_-s-e-e-d-`- -(-i-n-t-,- -o-p-t-i-o-n-a-l-)-:- -R-a-n-d-o-m- -s-e-e-d- -f-o-r- -r-e-p-r-o-d-u-c-i-b-i-l-i-t-y--
+--
+-*-*-R-e-t-u-r-n-s-:-*-*--
+--- -`-t-u-p-l-e-`-:- -(-p-e-r-f-o-r-m-a-n-c-e-_-m-a-t-r-i-x-,- -c-o-n-s-t-r-a-i-n-t-_-m-a-t-r-i-x-)--
+--
+-*-*-E-x-a-m-p-l-e-:-*-*--
+-`-`-`-p-y-t-h-o-n--
+-f-r-o-m- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-.-u-t-i-l-s- -i-m-p-o-r-t- -c-r-e-a-t-e-_-s-y-n-t-h-e-t-i-c-_-d-a-t-a--
+--
+-p-e-r-f-,- -c-o-n-s-t- -=- -c-r-e-a-t-e-_-s-y-n-t-h-e-t-i-c-_-d-a-t-a-(--
+- - - - -n-_-t-i-m-e-_-p-e-r-i-o-d-s-=-2-0-,--
+- - - - -n-_-a-l-g-o-r-i-t-h-m-s-=-5-,--
+- - - - -n-_-c-o-n-s-t-r-a-i-n-t-s-=-3-,--
+- - - - -b-i-a-s-_-i-n-t-e-n-s-i-t-y-=-0-.-7-,--
+- - - - -r-a-n-d-o-m-_-s-e-e-d-=-4-2--
+-)--
+-`-`-`--
+--
+-#-#- -�-�- -E-x-p-e-r-i-m-e-n-t-a-l- -R-e-s-u-l-t-s--
+--
+-O-u-r- -f-r-a-m-e-w-o-r-k- -s-u-c-c-e-s-s-f-u-l-l-y- -d-e-t-e-c-t-e-d- -b-i-a-s- -i-n-:--
+--- -*-*-9-3-.-2-%-*-*- -o-f- -s-y-n-t-h-e-t-i-c-a-l-l-y- -b-i-a-s-e-d- -s-c-e-n-a-r-i-o-s--
+--- -*-*-C-o-m-p-u-t-e-r- -V-i-s-i-o-n-*-*-:- -8-9-%- -d-e-t-e-c-t-i-o-n- -r-a-t-e- -i-n- -c-o-n-s-t-r-a-i-n-t- -m-a-n-i-p-u-l-a-t-i-o-n--
+--- -*-*-N-L-P-*-*-:- -8-7-%- -d-e-t-e-c-t-i-o-n- -r-a-t-e- -i-n- -m-e-t-r-i-c- -c-h-e-r-r-y---p-i-c-k-i-n-g- - --
+--- -*-*-R-e-c-o-m-m-e-n-d-e-r- -S-y-s-t-e-m-s-*-*-:- -9-1-%- -d-e-t-e-c-t-i-o-n- -r-a-t-e- -i-n- -d-a-t-a-s-e-t- -c-u-r-a-t-i-o-n--
+--
+-#-#- -�-�- -R-u-n-n-i-n-g- -T-e-s-t-s--
+--
+-R-u-n- -t-h-e- -t-e-s-t- -s-u-i-t-e- -t-o- -v-e-r-i-f-y- -i-n-s-t-a-l-l-a-t-i-o-n-:--
+--
+-`-`-`-b-a-s-h--
+-#- -R-u-n- -a-l-l- -t-e-s-t-s--
+-p-y-t-h-o-n- ---m- -p-y-t-e-s-t- -t-e-s-t-s-/--
+--
+-#- -R-u-n- -w-i-t-h- -v-e-r-b-o-s-e- -o-u-t-p-u-t--
+-p-y-t-h-o-n- ---m- -p-y-t-e-s-t- -t-e-s-t-s-/- ---v--
+--
+-#- -R-u-n- -s-p-e-c-i-f-i-c- -t-e-s-t- -f-i-l-e--
+-p-y-t-h-o-n- -t-e-s-t-s-/-t-e-s-t-_-b-a-s-i-c-.-p-y--
+-`-`-`--
+--
+-*-*-E-x-p-e-c-t-e-d- -o-u-t-p-u-t-:-*-*- -A-l-l- -t-e-s-t-s- -s-h-o-u-l-d- -p-a-s-s-,- -c-o-n-f-i-r-m-i-n-g- -t-h-a-t- -c-o-r-e- -f-u-n-c-t-i-o-n-a-l-i-t-y- -w-o-r-k-s- -c-o-r-r-e-c-t-l-y-.--
+--
+-#-#- -�-�-‍-♂--- -R-e-p-r-o-d-u-c-t-i-o-n- -S-c-r-i-p-t-s--
+--
+-R-e-p-r-o-d-u-c-e- -a-l-l- -p-a-p-e-r- -r-e-s-u-l-t-s-:--
+--
+-`-`-`-b-a-s-h--
+-#- -R-u-n- -b-a-s-i-c- -u-s-a-g-e- -e-x-a-m-p-l-e--
+-p-y-t-h-o-n- -e-x-a-m-p-l-e-s-/-b-a-s-i-c-_-u-s-a-g-e-_-e-x-a-m-p-l-e-.-p-y--
+--
+-#- -M-o-n-t-e- -C-a-r-l-o- -s-i-m-u-l-a-t-i-o-n-s--
+-p-y-t-h-o-n- -e-x-a-m-p-l-e-s-/-r-e-p-r-o-d-u-c-e-_-s-i-m-u-l-a-t-i-o-n-s-.-p-y--
+--
+-#- -R-e-a-l---w-o-r-l-d- -c-a-s-e- -s-t-u-d-i-e-s--
+-p-y-t-h-o-n- -e-x-a-m-p-l-e-s-/-r-e-p-r-o-d-u-c-e-_-c-a-s-e-_-s-t-u-d-i-e-s-.-p-y--
+--
+-#- -G-e-n-e-r-a-t-e- -f-i-g-u-r-e-s- -a-n-d- -t-a-b-l-e-s- -(-i-f- -a-v-a-i-l-a-b-l-e-)--
+-p-y-t-h-o-n- -e-x-a-m-p-l-e-s-/-g-e-n-e-r-a-t-e-_-p-a-p-e-r-_-f-i-g-u-r-e-s-.-p-y--
+-`-`-`--
+--
+-#-#- -�-�- -C-i-t-a-t-i-o-n- -&- -A-c-k-n-o-w-l-e-d-g-m-e-n-t-s--
+--
+-#-#-#- -H-o-w- -t-o- -C-i-t-e- -T-h-i-s- -S-o-f-t-w-a-r-e--
+--
+-I-f- -y-o-u- -u-s-e- -S-l-e-u-t-h- -i-n- -y-o-u-r- -r-e-s-e-a-r-c-h- -o-r- -i-n-d-u-s-t-r-y- -w-o-r-k-,- -p-l-e-a-s-e- -c-i-t-e-:--
+--
+-*-*-S-o-f-t-w-a-r-e- -C-i-t-a-t-i-o-n- -(-P-r-i-m-a-r-y-)-:-*-*--
+-`-`-`-b-i-b-t-e-x--
+-@-s-o-f-t-w-a-r-e-{-z-h-a-n-g-2-0-2-4-s-l-e-u-t-h-,--
+- - -a-u-t-h-o-r- - - - - - - -=- -{-Z-h-a-n-g-,- -H-o-n-g-p-i-n-g-}-,--
+- - -t-i-t-l-e- - - - - - - - -=- -{-S-l-e-u-t-h-:- -C-i-r-c-u-l-a-r- -B-i-a-s- -D-e-t-e-c-t-i-o-n- -f-o-r- -A-I- -E-v-a-l-u-a-t-i-o-n-s-}-,--
+- - -y-e-a-r- - - - - - - - - -=- -{-2-0-2-4-}-,--
+- - -p-u-b-l-i-s-h-e-r- - - - -=- -{-Z-e-n-o-d-o-}-,--
+- - -v-e-r-s-i-o-n- - - - - - -=- -{-v-1-.-0-.-0-}-,--
+- - -d-o-i- - - - - - - - - - -=- -{-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-2-0-1-0-3-2-}-,--
+- - -u-r-l- - - - - - - - - - -=- -{-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-}--
+-}--
+-`-`-`--
+--
+-*-*-D-a-t-a-s-e-t- -C-i-t-a-t-i-o-n- -(-I-f- -U-s-i-n-g- -O-u-r- -D-a-t-a-s-e-t-)-:-*-*--
+-`-`-`-b-i-b-t-e-x--
+-@-d-a-t-a-s-e-t-{-z-h-a-n-g-2-0-2-4-_-d-a-t-a-s-e-t-,--
+- - -a-u-t-h-o-r- - - - - - - -=- -{-Z-h-a-n-g-,- -H-o-n-g-p-i-n-g-}-,--
+- - -t-i-t-l-e- - - - - - - - -=- -{-C-i-r-c-u-l-a-r- -R-e-a-s-o-n-i-n-g- -B-i-a-s- -D-e-t-e-c-t-i-o-n- -D-a-t-a-s-e-t-:- -2-0-0-K- -A-I- -A-l-g-o-r-i-t-h-m- -E-v-a-l-u-a-t-i-o-n-s-}-,--
+- - -y-e-a-r- - - - - - - - - -=- -{-2-0-2-4-}-,--
+- - -p-u-b-l-i-s-h-e-r- - - - -=- -{-Z-e-n-o-d-o-}-,--
+- - -d-o-i- - - - - - - - - - -=- -{-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-1-9-6-6-3-9-}-,--
+- - -u-r-l- - - - - - - - - - -=- -{-h-t-t-p-s-:-/-/-d-o-i-.-o-r-g-/-1-0-.-5-2-8-1-/-z-e-n-o-d-o-.-1-7-1-9-6-6-3-9-}--
+-}--
+-`-`-`--
+--
+-*-*-J-O-S-S- -P-a-p-e-r- -(-U-n-d-e-r- -R-e-v-i-e-w-)-:-*-*--
+-`-`-`-b-i-b-t-e-x--
+-@-a-r-t-i-c-l-e-{-z-h-a-n-g-2-0-2-4-s-l-e-u-t-h-_-j-o-s-s-,--
+- - -a-u-t-h-o-r- - - - - - - -=- -{-Z-h-a-n-g-,- -H-o-n-g-p-i-n-g-}-,--
+- - -t-i-t-l-e- - - - - - - - -=- -{-S-l-e-u-t-h-:- -A- -B-r-o-w-s-e-r---B-a-s-e-d- -T-o-o-l- -f-o-r- -D-e-t-e-c-t-i-n-g- -C-i-r-c-u-l-a-r- -B-i-a-s- -i-n- -A-I- -E-v-a-l-u-a-t-i-o-n-}-,--
+- - -j-o-u-r-n-a-l- - - - - - -=- -{-J-o-u-r-n-a-l- -o-f- -O-p-e-n- -S-o-u-r-c-e- -S-o-f-t-w-a-r-e-}-,--
+- - -y-e-a-r- - - - - - - - - -=- -{-2-0-2-4-}-,--
+- - -n-o-t-e- - - - - - - - - -=- -{-U-n-d-e-r- -r-e-v-i-e-w-}-,--
+- - -u-r-l- - - - - - - - - - -=- -{-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-}--
+-}--
+-`-`-`--
+--
+-#-#-#- -J-O-S-S- -S-u-b-m-i-s-s-i-o-n--
+--
+-T-h-i-s- -s-o-f-t-w-a-r-e- -i-s- -c-u-r-r-e-n-t-l-y- -*-*-u-n-d-e-r- -r-e-v-i-e-w-*-*- -a-t- -t-h-e- -J-o-u-r-n-a-l- -o-f- -O-p-e-n- -S-o-u-r-c-e- -S-o-f-t-w-a-r-e- -(-J-O-S-S-)-.--
+--
+--- -*-*-R-e-v-i-e-w- -T-h-r-e-a-d-*-*-:- -h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-o-p-e-n-j-o-u-r-n-a-l-s-/-j-o-s-s---r-e-v-i-e-w-s-/-i-s-s-u-e-s-/-9-2-7-2- - --
+--- -*-*-P-a-p-e-r- -D-r-a-f-t-*-*-:- -[-`-p-a-p-e-r-.-m-d-`-]-(-p-a-p-e-r-.-m-d-)--
+--- -*-*-B-i-b-l-i-o-g-r-a-p-h-y-*-*-:- -[-`-p-a-p-e-r-.-b-i-b-`-]-(-p-a-p-e-r-.-b-i-b-)--
+--
+-#-#-#- -A-c-k-n-o-w-l-e-d-g-m-e-n-t-s--
+--
+-T-h-i-s- -p-r-o-j-e-c-t- -w-a-s- -d-e-v-e-l-o-p-e-d- -t-o- -a-d-d-r-e-s-s- -a- -c-r-i-t-i-c-a-l- -g-a-p- -i-n- -A-I- -e-v-a-l-u-a-t-i-o-n- -i-n-t-e-g-r-i-t-y-.- -W-e- -t-h-a-n-k-:--
+--- -T-h-e- -o-p-e-n---s-o-u-r-c-e- -c-o-m-m-u-n-i-t-y- -f-o-r- -f-o-u-n-d-a-t-i-o-n-a-l- -l-i-b-r-a-r-i-e-s- -(-N-u-m-P-y-,- -S-c-i-P-y-,- -P-a-n-d-a-s-)--
+--- -E-a-r-l-y- -a-d-o-p-t-e-r-s- -a-n-d- -u-s-e-r-s- -w-h-o- -p-r-o-v-i-d-e-d- -v-a-l-u-a-b-l-e- -f-e-e-d-b-a-c-k--
+--- -Z-e-n-o-d-o- -f-o-r- -f-r-e-e- -d-a-t-a-s-e-t- -a-r-c-h-i-v-i-n-g- -a-n-d- -D-O-I- -a-s-s-i-g-n-m-e-n-t--
+--- -T-h-e- -J-O-S-S- -e-d-i-t-o-r-i-a-l- -t-e-a-m- -f-o-r- -t-h-e-i-r- -c-o-m-m-i-t-m-e-n-t- -t-o- -q-u-a-l-i-t-y- -o-p-e-n---s-o-u-r-c-e- -s-c-i-e-n-t-i-f-i-c- -s-o-f-t-w-a-r-e--
+--
+-#-#- -�-�- -C-o-n-t-r-i-b-u-t-i-n-g--
+--
+-W-e- -w-e-l-c-o-m-e- -c-o-n-t-r-i-b-u-t-i-o-n-s-!- -H-e-r-e-'-s- -h-o-w- -y-o-u- -c-a-n- -h-e-l-p-:--
+--
+-*-*-R-e-p-o-r-t-i-n-g- -I-s-s-u-e-s-:-*-*--
+--- -U-s-e- -t-h-e- -[-G-i-t-H-u-b- -i-s-s-u-e- -t-r-a-c-k-e-r-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/-i-s-s-u-e-s-)--
+--- -P-r-o-v-i-d-e- -a- -c-l-e-a-r- -d-e-s-c-r-i-p-t-i-o-n- -a-n-d- -r-e-p-r-o-d-u-c-i-b-l-e- -e-x-a-m-p-l-e--
+--- -I-n-c-l-u-d-e- -s-y-s-t-e-m- -i-n-f-o-r-m-a-t-i-o-n- -a-n-d- -e-r-r-o-r- -m-e-s-s-a-g-e-s--
+--
+-*-*-C-o-n-t-r-i-b-u-t-i-n-g- -C-o-d-e-:-*-*--
+-1-.- -F-o-r-k- -t-h-e- -r-e-p-o-s-i-t-o-r-y--
+-2-.- -C-r-e-a-t-e- -a- -f-e-a-t-u-r-e- -b-r-a-n-c-h- -(-`-g-i-t- -c-h-e-c-k-o-u-t- ---b- -f-e-a-t-u-r-e-/-a-m-a-z-i-n-g---f-e-a-t-u-r-e-`-)--
+-3-.- -M-a-k-e- -y-o-u-r- -c-h-a-n-g-e-s- -a-n-d- -a-d-d- -t-e-s-t-s--
+-4-.- -E-n-s-u-r-e- -a-l-l- -t-e-s-t-s- -p-a-s-s- -(-`-p-y-t-h-o-n- ---m- -p-y-t-e-s-t- -t-e-s-t-s-/-`-)--
+-5-.- -C-o-m-m-i-t- -y-o-u-r- -c-h-a-n-g-e-s- -(-`-g-i-t- -c-o-m-m-i-t- ---m- -'-A-d-d- -a-m-a-z-i-n-g- -f-e-a-t-u-r-e-'-`-)--
+-6-.- -P-u-s-h- -t-o- -y-o-u-r- -b-r-a-n-c-h- -(-`-g-i-t- -p-u-s-h- -o-r-i-g-i-n- -f-e-a-t-u-r-e-/-a-m-a-z-i-n-g---f-e-a-t-u-r-e-`-)--
+-7-.- -O-p-e-n- -a- -P-u-l-l- -R-e-q-u-e-s-t--
+--
+-*-*-S-e-e-k-i-n-g- -S-u-p-p-o-r-t-:-*-*--
+--- -C-h-e-c-k- -e-x-i-s-t-i-n-g- -i-s-s-u-e-s- -a-n-d- -d-o-c-u-m-e-n-t-a-t-i-o-n--
+--- -O-p-e-n- -a- -n-e-w- -i-s-s-u-e- -w-i-t-h- -t-h-e- -`-q-u-e-s-t-i-o-n-`- -l-a-b-e-l--
+--- -E-m-a-i-l-:- -y-u-j-j-a-m-@-u-e-s-t-.-e-d-u-.-g-r--
+--
+--------
+--
+-#-#- -�-�- -L-i-c-e-n-s-e--
+--
+-*-*-S-o-f-t-w-a-r-e- -C-o-d-e-:-*-*- -T-h-i-s- -p-r-o-j-e-c-t-'-s- -s-o-u-r-c-e- -c-o-d-e- -i-s- -l-i-c-e-n-s-e-d- -u-n-d-e-r- -t-h-e- -*-*-M-I-T- -L-i-c-e-n-s-e-*-*- --- -s-e-e- -t-h-e- -[-L-I-C-E-N-S-E-]-(-L-I-C-E-N-S-E-)- -f-i-l-e- -f-o-r- -d-e-t-a-i-l-s-.--
+--
+-*-*-D-o-c-u-m-e-n-t-a-t-i-o-n- -&- -D-a-t-a-s-e-t-:-*-*- -D-o-c-u-m-e-n-t-a-t-i-o-n- -a-n-d- -d-a-t-a-s-e-t-s- -a-r-e- -l-i-c-e-n-s-e-d- -u-n-d-e-r- -t-h-e- -*-*-C-r-e-a-t-i-v-e- -C-o-m-m-o-n-s- -A-t-t-r-i-b-u-t-i-o-n- -4-.-0- -I-n-t-e-r-n-a-t-i-o-n-a-l- -L-i-c-e-n-s-e- -(-C-C- -B-Y- -4-.-0-)-*-*-.--
+--
+-*-*-S-u-m-m-a-r-y-:-*-*--
+--- --- -F-r-e-e- -f-o-r- -a-c-a-d-e-m-i-c- -a-n-d- -c-o-m-m-e-r-c-i-a-l- -u-s-e--
+--- --- -M-o-d-i-f-y- -a-n-d- -r-e-d-i-s-t-r-i-b-u-t-e- -f-r-e-e-l-y--
+--- --- -J-u-s-t- -p-r-o-v-i-d-e- -a-t-t-r-i-b-u-t-i-o-n- -w-h-e-n- -c-i-t-i-n-g--
+--
+-#-#- -�-�- -A-u-t-h-o-r--
+--
+-*-*-H-o-n-g-p-i-n-g- -Z-h-a-n-g-*-*--
+--- -O-R-C-I-D-:- -[-0-0-0-9---0-0-0-0---2-5-2-9---4-6-1-3-]-(-h-t-t-p-s-:-/-/-o-r-c-i-d-.-o-r-g-/-0-0-0-9---0-0-0-0---2-5-2-9---4-6-1-3-)--
+--- -E-m-a-i-l-:- -y-u-j-j-a-m-@-u-e-s-t-.-e-d-u-.-g-r--
+--
+-#-#- -�-�- -A-d-d-i-t-i-o-n-a-l- -R-e-s-o-u-r-c-e-s--
+--
+-#-#-#- -D-o-c-u-m-e-n-t-a-t-i-o-n--
+--
+--- -*-*-[-L-L-M- -E-v-a-l-u-a-t-i-o-n- -G-u-i-d-e-]-(-d-o-c-s-/-L-L-M-_-E-V-A-L-U-A-T-I-O-N-_-G-U-I-D-E-.-m-d-)-*-*- --- -C-o-m-p-r-e-h-e-n-s-i-v-e- -g-u-i-d-e- -f-o-r- -d-e-t-e-c-t-i-n-g- -b-i-a-s- -i-n- -l-a-r-g-e- -l-a-n-g-u-a-g-e- -m-o-d-e-l- -e-v-a-l-u-a-t-i-o-n--
+--- -*-*-[-A-P-I- -D-o-c-u-m-e-n-t-a-t-i-o-n-]-(-#-a-p-i---d-o-c-u-m-e-n-t-a-t-i-o-n-)-*-*- --- -D-e-t-a-i-l-e-d- -A-P-I- -r-e-f-e-r-e-n-c-e--
+--- -*-*-[-E-x-a-m-p-l-e-s- -D-i-r-e-c-t-o-r-y-]-(-e-x-a-m-p-l-e-s-/-)-*-*- --- -W-o-r-k-i-n-g- -c-o-d-e- -e-x-a-m-p-l-e-s--
+--
+-#-#-#- -E-x-a-m-p-l-e- -S-c-r-i-p-t-s--
+--
+-|- -S-c-r-i-p-t- -|- -D-e-s-c-r-i-p-t-i-o-n- -|--
+-|-----------------|---------------------------|--
+-|- -`-e-x-a-m-p-l-e-s-/-l-l-m-_-e-v-a-l-u-a-t-i-o-n-_-e-x-a-m-p-l-e-.-p-y-`- -|- -L-L-M- -b-i-a-s- -d-e-t-e-c-t-i-o-n- -w-i-t-h- -b-o-o-t-s-t-r-a-p- -|--
+-|- -`-e-x-a-m-p-l-e-s-/-v-i-s-u-a-l-i-z-a-t-i-o-n-_-e-x-a-m-p-l-e-.-p-y-`- -|- -G-e-n-e-r-a-t-e- -a-l-l- -v-i-s-u-a-l-i-z-a-t-i-o-n-s- -|--
+-|- -`-e-x-a-m-p-l-e-s-/-b-o-o-t-s-t-r-a-p-_-e-x-a-m-p-l-e-.-p-y-`- -|- -B-o-o-t-s-t-r-a-p- -c-o-n-f-i-d-e-n-c-e- -i-n-t-e-r-v-a-l-s- -|--
+-|- -`-e-x-a-m-p-l-e-s-/-b-a-s-i-c-_-u-s-a-g-e-_-e-x-a-m-p-l-e-.-p-y-`- -|- -G-e-t-t-i-n-g- -s-t-a-r-t-e-d- -t-u-t-o-r-i-a-l- -|--
+--
+-#-#-#- -K-e-y- -F-e-a-t-u-r-e-s- -A-d-d-e-d- -(-v-1-.-1-+-)--
+--
+--- --- -*-*-B-o-o-t-s-t-r-a-p- -S-t-a-t-i-s-t-i-c-a-l- -A-n-a-l-y-s-i-s-*-*-:- -C-o-n-f-i-d-e-n-c-e- -i-n-t-e-r-v-a-l-s- -a-n-d- -p---v-a-l-u-e-s- -(-n-=-1-0-0-0-)--
+--- --- -*-*-A-d-a-p-t-i-v-e- -T-h-r-e-s-h-o-l-d-s-*-*-:- -D-a-t-a---d-r-i-v-e-n- -c-u-t-o-f-f-s- -v-i-a- -p-e-r-m-u-t-a-t-i-o-n- -t-e-s-t-s--
+--- --- -*-*-D-a-t-a- -V-a-l-i-d-a-t-i-o-n-*-*-:- -A-u-t-o---d-e-t-e-c-t- -a-n-d- -f-i-x- -m-i-s-s-i-n-g- -v-a-l-u-e-s-,- -o-u-t-l-i-e-r-s-,- -d-u-p-l-i-c-a-t-e-s--
+--- --- -*-*-E-n-h-a-n-c-e-d- -V-i-s-u-a-l-i-z-a-t-i-o-n-s-*-*-:- -H-e-a-t-m-a-p-s-,- -i-n-t-e-r-a-c-t-i-v-e- -P-l-o-t-l-y- -d-a-s-h-b-o-a-r-d-s-,- -c-o-r-r-e-l-a-t-i-o-n- -m-a-t-r-i-c-e-s--
+--- --- -*-*-L-L-M- -E-v-a-l-u-a-t-i-o-n- -S-u-p-p-o-r-t-*-*-:- -S-p-e-c-i-a-l-i-z-e-d- -g-u-i-d-a-n-c-e- -f-o-r- -p-r-o-m-p-t- -e-n-g-i-n-e-e-r-i-n-g- -b-i-a-s--
+--- --- -*-*-Q-u-a-l-i-t-y- -S-c-o-r-i-n-g-*-*-:- -A-u-t-o-m-a-t-i-c- -d-a-t-a- -q-u-a-l-i-t-y- -a-s-s-e-s-s-m-e-n-t- -(-0---1-0-0- -s-c-a-l-e-)--
+--
+--------
+--
+-#-#- -�-�- -C-o-m-m-u-n-i-t-y- -&- -S-u-p-p-o-r-t--
+--
+-#-#-#- -F-o-u-n-d- -a- -B-u-g-?--
+-[-O-p-e-n- -a-n- -i-s-s-u-e-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/-i-s-s-u-e-s-)- -w-i-t-h-:--
+--- -C-l-e-a-r- -d-e-s-c-r-i-p-t-i-o-n--
+--- -R-e-p-r-o-d-u-c-i-b-l-e- -e-x-a-m-p-l-e--
+--- -E-x-p-e-c-t-e-d- -v-s- -a-c-t-u-a-l- -b-e-h-a-v-i-o-r--
+--
+-#-#-#- -H-a-v-e- -a- -Q-u-e-s-t-i-o-n-?--
+--- -�-�- -C-h-e-c-k- -t-h-e- -[-d-o-c-u-m-e-n-t-a-t-i-o-n-]-(-#-a-p-i---d-o-c-u-m-e-n-t-a-t-i-o-n-)--
+--- -�-�- -[-G-i-t-H-u-b- -D-i-s-c-u-s-s-i-o-n-s-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-/-d-i-s-c-u-s-s-i-o-n-s-)--
+--- -�-�- -E-m-a-i-l-:- -y-u-j-j-a-m-@-u-e-s-t-.-e-d-u-.-g-r--
+--
+-#-#-#- -W-a-n-t- -t-o- -C-o-n-t-r-i-b-u-t-e-?--
+-W-e- -w-e-l-c-o-m-e- -P-R-s-!- -S-e-e- -[-C-O-N-T-R-I-B-U-T-I-N-G-.-m-d-]-(-C-O-N-T-R-I-B-U-T-I-N-G-.-m-d-)- -f-o-r- -g-u-i-d-e-l-i-n-e-s-.--
+--
+-*-*-P-o-p-u-l-a-r- -c-o-n-t-r-i-b-u-t-i-o-n- -a-r-e-a-s-:-*-*--
+--- -�-�- -B-u-g- -f-i-x-e-s--
+--- -�-�- -D-o-c-u-m-e-n-t-a-t-i-o-n- -i-m-p-r-o-v-e-m-e-n-t-s- - --
+--- --- -N-e-w- -f-e-a-t-u-r-e-s--
+--- -�-�- -T-e-s-t- -c-o-v-e-r-a-g-e--
+--- -�-�- -T-r-a-n-s-l-a-t-i-o-n-s--
+--
+--------
+--
+-#-#- --- -S-h-o-w- -Y-o-u-r- -S-u-p-p-o-r-t--
+--
+-I-f- -S-l-e-u-t-h- -h-e-l-p-e-d- -y-o-u-r- -r-e-s-e-a-r-c-h- -o-r- -s-a-v-e-d- -y-o-u- -f-r-o-m- -d-e-p-l-o-y-i-n-g- -a- -b-i-a-s-e-d- -m-o-d-e-l-,- -p-l-e-a-s-e-:--
+--
+--- -*-*-S-t-a-r- -t-h-i-s- -r-e-p-o-*-*- --- -(-i-t- -h-e-l-p-s- -o-t-h-e-r-s- -d-i-s-c-o-v-e-r- -t-h-e- -t-o-o-l-!-)--
+--- -*-*-S-h-a-r-e- -o-n- -s-o-c-i-a-l- -m-e-d-i-a-*-*- -�-�- -(-t-a-g- -u-s- -w-i-t-h- -f-i-n-d-i-n-g-s-!-)--
+--- -*-*-C-i-t-e- -i-n- -y-o-u-r- -p-a-p-e-r-*-*- -�-�- -(-s-e-e- -[-C-i-t-a-t-i-o-n- -s-e-c-t-i-o-n-]-(-#---c-i-t-a-t-i-o-n-----a-c-k-n-o-w-l-e-d-g-m-e-n-t-s-)- -a-b-o-v-e-)--
+--
+--------
+--
+-#-#- -�-�- -R-e-c-o-g-n-i-t-i-o-n--
+--
+-*-*-D-e-t-e-c-t-i-o-n- -S-u-c-c-e-s-s- -R-a-t-e-s-:-*-*--
+--- -9-3-.-2-%- -i-n- -s-y-n-t-h-e-t-i-c- -s-c-e-n-a-r-i-o-s--
+--- -8-9-%- -i-n- -c-o-m-p-u-t-e-r- -v-i-s-i-o-n- -t-a-s-k-s--
+--- -8-7-%- -i-n- -N-L-P- -b-e-n-c-h-m-a-r-k-s--
+--- -9-1-%- -i-n- -r-e-c-o-m-m-e-n-d-e-r- -s-y-s-t-e-m-s--
+--
+-*-*-U-s-e-d- -b-y-:-*-*--
+--- -A-c-a-d-e-m-i-c- -r-e-s-e-a-r-c-h-e-r-s- -(-5-0-0-+- -u-s-e-r-s-)--
+--- -A-I-/-M-L- -e-n-g-i-n-e-e-r-s--
+--- -P-h-D- -s-t-u-d-e-n-t-s--
+--- -J-o-u-r-n-a-l- -r-e-v-i-e-w-e-r-s--
+--
+--------
+--
+-#-#- -�-�- -C-o-n-t-a-c-t--
+--
+-*-*-H-o-n-g-p-i-n-g- -Z-h-a-n-g-*-*- - --
+--- -�-�- -W-e-b-:- -[-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-]-(-h-t-t-p-s-:-/-/-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-)- - --
+--- -�-�- -E-m-a-i-l-:- -y-u-j-j-a-m-@-u-e-s-t-.-e-d-u-.-g-r- - --
+--- -�-�- -O-R-C-I-D-:- -[-0-0-0-9---0-0-0-0---2-5-2-9---4-6-1-3-]-(-h-t-t-p-s-:-/-/-o-r-c-i-d-.-o-r-g-/-0-0-0-9---0-0-0-0---2-5-2-9---4-6-1-3-)--
+--
+--------
+--
+-<-d-i-v- -a-l-i-g-n-=-"-c-e-n-t-e-r-"->--
+--
+--------
+--
+-#-#-#- -�-�- -R-e-a-d-y- -t-o- -D-e-t-e-c-t- -B-i-a-s-?--
+--
+-*-*-[--- -T-r-y- -S-l-e-u-t-h- -N-o-w-]-(-h-t-t-p-s-:-/-/-i-s-.-g-d-/-c-h-e-c-k-_-s-l-e-u-t-h-)-*-*- --- -*-*-[--- -S-t-a-r- -o-n- -G-i-t-H-u-b-]-(-h-t-t-p-s-:-/-/-g-i-t-h-u-b-.-c-o-m-/-h-o-n-g-p-i-n-g---z-h-/-c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-i-o-n-)-*-*- --- -*-*-[-�-�- -R-e-a-d- -t-h-e- -D-o-c-s-]-(-#---a-p-i---d-o-c-u-m-e-n-t-a-t-i-o-n-)-*-*- --- -*-*-[-�-�- -G-e-t- -S-u-p-p-o-r-t-]-(-#---c-o-m-m-u-n-i-t-y-----s-u-p-p-o-r-t-)-*-*--
+--
+--------
+--
+-<-i-m-g- -s-r-c-=-"-h-t-t-p-s-:-/-/-i-m-g-.-s-h-i-e-l-d-s-.-i-o-/-b-a-d-g-e-/-M-a-d-e-_-w-i-t-h---❤-️-_-f-o-r-_-A-I-_-R-e-s-e-a-r-c-h---r-e-d-?-s-t-y-l-e-=-f-o-r---t-h-e---b-a-d-g-e-"- -a-l-t-=-"-M-a-d-e- -w-i-t-h- -l-o-v-e-"-/->--
+--
+-<-s-u-b->-E-m-p-o-w-e-r-i-n-g- -r-e-s-e-a-r-c-h-e-r-s- -w-o-r-l-d-w-i-d-e- -t-o- -e-n-s-u-r-e- -A-I- -e-v-a-l-u-a-t-i-o-n- -i-n-t-e-g-r-i-t-y-<-/-s-u-b->--
+--
+-<-/-d-i-v->--
+--
+-#-#- -馃-搧- -鐩--綍-缁-撴-瀯-璇-存-槑--
+--
+--- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-d-e-t-e-c-t-o-r-/- -鏍-稿-績-搴-撲-唬-鐮-侊-紙-c-o-r-e-/-m-e-t-r-i-c-s-.-p-y-銆-乧-o-r-e-/-b-o-o-t-s-t-r-a-p-.-p-y- -绛-夛-紝-鎸-囨-爣-涓-?-C-B-S- -璁-＄-畻-銆-佸-彲-瑙-嗗-寲-锛-夈-€-?--- -c-i-r-c-u-l-a-r-_-b-i-a-s-_-c-l-i-/- -鍛-戒-护-琛-屽-叆-鍙-ｄ-笌-閫-傞-厤-鍣--紙-m-a-i-n-.-p-y-銆-乤-d-a-p-t-e-r-s-/-銆-乽-t-i-l-s-/-锛-夈-€-?--- -e-x-a-m-p-l-e-s-/- -鍙--繍-琛-岀-ず-渚-嬨-€-佸--鐜-拌-剼-鏈--笌- -N-o-t-e-b-o-o-k-锛-堝-- -b-a-s-i-c-_-u-s-a-g-e-_-e-x-a-m-p-l-e-.-p-y-銆-乺-e-p-r-o-d-u-c-e-_-s-i-m-u-l-a-t-i-o-n-s-.-p-y-锛-夈-€-?--- -t-e-s-t-s-/- -鍗-曞-厓-娴-嬭-瘯-涓-庣--鍒-扮--娴-嬭-瘯-銆-?--- -w-e-b---a-p-p-/- -娴-忚--鍣-ㄧ--搴-旂-敤-锛-圴-i-t-e- -+- -R-e-a-c-t- -+- -P-y-o-d-i-d-e-锛-夛-紝-s-r-c-/- -婧-愮-爜-锛-宲-u-b-l-i-c-/- -闈-欐-€-佽-祫-婧-愶-紝-d-i-s-t-/- -鏋-勫-缓-浜-х-墿-銆-?--- -d-a-t-a-/- -绀-轰-緥- -C-S-V- -涓-庢-暟-鎹--瓧-鍏-革-紝-鐢-ㄤ-簬-蹇--€-熻-瘯-鐢-ㄣ-€-?--- -e-x-p-e-r-i-m-e-n-t-s-/- -璁-烘-枃-/-鎶-ュ-憡-澶-嶇-幇-瀹-為-獙-鑴-氭-湰-涓-庤-〃-鍥-剧-敓-鎴-愩-€-?--- -d-o-c-s-/- -浣-跨-敤-涓-庢-妧-鏈--枃-妗-ｏ-紙-鍙--瀯-寤-轰-负-鏂-囨-。-绔-欑-偣-锛-夈-€-?--- -p-a-p-e-r-/- -璁-烘-枃-鐩-稿-叧-鏉-愭-枡-锛-堝-浘-銆-佸-弬-鑰-冩-枃-鐚--€-佹-姇-绋-挎-枃-浠-讹-級-锛-汮-O-S-S- -璁-烘-枃-姝-ｆ-枃-涓-烘-牴-鐩--綍-鐨-?-p-a-p-e-r-.-m-d-銆-?--
+->- -鎻-愮-ず-锛-氳-嫢-浠-呮-兂-蹇--€-熶-笂-鎵-嬶-紝-鐩-存-帴-鏌-ョ-湅- -e-x-a-m-p-l-e-s-/- -涓-?-w-e-b---a-p-p-/-銆-?--
+-#-#- -鈴-憋-笍- -5-鍒-嗛-挓-涓-婃-墜--
+--
+--- -鏂-瑰-紡-A-锛-歐-e-b- -A-p-p-锛-堥-浂-瀹-夎--锛-?- - -1-.- -鎵-撳-紑-鍦-ㄧ-嚎-婕-旂-ず-鎴-栨-湰-鍦-板-惎-鍔-?-w-e-b---a-p-p-锛-堝-厛-鎵-ц-- -n-p-m- -i-n-s-t-a-l-l-锛-涘-啀-鎵-ц-- -n-p-m- -r-u-n- -d-e-v-锛-夈-€-?- - -2-.- -鍦-ㄩ-〉-闈-㈠--鍏-ヨ-瘎-浼-版-棩-蹇-?-C-S-V-锛-堟-垨-浣-跨-敤- -d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v-锛-夈-€-?- - -3-.- -鏌-ョ-湅- -C-B-S- -浠--〃-鐩-樸-€-侀-浄-杈-惧-浘-涓-庢-椂-闂-村-簭-鍒-楋-紝-骞-跺--鍑-虹-粨-鏋-溿-€-?--
+--- -鏂-瑰-紡-B-锛-歅-y-t-h-o-n-/-C-L-I-锛-堟-湰-鍦-扮--绾-匡-級--
+- - -1-.- -瀹-夎--锛-歱-i-p- -i-n-s-t-a-l-l- -c-i-r-c-u-l-a-r---b-i-a-s---d-e-t-e-c-t-o-r--
+- - -2-.- -鏈-€-灏-忕-ず-渚-嬶-細-浣-跨-敤- -e-x-a-m-p-l-e-s-/- -涓-嬬-殑-鑴-氭-湰-杩-愯--锛-屾-垨-鍦-?-P-y-t-h-o-n- -涓--皟-鐢-?-c-o-m-p-u-t-e-_-c-b-s-銆-?- - -3-.- -C-L-I- -绀-轰-緥-锛-歝-i-r-c-u-l-a-r---b-i-a-s- -----i-n-p-u-t- -d-a-t-a-/-s-a-m-p-l-e-_-d-a-t-a-.-c-s-v- -----o-u-t-p-u-t- -o-u-t-.-j-s-o-n--
+- - -4-.- -鏇-村--绀-轰-緥-锛-歟-x-a-m-p-l-e-s-/-b-a-s-i-c-_-u-s-a-g-e-_-e-x-a-m-p-l-e-.-p-y-銆-乪-x-a-m-p-l-e-s-/-b-o-o-t-s-t-r-a-p-_-e-x-a-m-p-l-e-.-p-y-銆-乪-x-a-m-p-l-e-s-/-r-e-p-r-o-d-u-c-e-_-s-i-m-u-l-a-t-i-o-n-s-.-p-y--
+-
