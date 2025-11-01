@@ -15,6 +15,15 @@
 
 ## Detect AI Evaluation Bias in 30 Seconds
 
+## On this page
+
+- [Quick Links](#quick-links)
+- [Quick Start](#-quick-start)
+- [Examples](#examples)
+- [API/Docs](#documentation)
+- [Testing](#-testing)
+
+
 ## Quick Links
 
 - Live Demo: https://is.gd/check_sleuth
