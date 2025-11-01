@@ -1,0 +1,12 @@
+﻿name: Bug report
+labels: bug
+body:
+- type: textarea
+  attributes:
+    label: Description
+- type: textarea
+  attributes:
+    label: Reproduction
+- type: input
+  attributes:
+    label: Environment

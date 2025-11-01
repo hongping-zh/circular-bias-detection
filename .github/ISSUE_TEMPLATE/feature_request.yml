@@ -1,0 +1,9 @@
+﻿name: Feature request
+labels: enhancement
+body:
+- type: textarea
+  attributes:
+    label: Problem
+- type: textarea
+  attributes:
+    label: Proposed solution
