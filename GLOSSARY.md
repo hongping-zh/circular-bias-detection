@@ -1,5 +1,4 @@
 ﻿# Glossary
-
 - Circular Bias: Results inflated by iterative protocol changes.
 - PSI (Parameter Stability Index): Stability of parameters across periods.
 - CCS (Constraint Consistency Score): Consistency of evaluation constraints.
