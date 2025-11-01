@@ -1,23 +1,21 @@
 ﻿# FAQ
 
 ## Installation
-- Q: pip install fails?
-  - A: Upgrade pip, ensure Python>=3.8, check network mirrors.
+- pip install fails?
+  - Upgrade pip, ensure Python>=3.8, check network availability/mirrors.
 
 ## CLI
-- Q: circular-bias not found?
-  - A: Reinstall with pip install -e .[cli] or ensure Scripts/ on PATH (Windows).
+- circular-bias not found?
+  - pip install -e .[cli] or ensure Python/Scripts is on PATH (Windows).
 
 ## Web App
-- Q: Blank page?
-  - A: Run 
-pm install then 
-pm run dev, open http://localhost:5173
+- Blank page?
+  - npm install && npm run dev, open http://localhost:5173
 
 ## Data/CSV
-- Q: Missing required columns?
-  - A: See README 'CSV Data Format' and examples in data/.
+- Missing required columns?
+  - See README 'CSV Data Format' and data/sample_data.csv.
 
 ## Encoding/Line Endings
-- Q: README shows garbled text?
-  - A: Use UTF-8 encoding; [.gitattributes](cci:7://file:///c:/Users/14593/CascadeProjects/circular-bias-detection/.gitattributes:0:0-0:0) enforces * text=auto eol=lf.
+- Garbled README?
+  - Use UTF-8; [.gitattributes](cci:7://file:///c:/Users/14593/CascadeProjects/circular-bias-detection/.gitattributes:0:0-0:0) enforces * text=auto eol=lf.
