@@ -4,14 +4,14 @@
 pip install circular-bias-detector
 
 ## Minimal Example (Python)
-See examples/basic_usage_example.py or:
-- Input: data/tiny_sample.csv
-- Output: console metrics (PSI/CCS/ρ_PC) or JSON via CLI
+Use data/tiny_sample.csv:
+- SDK: examples/basic_usage_example.py
+- CLI: circular-bias --input data/tiny_sample.csv --output out.json
 
 ## Reproducible Scripts
 - examples/reproduce_simulations.py
 - examples/reproduce_case_studies.py
 
 ## Tips
-- Keep evaluation constraints fixed across iterations.
-- Use bootstrap examples for CI/p-values.
+- Keep constraints fixed across iterations.
+- See bootstrap examples for CI & p-values.
