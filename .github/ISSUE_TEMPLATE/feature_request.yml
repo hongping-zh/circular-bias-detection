@@ -2,8 +2,6 @@
 labels: enhancement
 body:
 - type: textarea
-  attributes:
-    label: Problem
+  attributes: { label: Problem }
 - type: textarea
-  attributes:
-    label: Proposed solution
+  attributes: { label: Proposed solution }

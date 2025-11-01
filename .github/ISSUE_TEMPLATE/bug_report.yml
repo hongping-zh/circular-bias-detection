@@ -2,11 +2,8 @@
 labels: bug
 body:
 - type: textarea
-  attributes:
-    label: Description
+  attributes: { label: Description }
 - type: textarea
-  attributes:
-    label: Reproduction
+  attributes: { label: Reproduction }
 - type: input
-  attributes:
-    label: Environment
+  attributes: { label: Environment }
