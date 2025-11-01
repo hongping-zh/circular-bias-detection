@@ -15,6 +15,22 @@
 
 ## Detect AI Evaluation Bias in 30 Seconds
 
+## Quick Links
+
+- Live Demo: https://is.gd/check_sleuth
+- 5分钟上手: 参见 README 的“5分钟上手”小节
+- 示例数据: data/tiny_sample.csv
+- Examples: examples/
+- API/Docs: docs/
+- JOSS 预审: https://github.com/openjournals/joss-reviews/issues/9272
+- Software DOI: https://doi.org/10.5281/zenodo.17201032
+- Dataset DOI: https://doi.org/10.5281/zenodo.17196639
+
+## Screenshot
+
+![Sleuth Web App Screenshot](assets/screenshot.png)
+
+
 **Stop deploying AI models with inflated performance scores.**
 
 Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets until your benchmark numbers look good—a hidden form of bias that breaks AI evaluations.
