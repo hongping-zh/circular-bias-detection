@@ -30,19 +30,15 @@ Operating entirely in the browser through Pyodide for client-side Python executi
 
 # Statement of Need
 
-Contemporary AI research workflows commonly employ adaptive evaluation strategies where experimental parameters undergo refinement based on interim performance observations [@recht2019imagenet; @bouthillier2021accounting]. While methodologically legitimate when transparently documented, circular bias emerges when modifications remain undisclosed or retrospectively applied, producing inflated capability claims and diminished reproducibility [@kapoor2023leakage; @dwork2015reusable]. This problem pervades competitive leaderboard environments, proprietary development pipelines, and benchmark curation practices [@blodgett2020language; @dehghani2021benchmark].
+Reviewers frequently ask whether Sleuth is (1) a new algorithm, (2) an innovative combination yielding superior diagnostic power, or (3) a usability contribution that enables new users. Our answer is explicit:
 
-Existing experiment management platforms (MLflow [@zaharia2018mlflow], Weights & Biases [@biewald2020wandb]) provide metadata logging but lack integrated diagnostics for circular evaluation patterns. Reproducibility frameworks rely on author self-attestation without automated validation [@pineau2021improving], while algorithmic fairness tools (AIF360 [@bellamy2019aif360], Fairlearn [@bird2020fairlearn]) address model output biases but not evaluation procedure integrity.
+- **New algorithm?** Sleuth does not propose a single novel estimator. Instead, it frames circular-bias detection as a statistical inference task and operationalizes it with three complementary indicators—PSI, CCS, and ρ_PC—augmented with bootstrap uncertainty quantification (confidence intervals and p-values) for formal hypothesis testing.
+- **Innovative combination?** Yes. Sleuth integrates these indicators into a unified workflow and a composite Circular Bias Score (CBS) with calibrated, data-driven thresholds. This design improves practical diagnostic power versus any single metric and separates failure modes (parameter drift, constraint inconsistency, performance–constraint coupling) that are often conflated in practice [@recht2019imagenet; @bouthillier2021accounting].
+- **Ease-of-use enabling new users?** Yes. A zero‑install, browser-based implementation via Pyodide, CSV inputs, guided defaults, and exportable reports lower the barrier for non-programmers (e.g., reviewers, editors, and domain researchers) to perform circular‑bias audits, expanding who can apply these checks in real workflows.
 
-**Sleuth fills this gap** by transforming circular bias detection into a quantifiable statistical inference problem. Its target audience includes:
+This contribution addresses a clear gap: experiment platforms (MLflow [@zaharia2018mlflow], Weights & Biases [@biewald2020wandb]) log metadata but lack integrated diagnostics for circular evaluation patterns; reproducibility checklists rely on self‑attestation without automated validation [@pineau2021improving]; fairness toolkits (AIF360 [@bellamy2019aif360], Fairlearn [@bird2020fairlearn]) target model‑output bias rather than evaluation‑protocol integrity. Sleuth complements these efforts by providing statistical tests and actionable visual diagnostics focused specifically on evaluation procedures.
 
-- **Academic researchers** validating their own evaluation protocols before publication
-- **Peer reviewers and editors** assessing methodological rigor in submitted manuscripts  
-- **Benchmark organizers** auditing leaderboard competitions for integrity violations
-- **Research integrity officers** investigating reproducibility concerns
-- **ML practitioners** implementing quality assurance in production pipelines
-
-The tool's browser-based architecture eliminates installation barriers and data transmission risks, making statistical diagnostics accessible to researchers without specialized computational infrastructure or statistical expertise. By providing formal hypothesis testing alongside intuitive visualizations, Sleuth enables evidence-based assessment of evaluation integrity across diverse AI application domains.
+Primary users include academic researchers preparing submissions, peer reviewers and editors assessing methodological rigor, benchmark organizers auditing leaderboards, research‑integrity officers, and ML practitioners integrating QA checks into pipelines. By combining statistical rigor with accessible delivery, Sleuth meets an immediate community need for practical, auditable detection of circular evaluation bias.
 
 # Key Features
 
