@@ -1,0 +1,14 @@
+[run]
+source = circular_bias_detector
+branch = True
+omit =
+    tests/*
+    setup.py
+
+[report]
+show_missing = True
+skip_empty = True
+fail_under = 0
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.

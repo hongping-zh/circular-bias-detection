@@ -29,10 +29,17 @@ circular_bias_detector/inference/base.py
 circular_bias_detector/inference/detector.py
 circular_bias_detector/inference/backends/__init__.py
 circular_bias_detector/inference/backends/vllm_backend.py
+tests/test_adaptive_thresholds.py
 tests/test_advanced_metrics.py
 tests/test_basic.py
+tests/test_bootstrap.py
+tests/test_cli.py
 tests/test_core_matrix.py
 tests/test_core_metrics.py
 tests/test_detect_bias.py
+tests/test_detector.py
 tests/test_inference.py
 tests/test_integration.py
+tests/test_phase1.py
+tests/test_utils.py
+tests/test_visualization.py

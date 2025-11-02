@@ -1,20 +1,8 @@
-## Summary
-Describe the change and motivation.
-
-## Related Issues
-Closes #
-
-## Type of change
-- [ ] feat
-- [ ] fix
-- [ ] docs
-- [ ] refactor
-- [ ] test
-- [ ] chore
+﻿## Summary
+- Link to issue:
+- Type of change:
 
 ## Checklist
-- [ ] Added/updated tests
-- [ ] Updated documentation (README/docs)
-- [ ] Lint and CI pass
-
-## Additional context
+- [ ] Tests added/updated
+- [ ] Docs updated
+- [ ] CI passes
