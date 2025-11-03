@@ -1,0 +1,8 @@
+{
+  "prefix": "neg_control",
+  "num_edges": 704,
+  "precision": 0.0,
+  "recall": 0.0,
+  "f1": 0.0,
+  "classification_report": "              precision    recall  f1-score   support\n\n           0     1.0000    1.0000    1.0000       704\n\n    accuracy                         1.0000       704\n   macro avg     1.0000    1.0000    1.0000       704\nweighted avg     1.0000    1.0000    1.0000       704\n"
+}

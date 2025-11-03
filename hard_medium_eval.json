@@ -1,0 +1,8 @@
+{
+  "prefix": "synthetic_hard_medium",
+  "num_edges": 5197,
+  "precision": 1.0,
+  "recall": 0.9646302250803859,
+  "f1": 0.9819967266775778,
+  "classification_report": "              precision    recall  f1-score   support\n\n           0     0.9978    1.0000    0.9989      4886\n           1     1.0000    0.9646    0.9820       311\n\n    accuracy                         0.9979      5197\n   macro avg     0.9989    0.9823    0.9904      5197\nweighted avg     0.9979    0.9979    0.9979      5197\n"
+}

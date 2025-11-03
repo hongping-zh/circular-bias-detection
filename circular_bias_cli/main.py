@@ -122,6 +122,17 @@ For more information: https://github.com/hongping-zh/circular-bias-detection
         
         # List algorithms command
         subparsers.add_parser('list-algorithms', help='List available algorithms')
+
+        # Quality gate command for CI/CD
+        gate_parser = subparsers.add_parser('gate', help='Run CI/CD quality gate for circular bias')
+        gate_parser.add_argument('--data-path', type=str, required=True, help='Path to local CSV data file')
+        gate_parser.add_argument('--psi-threshold', type=float, default=0.15, help='PSI detection threshold (default: 0.15)')
+        gate_parser.add_argument('--ccs-threshold', type=float, default=0.85, help='CCS detection threshold (default: 0.85)')
+        gate_parser.add_argument('--rho-threshold', type=float, default=0.5, help='ρ_PC detection threshold (default: 0.5)')
+        gate_parser.add_argument('--warn-threshold', type=float, default=0.6, help='Warn gate on confidence ≥ this value (default: 0.6)')
+        gate_parser.add_argument('--critical-threshold', type=float, default=0.8, help='Fail gate on confidence ≥ this value when bias detected (default: 0.8)')
+        gate_parser.add_argument('--output', '-o', type=str, help='Optional output file path')
+        gate_parser.add_argument('--format', '-f', choices=['text', 'json', 'csv'], default='json', help='Output format (default: json)')
         
         return parser
     
@@ -322,6 +333,52 @@ For more information: https://github.com/hongping-zh/circular-bias-detection
             row = f"{result['algorithm']},{result['score']:.4f},{result['threshold']:.4f},{result['detected']}"
         
         return f"{header}\n{row}"
+
+    def cmd_gate(self, args) -> int:
+        """Execute CI/CD quality gate.
+        Exit codes:
+          0 = OK (no critical or warning bias)
+          1 = Critical bias detected (block deploy)
+          2 = Warning (requires manual review)
+        """
+        try:
+            data = pd.read_csv(args.data_path)
+            params = {
+                'psi_threshold': args.psi_threshold,
+                'ccs_threshold': args.ccs_threshold,
+                'rho_pc_threshold': args.rho_threshold,
+            }
+            result = self.algorithm_adapter.run('decision_framework', data, params)
+
+            # Emit output
+            if args.format == 'json':
+                output = json.dumps(result, indent=2)
+            elif args.format == 'csv':
+                output = self._format_csv(result)
+            else:
+                output = self._format_text(result)
+
+            if args.output:
+                Path(args.output).write_text(output, encoding='utf-8')
+                print(f"✓ Results written to: {args.output}")
+            else:
+                print(output)
+
+            detected = bool(result.get('detected', False))
+            confidence = float(result.get('confidence', 0.0))
+
+            if detected and confidence >= args.critical_threshold:
+                return 1
+            if detected or confidence >= args.warn_threshold:
+                return 2
+            return 0
+        except Exception as e:
+            self.logger.error(f"Quality gate failed: {e}")
+            if getattr(args, 'verbose', False):
+                import traceback
+                traceback.print_exc()
+            # Treat runtime failures as warnings to avoid silent passes
+            return 2
     
     def run(self, argv=None):
         """Main entry point."""
@@ -346,6 +403,8 @@ For more information: https://github.com/hongping-zh/circular-bias-detection
                 return self.cmd_cache(args)
             elif args.command == 'list-algorithms':
                 return self.cmd_list_algorithms()
+            elif args.command == 'gate':
+                return self.cmd_gate(args)
             else:
                 print(f"Unknown command: {args.command}")
                 parser.print_help()

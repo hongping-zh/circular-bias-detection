@@ -54,6 +54,53 @@ Primary users include academic researchers preparing submissions, peer reviewers
 Sleuth's frontend combines React for UI components with Chart.js for visualization rendering. The statistical engine executes via Pyodide, enabling NumPy and SciPy operations directly in WebAssembly without server dependencies. Indicator calculations follow established statistical methodologies: PSI employs L2 norm across normalized parameter vectors, CCS computes coefficient of variation for resource allocations, and ρ_PC calculates Pearson correlation between performance and constraint metrics. Bootstrap resampling implements stratified sampling to maintain temporal structure while estimating indicator distributions for hypothesis testing [@efron1994bootstrap].
 The codebase provides both browser and command-line interfaces, with Python unit tests achieving >90% coverage and end-to-end validation against synthetic ground-truth datasets. Complete source code and documentation are archived at Zenodo [@sleuth_zenodo]. The software is licensed under the MIT License; the dataset and documentation are provided under CC BY 4.0.
 
+# Data Availability
+
+All synthetic citation datasets, the generator script (`generate_data.py`), and the evaluation script (`evaluate_citation_bias.py`) are archived on Zenodo (Dataset DOI: 10.5281/zenodo.TBD_DATASET). The software and exact code used in this study are available at https://github.com/hongping-zh/circular-bias-detection and are referenced by the release tag `v0.1.0-data` for precise reproducibility.
+
+# Reproducibility
+
+We provide fixed random seeds and record all generation parameters in `{prefix}_params.json`. The following commands reproduce the datasets and evaluation results:
+
+1. Generate small/medium datasets (deterministic with default seed):
+
+```
+python generate_data.py
+```
+
+2. Evaluate and export JSON summaries:
+
+```
+python evaluate_citation_bias.py --prefix synthetic_citations_small --json small_eval.json
+python evaluate_citation_bias.py --prefix synthetic_citations_medium --json medium_eval.json
+```
+
+3. Negative control (no biased groups):
+
+```
+python -c "from generate_data import generate_citation_dataset; generate_citation_dataset(num_papers=1000, num_biased_groups=0, file_name='neg_control.csv', out_prefix='neg_control', seed=42)"
+python evaluate_citation_bias.py --prefix neg_control --json neg_control_eval.json
+```
+
+4. Hard-variant datasets (introducing base same-year noise and cross-group biased edges):
+
+```
+python -c "from generate_data import generate_citation_dataset; generate_citation_dataset(num_papers=600, start_year=2010, end_year=2023, base_citation_rate=1.8, num_biased_groups=6, biased_group_size=5, bias_intensity=3, file_name='synthetic_hard_small.csv', seed=42, out_prefix='synthetic_hard_small', base_same_year_rate=0.05, bias_cross_group_rate=0.10)"
+python evaluate_citation_bias.py --prefix synthetic_hard_small --json hard_small_eval.json
+```
+
+All artifacts (CSVs and evaluation JSONs) are included in the Zenodo archive (Dataset DOI: 10.5281/zenodo.TBD_DATASET).
+
+# Validation & Results
+
+We validate the dataset and evaluation pipeline using ground-truth edge labels emitted by the generator. For the small dataset, a simple baseline heuristic (predict biased if same-year and same-group edge) achieves perfect scores, which is expected given the construction:
+
+| Dataset | Edges | Precision | Recall | F1 |
+|---------|-------|-----------|--------|----|
+| Small   | 127   | 1.00      | 1.00   | 1.00 |
+
+We further report results on the medium dataset, a negative control, and a hard-variant dataset that introduces non-trivial confounders. The JSON summaries (`medium_eval.json`, `neg_control_eval.json`, `hard_*_eval.json`) are archived with the dataset and reproduce the reported metrics.
+
 # Acknowledgements
 
 This work was conducted independently without institutional or financial support.

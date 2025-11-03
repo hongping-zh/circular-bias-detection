@@ -55,7 +55,7 @@ Dynamic: requires-dist
 Dynamic: requires-python
 Dynamic: summary
 
-﻿# Sleuth - AI Bias Detector
+# Sleuth - AI Bias Detector
 
 <!-- Badges Section -->
 [![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
@@ -1168,9 +1168,6 @@ If Sleuth helped your research or saved you from deploying a biased model, pleas
 
 **Used by:**
 - Academic researchers (500+ users)
-- AI/ML engineers
-- PhD students
-- Journal reviewers
 
 ---
 

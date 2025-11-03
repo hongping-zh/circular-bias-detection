@@ -9,6 +9,7 @@ circular_bias_cli/utils/__init__.py
 circular_bias_cli/utils/zenodo_loader.py
 circular_bias_detector/__init__.py
 circular_bias_detector/advanced_metrics.py
+circular_bias_detector/api.py
 circular_bias_detector/core.py
 circular_bias_detector/detection.py
 circular_bias_detector/ml_detector.py

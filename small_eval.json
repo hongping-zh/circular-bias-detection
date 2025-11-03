@@ -1,0 +1,8 @@
+{
+  "prefix": "synthetic_citations_small",
+  "num_edges": 127,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "classification_report": "              precision    recall  f1-score   support\n\n           0     1.0000    1.0000    1.0000       103\n           1     1.0000    1.0000    1.0000        24\n\n    accuracy                         1.0000       127\n   macro avg     1.0000    1.0000    1.0000       127\nweighted avg     1.0000    1.0000    1.0000       127\n"
+}

@@ -1,0 +1,14 @@
+{
+  "num_papers": 200,
+  "start_year": 2015,
+  "end_year": 2023,
+  "base_citation_rate": 1.2,
+  "num_biased_groups": 3,
+  "biased_group_size": 4,
+  "bias_intensity": 2,
+  "seed": 42,
+  "timestamp": "2025-11-03T09:43:48.893461",
+  "out_prefix": "synthetic_citations_small",
+  "base_same_year_rate": 0.0,
+  "bias_cross_group_rate": 0.0
+}

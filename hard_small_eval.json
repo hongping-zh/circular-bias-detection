@@ -1,0 +1,8 @@
+{
+  "prefix": "synthetic_hard_small",
+  "num_edges": 591,
+  "precision": 1.0,
+  "recall": 0.9574468085106383,
+  "f1": 0.9782608695652174,
+  "classification_report": "              precision    recall  f1-score   support\n\n           0     0.9920    1.0000    0.9960       497\n           1     1.0000    0.9574    0.9783        94\n\n    accuracy                         0.9932       591\n   macro avg     0.9960    0.9787    0.9871       591\nweighted avg     0.9933    0.9932    0.9932       591\n"
+}
