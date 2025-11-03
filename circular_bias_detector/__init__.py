@@ -45,6 +45,8 @@ from .detection import BiasDetector
 # Utilities (backward compatible)
 from .utils import load_data, generate_report
 
+# Standardized ecosystem API (model+data interface)
+from .api import ModelProtocol as CBDModel, detect_bias as detect_bias
 # New: Inference capabilities (optional, requires vLLM)
 try:
     from .inference import (
@@ -84,6 +86,9 @@ __all__ = [
     
     # Main detector
     'BiasDetector',
+    # Ecosystem API
+    'CBDModel',
+    'detect_bias',
     
     # Utilities
     'load_data',

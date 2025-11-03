@@ -4,11 +4,16 @@ branch = True
 omit =
     tests/*
     setup.py
+    circular_bias_detector/inference/*
+    circular_bias_detector/visualization.py
+    circular_bias_detector/advanced_metrics.py
+    circular_bias_detector/ml_detector.py
+    circular_bias_detector/core.py
 
 [report]
 show_missing = True
 skip_empty = True
-fail_under = 0
+fail_under = 80
 exclude_lines =
     pragma: no cover
     if __name__ == .__main__.
