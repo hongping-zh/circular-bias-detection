@@ -1,1 +1,13 @@
 * text=auto eol=lf
+
+# Hide configuration files from GitHub language stats and file browser
+.coveragerc linguist-generated=true
+pytest.ini linguist-generated=true
+.zenodo.json linguist-generated=true
+codemeta.json linguist-generated=true
+.gitattributes linguist-generated=true
+.gitignore linguist-generated=true
+
+# Mark documentation as linguist-documentation (collapsed by default)
+FAQ.md linguist-documentation=true
+GLOSSARY.md linguist-documentation=true
