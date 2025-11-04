@@ -2,7 +2,7 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "name": "Sleuth",
-  "description": "A browser-based tool for detecting circular bias in AI evaluation through statistical analysis of experimental logs",
+  "description": "Statistical framework and browser-based tool for detecting circular bias in AI evaluation. Provides automated analysis with PSI, CCS, and correlation metrics.",
   "identifier": "https://doi.org/10.5281/zenodo.17201032",
   "codeRepository": "https://github.com/hongping-zh/circular-bias-detection",
   "license": "https://spdx.org/licenses/CC-BY-4.0",
@@ -41,6 +41,6 @@
   ],
   "developmentStatus": "active",
   "dateCreated": "2024-01-01",
-  "dateModified": "2025-10-16",
+  "dateModified": "2025-11-04",
   "issueTracker": "https://github.com/hongping-zh/circular-bias-detection/issues"
 }

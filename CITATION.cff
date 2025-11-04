@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use Sleuth in your research or deployment pipeline, please cite both the software and the methodological paper."
+message: "If you use Sleuth in your research or production systems, please cite the software and dataset."
 authors:
   - family-names: Zhang
     given-names: Hongping
@@ -12,15 +12,14 @@ repository-code: https://github.com/hongping-zh/circular-bias-detection
 url: https://github.com/hongping-zh/circular-bias-detection
 doi: 10.5281/zenodo.17201032
 preferred-citation:
-  type: article
-  title: "A Comprehensive Statistical Framework for Detecting Circular Reasoning Bias in AI Algorithm Evaluation: Theory, Implementation, and Empirical Validation"
+  type: software
+  title: "Sleuth: Circular Bias Detection Framework"
   authors:
     - family-names: Zhang
       given-names: Hongping
       orcid: https://orcid.org/0009-0000-2529-4613
-  journal: "Submitted to Journal of the American Statistical Association"
   year: 2024
-  status: submitted
+  doi: 10.5281/zenodo.17201032
 references:
   - type: dataset
     title: "Circular Reasoning Bias Detection Dataset: 200K AI Algorithm Evaluations"

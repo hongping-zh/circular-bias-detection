@@ -40,7 +40,7 @@ dev_requires = [
 setup(
     name='circular-bias-detector',
     version='1.0.0',
-    description='Detect circular reasoning bias in algorithm evaluation',
+    description='Statistical framework for detecting circular bias in AI evaluation with automated PSI, CCS, and correlation analysis',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Hongping Zhang',
@@ -50,6 +50,8 @@ setup(
         'Documentation': 'https://github.com/hongping-zh/circular-bias-detection#readme',
         'Source': 'https://github.com/hongping-zh/circular-bias-detection',
         'Dataset': 'https://doi.org/10.5281/zenodo.17196639',
+        'Software DOI': 'https://doi.org/10.5281/zenodo.17201032',
+        'Web App': 'https://is.gd/check_sleuth',
         'Bug Tracker': 'https://github.com/hongping-zh/circular-bias-detection/issues',
     },
     packages=find_packages(exclude=['tests*', 'docs*']),
