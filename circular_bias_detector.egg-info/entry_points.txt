@@ -1,2 +1,0 @@
-[console_scripts]
-circular-bias = circular_bias_cli.main:main

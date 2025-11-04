@@ -1,2 +1,0 @@
-circular_bias_cli
-circular_bias_detector
