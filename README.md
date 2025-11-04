@@ -1,4 +1,4 @@
-﻿# Sleuth - AI Bias Detector
+# Sleuth - AI Bias Detector
 
 <!-- Badges Section -->
 [![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
@@ -10,7 +10,6 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/Docs-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
 [![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
-[![JOSS Status](https://img.shields.io/badge/JOSS-under%20review-yellow)](https://github.com/openjournals/joss-reviews/issues/9272)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
 
 ## Detect AI Evaluation Bias in 30 Seconds
@@ -31,7 +30,6 @@
 - 示例数据: data/tiny_sample.csv
 - Examples: examples/
 - API/Docs: docs/
-- JOSS 预审: https://github.com/openjournals/joss-reviews/issues/9272
 - Software DOI: https://doi.org/10.5281/zenodo.17201032
 - Dataset DOI: https://doi.org/10.5281/zenodo.17196639
 
@@ -968,25 +966,6 @@ If you use Sleuth in your research or industry work, please cite:
 }
 ```
 
-**JOSS Paper (Under Review):**
-```bibtex
-@article{zhang2024sleuth_joss,
-  author       = {Zhang, Hongping},
-  title        = {Sleuth: A Browser-Based Tool for Detecting Circular Bias in AI Evaluation},
-  journal      = {Journal of Open Source Software},
-  year         = {2024},
-  note         = {Under review},
-  url          = {https://github.com/hongping-zh/circular-bias-detection}
-}
-```
-
-### JOSS Submission
-
-This software is currently **under review** at the Journal of Open Source Software (JOSS).
-
-- **Review Thread**: https://github.com/openjournals/joss-reviews/issues/9272  
-- **Paper Draft**: [`paper.md`](paper.md)
-- **Bibliography**: [`paper.bib`](paper.bib)
 
 ### Acknowledgments
 
@@ -994,7 +973,6 @@ This project was developed to address a critical gap in AI evaluation integrity.
 - The open-source community for foundational libraries (NumPy, SciPy, Pandas)
 - Early adopters and users who provided valuable feedback
 - Zenodo for free dataset archiving and DOI assignment
-- The JOSS editorial team for their commitment to quality open-source scientific software
 
 ## 🤝 Contributing
 
