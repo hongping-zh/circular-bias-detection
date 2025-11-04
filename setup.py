@@ -39,7 +39,7 @@ dev_requires = [
 
 setup(
     name='circular-bias-detector',
-    version='1.0.0',
+    version='1.2.0',
     description='Statistical framework for detecting circular bias in AI evaluation with automated PSI, CCS, and correlation analysis',
     long_description=long_description,
     long_description_content_type='text/markdown',

@@ -1,0 +1,45 @@
+[flake8]
+# Maximum line length
+max-line-length = 100
+
+# Ignore specific error codes
+extend-ignore = 
+    # E203: whitespace before ':' (conflicts with Black)
+    E203,
+    # W503: line break before binary operator (conflicts with Black)
+    W503,
+    # E501: line too long (handled by Black)
+    E501,
+    # E731: do not assign a lambda expression
+    E731
+
+# Exclude directories
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    env,
+    .eggs,
+    *.egg,
+    build,
+    dist,
+    .tox,
+    .pytest_cache,
+    htmlcov,
+    docs/_build,
+    experiments,
+    scripts
+
+# Maximum complexity
+max-complexity = 10
+
+# Per-file ignores
+per-file-ignores =
+    # __init__.py files can have unused imports
+    __init__.py:F401,F403
+    # Tests can have unused arguments (fixtures)
+    tests/*:F401,F811
+
+# Enable docstring checks
+docstring-convention = numpy
