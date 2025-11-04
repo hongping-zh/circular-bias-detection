@@ -13,15 +13,17 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@google/genai": "^1.28.0",
     "chart.js": "^4.5.1",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "react": "^19.1.1",
     "react-chartjs-2": "^5.3.0",
-    "react-dom": "^19.1.1",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@types/node": "^24.10.0",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
