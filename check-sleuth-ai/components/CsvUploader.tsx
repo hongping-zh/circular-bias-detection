@@ -46,7 +46,7 @@ export const CsvUploader: React.FC<CsvUploaderProps> = ({ onCsvUpload, isProcess
       <div className="bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-2xl">
         <h2 className="text-3xl font-bold text-slate-100 mb-2">Detect Circular Bias with AI</h2>
         <p className="text-slate-400 mb-6 max-w-2xl mx-auto">
-          Circular bias, or data leakage, can invalidate machine learning models by creating overly optimistic results. This tool uses Gemini to analyze your dataset for subtle signs of leakage, alongside general data quality issues. Protect your models by uploading a CSV to begin.
+          Circular bias, or data leakage, can invalidate machine learning models by creating overly optimistic results. This tool uses AI to analyze your dataset for subtle signs of leakage, alongside general data quality issues. Protect your models by uploading a CSV to begin.
         </p>
         <div
           onDragEnter={handleDragEnter}
