@@ -1,0 +1,5 @@
+{
+  "name": "Check Sleuth AI",
+  "description": "An intelligent web application that uses Gemini to analyze CSV files, identify anomalies, and provide data insights.",
+  "requestFramePermissions": []
+}

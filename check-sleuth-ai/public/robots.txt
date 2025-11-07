@@ -1,0 +1,11 @@
+# robots.txt for Circular Bias Detector
+# https://biasdetector.vercel.app
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://biasdetector.vercel.app/sitemap.xml
+
+# Crawl-delay for polite bots
+Crawl-delay: 1

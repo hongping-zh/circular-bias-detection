@@ -65,13 +65,13 @@ def detect_circular_bias(
         raise ValueError(f"weights must sum to 1.0, got {sum(weights)}")
     
     # Compute individual indicators
-    print("🔬 Computing PSI...")
+    print("[Computing] PSI...")
     psi_result = compute_psi(data)
     
-    print("🔬 Computing CCS...")
+    print("[Computing] CCS...")
     ccs_result = compute_ccs(data)
     
-    print("🔬 Computing ρ_PC...")
+    print("[Computing] rho_PC...")
     rho_pc_result = compute_rho_pc(data)
     
     # Normalize to [0, 1]
@@ -163,7 +163,7 @@ def detect_circular_bias(
     
     # Optional: Bootstrap CI
     if run_bootstrap:
-        print(f"\n🔄 Running bootstrap ({n_bootstrap} iterations)...")
+        print(f"\n[Bootstrap] Running {n_bootstrap} iterations...")
         bootstrap_results = bootstrap_indicators(data, n_iterations=n_bootstrap)
         results['bootstrap'] = bootstrap_results
     

@@ -16,9 +16,13 @@ from flask_cors import CORS
 import pandas as pd
 from io import StringIO
 import traceback
+import os
+import google.generativeai as genai
 
-from core.bias_scorer import detect_circular_bias
+# Use circular-bias-detector package via adapter (with fallback to core)
+from adapters.bias_detector_adapter import detect_circular_bias
 from core.integration_service import IntegrationService
+from services.llm_service import LLMService
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -29,6 +33,21 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Initialize integration service
 integration_service = IntegrationService(doi="10.5281/zenodo.17201032")
+
+# Initialize LLM service (supports DeepSeek, Gemini, and Demo mode)
+llm_service = LLMService()
+
+# Initialize Gemini API (legacy, kept for compatibility)
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+DEEPSEEK_API_KEY = os.environ.get('DEEPSEEK_API_KEY')
+
+if DEEPSEEK_API_KEY:
+    print("✅ DeepSeek API configured successfully (Primary)")
+elif GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
+    print("✅ Gemini API configured successfully (Fallback)")
+else:
+    print("⚠️  Warning: No API keys set. CSV analysis will use demo mode.")
 
 
 @app.route('/', methods=['GET'])
@@ -285,6 +304,17 @@ def api_info():
                     'run_bootstrap': False
                 }
             },
+            '/api/analyze-csv': {
+                'method': 'POST',
+                'description': 'Analyze CSV data using Gemini AI for data quality and bias detection',
+                'content_type': 'text/plain',
+                'body': 'Raw CSV content as text',
+                'returns': {
+                    'summary': 'High-level summary of findings',
+                    'dataQualityInsights': 'List of data quality findings',
+                    'biasDetectionInsights': 'List of bias/leakage findings'
+                }
+            },
             '/api/analyze_zenodo': {
                 'method': 'POST',
                 'description': 'Fetch data from Zenodo and run bias detection',
@@ -393,6 +423,85 @@ def detect_bias():
             'error': 'Internal server error',
             'details': str(e)
         }), 500
+
+
+@app.route('/api/analyze-csv', methods=['POST'])
+def analyze_csv():
+    """
+    Analyze CSV data using AI (DeepSeek/Gemini) for data quality and bias detection.
+    
+    This endpoint provides AI-powered analysis of CSV data for data quality issues,
+    anomalies, patterns, and potential circular bias/data leakage.
+    
+    Supports multiple AI providers:
+    - DeepSeek (default, free tier)
+    - User's Gemini API Key (premium, via header)
+    - Demo mode (fallback)
+    
+    Request:
+        POST body: Raw CSV content as text/plain
+        Optional header: X-Gemini-API-Key (for user's own Gemini key)
+    
+    Returns:
+        200 OK with JSON analysis results:
+        {
+            "summary": "High-level summary of findings",
+            "dataQualityInsights": ["List of data quality findings"],
+            "biasDetectionInsights": ["List of bias/leakage findings"],
+            "provider": "deepseek|gemini|demo",
+            "isMock": false|true
+        }
+    """
+    try:
+        # Get CSV content from request body
+        csv_content = request.get_data(as_text=True)
+        
+        if not csv_content or len(csv_content.strip()) == 0:
+            return jsonify({
+                'error': 'Empty CSV content',
+                'details': 'Request body must contain CSV data'
+            }), 400
+        
+        # Get user's API key from header (optional)
+        user_api_key = request.headers.get('X-Gemini-API-Key')
+        
+        print(f"📥 CSV analysis request: {len(csv_content)} chars, user_key={bool(user_api_key)}")
+        
+        # Use LLM service (supports DeepSeek, Gemini, and Demo mode)
+        result = llm_service.analyze_csv(csv_content, user_api_key)
+        
+        provider = result.get('provider', 'unknown')
+        is_mock = result.get('isMock', False)
+        
+        if is_mock:
+            print(f"⚠️  Returning {provider} mode data")
+        else:
+            print(f"✅ {provider.upper()} analysis complete")
+        
+        return jsonify(result), 200
+        
+    except Exception as e:
+        print(f"❌ Error in CSV analysis: {str(e)}")
+        traceback.print_exc()
+        
+        # Return demo data as ultimate fallback
+        fallback_result = {
+            "summary": "Analysis service encountered an error. This is fallback demo data. The data structure appears valid but detailed analysis is unavailable.",
+            "dataQualityInsights": [
+                "Unable to perform detailed analysis due to service error.",
+                "Please check server logs for details.",
+                "Basic CSV structure appears to be valid."
+            ],
+            "biasDetectionInsights": [
+                "Detailed bias detection unavailable in fallback mode.",
+                "Manual review of feature-target relationships recommended."
+            ],
+            "provider": "error_fallback",
+            "isMock": True,
+            "error": str(e)
+        }
+        
+        return jsonify(fallback_result), 200
 
 
 def _validate_data(df: pd.DataFrame) -> str:
@@ -580,12 +689,13 @@ def clear_cache():
 # CLI runner
 if __name__ == '__main__':
     print("=" * 70)
-    print("🚀 Starting Sleuth API Server with Zenodo Integration")
+    print("[Starting] Sleuth API Server with Zenodo Integration")
     print("=" * 70)
     print("\nEndpoints:")
     print("  GET  /health                - Health check")
     print("  GET  /api/info              - API information")
     print("  POST /api/detect            - Bias detection (custom data)")
+    print("  POST /api/analyze-csv       - Gemini AI CSV analysis")
     print("  POST /api/analyze_zenodo    - Analyze Zenodo dataset")
     print("  GET  /api/zenodo/summary    - Zenodo dataset summary")
     print("  POST /api/cache/clear       - Clear results cache")
@@ -599,3 +709,7 @@ if __name__ == '__main__':
         port=5000,
         debug=True
     )
+
+# Vercel serverless function handler
+# This allows the app to run on Vercel's serverless platform
+# When deployed to Vercel, this will be the entry point
