@@ -32,7 +32,10 @@ const NavBar: React.FC = () => {
 };
 
 const AppRouter: React.FC = () => {
-  const basename = import.meta.env.DEV ? '/' : '/circular-bias-detection';
+  // Use root basename for Vercel deployment to avoid 404 on client routes like /reports
+  // If you later deploy under a subpath (e.g., GitHub Pages), consider using an env var:
+  // const basename = import.meta.env.VITE_BASE_PATH || '/';
+  const basename = '/';
   
   return (
     <QueryClientProvider client={queryClient}>

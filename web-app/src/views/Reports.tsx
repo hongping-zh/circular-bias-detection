@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -27,6 +27,15 @@ const Reports: React.FC = () => {
     pdf.save('sleuth_report.pdf');
   };
 
+  const meta = useMemo(() => {
+    try {
+      const raw = localStorage.getItem('sleuth_data_meta');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
   return (
     <div className="space-y-4">
       <div className="flex gap-3">
@@ -36,6 +45,29 @@ const Reports: React.FC = () => {
       <div id="pdf-area" className="p-4 rounded border bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
         <h2 className="text-lg font-semibold">Sleuth Bias Analysis Report (Preview)</h2>
         <p className="text-sm text-slate-500">This preview area will be captured into a PDF.</p>
+
+        <div className="mt-4 p-3 rounded-md bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700">
+          <h3 className="text-base font-semibold mb-2">Data Source & Limitations / 数据来源与限制</h3>
+          <ul className="list-disc pl-5 text-sm text-slate-600 dark:text-slate-300 space-y-1">
+            <li>
+              <strong>Source 来源:</strong>
+              {meta?.dataset_source ? ` ${meta.dataset_source}` : ' Unknown'}
+              {meta?.domain ? ` (${meta.domain})` : ''}
+            </li>
+            <li>
+              <strong>Protocol 协议:</strong>
+              {meta?.evaluation_protocol ? ` ${meta.evaluation_protocol}` : ' Unknown'}
+            </li>
+            <li>
+              <strong>Rows 行数:</strong>
+              {meta?.total_rows ? ` ${meta.total_rows}` : ' Unknown'}
+            </li>
+            <li>
+              <strong>Notice 提示:</strong> If the dataset is synthetic/simulation, detected bias signals may be amplified and are for demonstration only.
+              若为合成/模拟数据，检测信号可能被放大，仅用于演示。
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

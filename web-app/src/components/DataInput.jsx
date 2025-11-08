@@ -34,6 +34,21 @@ function DataInput({ onDataLoad }) {
       setValidation(message);
       
       if (validationResult.valid) {
+        // Persist minimal metadata for reporting
+        try {
+          const headerLine = csvContent.trim().split('\n')[0];
+          const headers = headerLine.split(',').map(h => h.trim());
+          const firstRow = validationResult.data && validationResult.data.length > 0 ? validationResult.data[0] : null;
+          const meta = {
+            domain: firstRow && headers.includes('domain') ? firstRow['domain'] : null,
+            dataset_source: firstRow && headers.includes('dataset_source') ? firstRow['dataset_source'] : null,
+            evaluation_protocol: firstRow && headers.includes('evaluation_protocol') ? firstRow['evaluation_protocol'] : null,
+            total_rows: validationResult.stats ? validationResult.stats.totalRows : null,
+          };
+          localStorage.setItem('sleuth_data_meta', JSON.stringify(meta));
+        } catch (_) {
+          // ignore
+        }
         onDataLoad(csvContent, validationResult);
       }
     };

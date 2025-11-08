@@ -1,7 +1,9 @@
 # Sleuth - AI Bias Detector
 
+> **Brand Note**: **Sleuth** is the product name. The technical identifier `circular-bias-detection` (GitHub/PyPI) refers to the methodology we implement.
+
 <!-- Badges Section -->
-[![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Live_Demo-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
+[![Web App](https://img.shields.io/badge/%F0%9F%94%8D_Try_Sleuth-brightgreen?style=for-the-badge)](https://is.gd/check_sleuth)
 [![GitHub stars](https://img.shields.io/github/stars/hongping-zh/circular-bias-detection?style=social)](https://github.com/hongping-zh/circular-bias-detection)
 [![CI](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml/badge.svg)](https://github.com/hongping-zh/circular-bias-detection/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -75,7 +77,7 @@ Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets u
 - **📈 Bootstrap Uncertainty** - Formal hypothesis testing with 95% confidence intervals and statistical significance stars
 <p align="center">
   <a href="https://hongping-zh.github.io/circular-bias-detection/?utm_source=github&utm_medium=readme&utm_campaign=hero_live_demo">
-    <img src="https://img.shields.io/badge/%F0%9F%94%8D%20LIVE%20DEMO-Try%20Sleuth-brightgreen?style=for-the-badge" alt="Live Demo">
+    <img src="https://img.shields.io/badge/%F0%9F%94%8D%20Try%20Sleuth-Launch%20Now-brightgreen?style=for-the-badge" alt="Try Sleuth">
   </a>
   <a href="https://colab.research.google.com/github/hongping-zh/circular-bias-detection/blob/main/examples/quickstart_colab.ipynb?utm_source=github&utm_medium=readme&utm_campaign=hero_colab">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" style="height:28px;">
@@ -102,7 +104,7 @@ Sleuth catches when you've been tweaking hyperparameters, prompts, or datasets u
 
 **Option 1: Web App (Fastest- 0 seconds)**
 
-**[🔍 Try Live Demo →](https://is.gd/check_sleuth)** - No installation - Runs in browser - 100% private
+**[🔍 Try Sleuth Now →](https://is.gd/check_sleuth)** - No installation - Runs in browser - 100% private
 
 **Option 2: Python Library (Most Flexible)**
 
@@ -243,7 +245,7 @@ RECOMMENDATION:
 
 ### 1️⃣ **Web App** (Easiest - No Code)
 
-**[Launch Web App →](https://is.gd/check_sleuth)**
+**[Launch Sleuth Web App →](https://is.gd/check_sleuth)**
 
 1. Upload CSV or use sample data
 2. Click "Detect Bias"
@@ -322,7 +324,7 @@ circular-bias detect data.csv --format json --output results.json
 - `data/sample_data.csv` - Basic example (ImageNet evaluations)
 - `data/llm_eval_sample.csv` - LLM evaluation (GPT, Llama, Claude, Mistral)
 
-**Try them in the web app:** [Launch Sleuth →](https://is.gd/check_sleuth)
+**Try them in Sleuth:** [Launch Sleuth →](https://is.gd/check_sleuth)
 
 ### Full Research Dataset (200K+ Records)
 
