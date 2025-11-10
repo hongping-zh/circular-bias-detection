@@ -118,9 +118,26 @@ function Dashboard({ results, onReset }) {
     <div className="dashboard" ref={reportRef}>
       <div className="dashboard-header">
         <h2>📊 Bias Detection Results</h2>
-        <button className="reset-button" onClick={onReset}>
-          ← New Scan
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <button className="reset-button" onClick={onReset}>
+            ← New Scan
+          </button>
+          <button 
+            className="reset-button" 
+            onClick={exportPDF}
+            disabled={isExporting}
+            style={{ background: isExporting ? '#ccc' : '#28a745' }}
+          >
+            {isExporting ? '⏳ Exporting...' : '📄 PDF'}
+          </button>
+          <button 
+            className="reset-button" 
+            onClick={exportCSV}
+            style={{ background: '#17a2b8' }}
+          >
+            📊 CSV
+          </button>
+        </div>
       </div>
 
       <div className={`overall-status ${overallBias ? 'detected' : 'clean'}`}>
