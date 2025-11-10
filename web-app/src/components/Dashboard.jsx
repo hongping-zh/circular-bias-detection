@@ -205,19 +205,17 @@ function Dashboard({ results, onReset }) {
         </div>
       )}
 
-      <div className="action-buttons">
+      <div className="action-buttons" style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
         <button 
           className="download-button" 
-          onClick={() => exportPDF()}
+          onClick={exportPDF}
           disabled={isExporting}
-          style={{ marginRight: '10px' }}
         >
           {isExporting ? '⏳ Exporting...' : '📄 Export PDF Report'}
         </button>
         <button 
           className="download-button" 
-          onClick={() => exportCSV()}
-          style={{ marginRight: '10px' }}
+          onClick={exportCSV}
         >
           📊 Export CSV Data
         </button>
