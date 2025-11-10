@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import './Dashboard.css';
 import VisualizationCharts from './VisualizationCharts';
+import { saveAs } from 'file-saver';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function MetricCard({ title, value, threshold, status, description, ciLower, ciUpper, pValue, showBootstrap }) {
   const getStatusColor = () => {
@@ -48,6 +51,8 @@ function MetricCard({ title, value, threshold, status, description, ciLower, ciU
 }
 
 function Dashboard({ results, onReset }) {
+  const reportRef = useRef(null);
+  const [isExporting, setIsExporting] = useState(false);
   const getPSIStatus = (score) => {
     if (score < 0.10) return 'ok';
     if (score < 0.15) return 'warning';
@@ -70,8 +75,47 @@ function Dashboard({ results, onReset }) {
   const overallBias = results.overall_bias || false;
   const confidence = results.confidence || 0;
 
+  const exportPDF = async () => {
+    if (!reportRef.current || isExporting) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(reportRef.current, {
+        scale: 2,
+        backgroundColor: '#ffffff'
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`sleuth-bias-report-${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (err) {
+      console.error('PDF export failed:', err);
+      alert('Failed to export PDF. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const exportCSV = () => {
+    const rows = [
+      ['Metric', 'Value', 'Threshold', 'Status'],
+      ['PSI Score', results.psi?.toFixed(4) || 'N/A', '0.15', results.psi ? getPSIStatus(results.psi) : 'N/A'],
+      ['CCS Score', results.ccs?.toFixed(4) || 'N/A', '0.85', results.ccs ? getCCSStatus(results.ccs) : 'N/A'],
+      ['ρ_PC Score', results.rho_pc?.toFixed(4) || 'N/A', '±0.5', results.rho_pc !== undefined ? getRhoPCStatus(results.rho_pc) : 'N/A'],
+      ['Overall Bias Detected', overallBias ? 'YES' : 'NO', '', ''],
+      ['Confidence', `${(confidence * 100).toFixed(1)}%`, '', ''],
+      ['Algorithms Evaluated', results.details?.algorithms_evaluated?.join(', ') || 'N/A', '', ''],
+      ['Time Periods', results.details?.time_periods || 'N/A', '', ''],
+      ['Indicators Triggered', `${results.details?.indicators_triggered || 0} / 3`, '', '']
+    ];
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `sleuth-bias-data-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
   return (
-    <div className="dashboard">
+    <div className="dashboard" ref={reportRef}>
       <div className="dashboard-header">
         <h2>📊 Bias Detection Results</h2>
         <button className="reset-button" onClick={onReset}>
@@ -162,8 +206,23 @@ function Dashboard({ results, onReset }) {
       )}
 
       <div className="action-buttons">
+        <button 
+          className="download-button" 
+          onClick={() => exportPDF()}
+          disabled={isExporting}
+          style={{ marginRight: '10px' }}
+        >
+          {isExporting ? '⏳ Exporting...' : '📄 Export PDF Report'}
+        </button>
+        <button 
+          className="download-button" 
+          onClick={() => exportCSV()}
+          style={{ marginRight: '10px' }}
+        >
+          📊 Export CSV Data
+        </button>
         <button className="download-button" onClick={() => downloadResults(results)}>
-          📥 Download Report (JSON)
+          📥 Download JSON
         </button>
         <button className="cite-button" onClick={copyCitation}>
           📋 Copy Citation
