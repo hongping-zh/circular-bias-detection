@@ -6,6 +6,10 @@ import Dashboard from './components/Dashboard';
 import ProgressBar from './components/ProgressBar';
 import InteractiveTutorial from './components/InteractiveTutorial';
 import { initPyodideInWorker, onPyodideProgress, runPython } from './utils/pyodideClient';
+import { useRef } from 'react';
+import { saveAs } from 'file-saver';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function App() {
   const [pyodideReady, setPyodideReady] = useState(false);
@@ -16,6 +20,8 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const reportRef = useRef(null);
 
   const analysisSteps = [
     'Loading data',
@@ -170,6 +176,62 @@ json.dumps(res)
     localStorage.setItem('sleuth_tutorial_completed', 'true');
   };
 
+  const exportPDF = async () => {
+    if (!reportRef.current || isExporting) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(reportRef.current, { scale: 2, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`sleuth-bias-report-${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (e) {
+      console.error('PDF export failed:', e);
+      alert('Failed to export PDF. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const exportCSV = () => {
+    if (!results) return;
+    const rows = [
+      ['Metric', 'Value', 'Threshold', 'Status'],
+      ['PSI Score', results.psi?.toFixed?.(4) ?? results.psi ?? 'N/A', '0.15', results.psi !== undefined ? (results.psi < 0.10 ? 'ok' : results.psi < 0.15 ? 'warning' : 'danger') : 'N/A'],
+      ['CCS Score', results.ccs?.toFixed?.(4) ?? results.ccs ?? 'N/A', '0.85', results.ccs !== undefined ? (results.ccs >= 0.9 ? 'ok' : results.ccs >= 0.85 ? 'warning' : 'danger') : 'N/A'],
+      ['ρ_PC Score', results.rho_pc?.toFixed?.(4) ?? results.rho_pc ?? 'N/A', '±0.5', results.rho_pc !== undefined ? (Math.abs(results.rho_pc) < 0.3 ? 'ok' : Math.abs(results.rho_pc) < 0.5 ? 'warning' : 'danger') : 'N/A'],
+      ['Overall Bias Detected', results.overall_bias ? 'YES' : 'NO', '', ''],
+      ['Confidence', `${((results.confidence || 0) * 100).toFixed(1)}%`, '', ''],
+      ['Algorithms Evaluated', results.details?.algorithms_evaluated?.join?.(', ') || 'N/A', '', ''],
+      ['Time Periods', results.details?.time_periods ?? 'N/A', '', ''],
+      ['Indicators Triggered', `${results.details?.indicators_triggered ?? 0} / 3`, '', '']
+    ];
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `sleuth-bias-data-${new Date().toISOString().split('T')[0]}.csv`);
+  };
+
+  const downloadResultsJSON = () => {
+    if (!results) return;
+    const dataStr = JSON.stringify(results, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `bias-detection-results-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copyCitation = () => {
+    const citation = `Zhang, H. (2024). Algorithm Benchmark Suite v2.0: Synthetic Dataset for Circular Bias Detection [Data set]. Zenodo. https://doi.org/10.5281/zenodo.17201032`;
+    navigator.clipboard.writeText(citation).then(() => {
+      alert('Citation copied to clipboard!');
+    });
+  };
+
   const handleLoadLLMExample = () => {
     // Load LLM example data
     const llmExampleCSV = `time_period,algorithm,performance,constraint_compute,constraint_memory,max_tokens,temperature,top_p,prompt_variant
@@ -255,13 +317,25 @@ json.dumps(res)
         )}
 
         {results && (
-          <Dashboard 
-            results={results} 
-            onReset={() => {
-              setResults(null);
-              setData(null);
-            }}
-          />
+          <>
+            <div className="action-buttons" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+              <button className="download-button" onClick={exportPDF} disabled={isExporting}>
+                {isExporting ? '⏳ Exporting...' : '📄 Export PDF Report'}
+              </button>
+              <button className="download-button" onClick={exportCSV}>📊 Export CSV Data</button>
+              <button className="download-button" onClick={downloadResultsJSON}>📥 Download JSON</button>
+              <button className="cite-button" onClick={copyCitation}>📋 Copy Citation</button>
+            </div>
+            <div ref={reportRef}>
+              <Dashboard 
+                results={results} 
+                onReset={() => {
+                  setResults(null);
+                  setData(null);
+                }}
+              />
+            </div>
+          </>
         )}
       </main>
 
