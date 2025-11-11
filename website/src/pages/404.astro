@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+const title = 'Page not found';
+const description = 'The page you are looking for does not exist.';
+---
+<Base {title} {description} lang="en">
+  <Fragment slot="nav"><Nav lang="en" /></Fragment>
+  <section class="text-center py-20">
+    <h1 class="text-4xl font-bold mb-4">404</h1>
+    <p class="mb-6">Sorry, we couldn’t find that page.</p>
+    <div class="flex items-center justify-center gap-4">
+      <a class="px-4 py-2 border rounded hover:bg-gray-50 dark:hover:bg-gray-900" href="/circular-bias-detection/en/">Go to Home (EN)</a>
+      <a class="px-4 py-2 border rounded hover:bg-gray-50 dark:hover:bg-gray-900" href="/circular-bias-detection/zh/">前往首页（中文）</a>
+    </div>
+  </section>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

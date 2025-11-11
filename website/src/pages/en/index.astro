@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+const lang = 'en';
+---
+<Base title="Circular Bias Detection" description="CBD project overview" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <section class="grid gap-6">
+    <h1 class="text-3xl font-bold">Circular Bias Detection</h1>
+    <p>Identify and mitigate circular bias in deployed AI systems.</p>
+    <div class="grid md:grid-cols-3 gap-4">
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/en/assets/flowcharts">Flowcharts & Figures</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/en/assets/data">Data Tables</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/en/assets/scripts">Scripts</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/en/docs">Docs</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/en/about">About</a>
+    </div>
+  </section>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

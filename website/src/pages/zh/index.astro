@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+const lang = 'zh';
+---
+<Base title="循环偏差检测" description="CBD 项目网站" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <section class="grid gap-6">
+    <h1 class="text-3xl font-bold">循环偏差检测</h1>
+    <p>识别并缓解部署式 AI 系统中的循环偏差。</p>
+    <div class="grid md:grid-cols-3 gap-4">
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/zh/assets/flowcharts">流程图与图示</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/zh/assets/data">数据表</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/zh/assets/scripts">脚本</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/zh/docs">文档</a>
+      <a class="border rounded p-4 hover:shadow" href="/circular-bias-detection/zh/about">关于</a>
+    </div>
+  </section>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

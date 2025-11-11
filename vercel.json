@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd web-app && npm ci && npm run build",
+  "devCommand": "cd web-app && npm run dev",
+  "installCommand": "npm install --prefix web-app",
+  "framework": null,
+  "outputDirectory": "web-app/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

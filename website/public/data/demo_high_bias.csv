@@ -1,0 +1,11 @@
+time_period,algorithm,performance,constraint_compute,constraint_memory,constraint_dataset_size,evaluation_protocol,domain,dataset_source
+1,ModelA,0.93,500,16,50000,cross_validation,simulation,synthetic
+1,ModelB,0.88,300,8,50000,cross_validation,simulation,synthetic
+2,ModelA,0.95,800,24,60000,cross_validation,simulation,synthetic
+2,ModelB,0.89,350,8.5,60000,cross_validation,simulation,synthetic
+3,ModelA,0.97,1200,32,70000,cross_validation,simulation,synthetic
+3,ModelB,0.90,360,9,70000,cross_validation,simulation,synthetic
+4,ModelA,0.98,1500,40,80000,cross_validation,simulation,synthetic
+4,ModelB,0.91,370,9.5,80000,cross_validation,simulation,synthetic
+5,ModelA,0.99,1800,48,90000,cross_validation,simulation,synthetic
+5,ModelB,0.92,380,10,90000,cross_validation,simulation,synthetic

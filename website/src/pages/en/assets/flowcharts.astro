@@ -1,0 +1,26 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+const lang = 'en';
+const BASE = import.meta.env.BASE_URL;
+const images = [
+  { alt: 'Contamination risk map', src: `${BASE}img/flows/contamination_risk_map.png` },
+  { alt: 'Leakage type distribution', src: `${BASE}img/flows/leakage_type_distribution.png` },
+  { alt: 'Performance reality check', src: `${BASE}img/flows/performance_reality_check.png` },
+  { alt: 'Sample contamination heatmap', src: `${BASE}img/flows/sample_contamination_heatmap.png` },
+];
+---
+<Base title="Flowcharts & Figures" description="CBD flowcharts and figures" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <h1 class="text-2xl font-semibold mb-4">Flowcharts & Figures</h1>
+  <ul class="grid md:grid-cols-2 gap-6">
+    {images.map((img) => (
+      <li class="border rounded p-3">
+        <img src={img.src} alt={img.alt} class="w-full h-auto" loading="lazy" />
+        <figcaption class="mt-2 text-sm text-gray-600 dark:text-gray-300">{img.alt}</figcaption>
+      </li>
+    ))}
+  </ul>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

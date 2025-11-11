@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+const lang = 'zh';
+const docs = [
+  'docs/GET_STARTED.md',
+  'docs/INSTALL_GUIDE.md',
+  'docs/WEB_APP_SETUP.md',
+  'docs/QUICK_TEST_GUIDE.md',
+  'docs/GPU_QUICK_START.md',
+  'docs/GPU_ACCELERATION_GUIDE.md',
+  'docs/FAQ.md'
+];
+const link = (p) => `https://github.com/hongping-zh/circular-bias-detection/blob/main/${p}`;
+---
+<Base title="文档" description="指南与文档" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <h1 class="text-2xl font-semibold mb-4">文档</h1>
+  <ul class="list-disc pl-5">
+    {docs.map(d => (
+      <li class="mb-2"><a class="underline" target="_blank" rel="noopener" href={link(d)}>{d}</a></li>
+    ))}
+  </ul>
+  <p class="mt-4 text-sm">更多文档见 <a class="underline" target="_blank" rel="noopener" href="https://github.com/hongping-zh/circular-bias-detection/tree/main/docs">GitHub</a>。</p>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

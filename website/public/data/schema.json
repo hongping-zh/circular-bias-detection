@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/hongping-zh/circular-bias-detection/blob/main/data/schema.json",
+  "title": "Algorithm Evaluation Record",
+  "description": "Schema for algorithm evaluation data in the Circular Bias Detection benchmark suite",
+  "type": "object",
+  "required": [
+    "time_period",
+    "algorithm",
+    "performance",
+    "constraint_compute",
+    "constraint_memory",
+    "constraint_dataset_size",
+    "evaluation_protocol"
+  ],
+  "properties": {
+    "time_period": {
+      "type": "integer",
+      "description": "Sequential evaluation period identifier",
+      "minimum": 1
+    },
+    "algorithm": {
+      "type": "string",
+      "description": "Name or identifier of the algorithm being evaluated",
+      "minLength": 1,
+      "examples": ["ResNet", "VGG", "DenseNet", "EfficientNet"]
+    },
+    "performance": {
+      "type": "number",
+      "description": "Performance metric (e.g., accuracy) on a 0-1 scale",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "constraint_compute": {
+      "type": "number",
+      "description": "Computational resource constraint (e.g., FLOPs, inference time)",
+      "minimum": 0
+    },
+    "constraint_memory": {
+      "type": "number",
+      "description": "Memory constraint in gigabytes (GB)",
+      "minimum": 0
+    },
+    "constraint_dataset_size": {
+      "type": "integer",
+      "description": "Training dataset size (number of samples)",
+      "minimum": 0
+    },
+    "evaluation_protocol": {
+      "type": "string",
+      "description": "Version identifier of the evaluation protocol used",
+      "pattern": "^[A-Za-z0-9._-]+$",
+      "examples": ["ImageNet-v1.0", "GLUE-v1.2", "MovieLens-2023"]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "time_period": 1,
+      "algorithm": "ResNet",
+      "performance": 0.7234,
+      "constraint_compute": 300,
+      "constraint_memory": 8.0,
+      "constraint_dataset_size": 50000,
+      "evaluation_protocol": "ImageNet-v1.0"
+    }
+  ]
+}

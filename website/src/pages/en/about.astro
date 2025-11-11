@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+const lang = 'en';
+---
+<Base title="About" description="About the CBD project" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <h1 class="text-2xl font-semibold mb-4">About</h1>
+  <p class="mb-4">Circular Bias Detection (CBD) aims to identify and mitigate circular bias in deployed AI systems.</p>
+  <h2 class="text-xl font-semibold mt-6 mb-2">Contact</h2>
+  <p>
+    Email: <a class="underline" href="mailto:zhanghongping1982@gmail.com">zhanghongping1982gmail.com</a>
+  </p>
+  <p class="mt-2">
+    GitHub: <a class="underline" href="https://github.com/hongping-zh/circular-bias-detection" target="_blank" rel="noopener">hongping-zh/circular-bias-detection</a>
+  </p>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

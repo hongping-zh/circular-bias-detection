@@ -1,0 +1,24 @@
+---
+const { lang = 'en' } = Astro.props;
+const t = {
+  en: { home:'Home', assets:'Assets', flow:'Flowcharts', data:'Data', scripts:'Scripts', pdfs:'PDFs', docs:'Docs', about:'About', zh:'中文', en:'EN' },
+  zh: { home:'首页', assets:'资源', flow:'流程图', data:'数据表', scripts:'脚本', pdfs:'PDF', docs:'文档', about:'关于', zh:'中文', en:'EN' }
+}[lang];
+const prefix = `/${lang}`;
+const other = lang === 'en' ? '/zh' : '/en';
+---
+<nav class="w-full py-4 border-b border-gray-200 dark:border-gray-800">
+  <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
+    <a href={`${prefix}/`} class="font-semibold">Circular Bias Detection</a>
+    <ul class="flex items-center gap-4">
+      <li><a href={`${prefix}/`} class="hover:underline">{t.home}</a></li>
+      <li><a href={`${prefix}/assets/flowcharts`} class="hover:underline">{t.flow}</a></li>
+      <li><a href={`${prefix}/assets/data`} class="hover:underline">{t.data}</a></li>
+      <li><a href={`${prefix}/assets/scripts`} class="hover:underline">{t.scripts}</a></li>
+      <li><a href={`${prefix}/assets/pdfs`} class="hover:underline">{t.pdfs}</a></li>
+      <li><a href={`${prefix}/docs`} class="hover:underline">{t.docs}</a></li>
+      <li><a href={`${prefix}/about`} class="hover:underline">{t.about}</a></li>
+      <li><a href={other} class="px-2 py-1 border rounded">{t[lang === 'en' ? 'zh' : 'en']}</a></li>
+    </ul>
+  </div>
+</nav>

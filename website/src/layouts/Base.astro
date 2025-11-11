@@ -1,0 +1,26 @@
+---
+import "../styles/global.css";
+const { title = 'Circular Bias Detection', description = 'CBD project website', lang = 'en' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content="https://hongping-zh.github.io/circular-bias-detection/" />
+    <script defer data-domain="hongping-zh.github.io" src="https://plausible.io/js/script.js"></script>
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot name="nav" />
+    <main id="main" class="max-w-6xl mx-auto px-4 py-6">
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>

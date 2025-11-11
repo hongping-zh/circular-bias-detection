@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://hongping-zh.github.io/circular-bias-detection/sitemap-index.xml

@@ -1,0 +1,46 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+const lang = 'zh';
+const rows = [
+  { name: 'contamination_data.csv', path: 'mvp_case_study_figures/contamination_data.csv' },
+  { name: 'demo_high_bias.csv', path: 'data/demo_high_bias.csv' },
+  { name: 'demo_low_bias.csv', path: 'data/demo_low_bias.csv' },
+  { name: 'llm_eval_sample.csv', path: 'data/llm_eval_sample.csv' },
+  { name: 'mvp_leaked_dataset.csv', path: 'data/mvp_leaked_dataset.csv' },
+  { name: 'sample_data.csv', path: 'data/sample_data.csv' },
+  { name: 'tiny_sample.csv', path: 'data/tiny_sample.csv' },
+  { name: 'schema.json', path: 'data/schema.json' },
+];
+const BASE = import.meta.env.BASE_URL;
+const local = (name) => `${BASE}data/${name}`;
+const view = (p) => `https://github.com/hongping-zh/circular-bias-detection/blob/main/${p}`;
+---
+<Base title="数据表" description="CBD 数据表" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <h1 class="text-2xl font-semibold mb-4">数据表</h1>
+  <table class="w-full text-sm border-separate border-spacing-y-2" role="table" aria-label="数据表清单">
+    <thead class="text-left">
+      <tr>
+        <th scope="col" class="py-2">文件</th>
+        <th scope="col" class="py-2">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map(r => (
+        <tr class="align-top">
+          <td class="py-2">
+            <span class="font-mono">{r.name}</span>
+          </td>
+          <td class="py-2">
+            <a class="mr-3 underline" href={view(r.path)} target="_blank" rel="noopener">在 GitHub 查看</a>
+            <a class="underline" href={local(r.name)} download>下载</a>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="mt-4 text-sm">另见：<a class="underline" target="_blank" href="https://github.com/hongping-zh/circular-bias-detection/blob/main/data/DATA_DICTIONARY.md" rel="noopener">DATA_DICTIONARY.md</a></p>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

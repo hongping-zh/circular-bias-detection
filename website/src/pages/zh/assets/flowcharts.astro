@@ -1,0 +1,26 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+const lang = 'zh';
+const BASE = import.meta.env.BASE_URL;
+const images = [
+  { alt: '污染风险地图', src: `${BASE}img/flows/contamination_risk_map.png` },
+  { alt: '泄漏类型分布', src: `${BASE}img/flows/leakage_type_distribution.png` },
+  { alt: '性能现实校验', src: `${BASE}img/flows/performance_reality_check.png` },
+  { alt: '样本污染热力图', src: `${BASE}img/flows/sample_contamination_heatmap.png` },
+];
+---
+<Base title="流程图与图示" description="CBD 流程图与图示" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <h1 class="text-2xl font-semibold mb-4">流程图与图示</h1>
+  <ul class="grid md:grid-cols-2 gap-6">
+    {images.map((img) => (
+      <li class="border rounded p-3">
+        <img src={img.src} alt={img.alt} class="w-full h-auto" loading="lazy" />
+        <figcaption class="mt-2 text-sm text-gray-600 dark:text-gray-300">{img.alt}</figcaption>
+      </li>
+    ))}
+  </ul>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

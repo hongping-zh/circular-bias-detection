@@ -1,0 +1,7 @@
+time_period,algorithm,performance,constraint_compute,constraint_memory
+1,ModelA,0.85,512,8.0
+1,ModelB,0.78,512,8.0
+2,ModelA,0.87,550,8.5
+2,ModelB,0.80,550,8.5
+3,ModelA,0.91,600,9.0
+3,ModelB,0.84,600,9.0

@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+const lang = 'zh';
+---
+<Base title="关于" description="CBD 项目介绍" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <h1 class="text-2xl font-semibold mb-4">关于</h1>
+  <p class="mb-4">循环偏差检测（CBD）旨在识别并缓解部署式 AI 系统中的循环偏差。</p>
+  <h2 class="text-xl font-semibold mt-6 mb-2">联系</h2>
+  <p>
+    邮箱：<a class="underline" href="mailto:zhanghongping1982@gmail.com">zhanghongping1982gmail.com</a>
+  </p>
+  <p class="mt-2">
+    GitHub：<a class="underline" href="https://github.com/hongping-zh/circular-bias-detection" target="_blank" rel="noopener">hongping-zh/circular-bias-detection</a>
+  </p>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>

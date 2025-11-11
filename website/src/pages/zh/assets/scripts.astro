@@ -1,0 +1,30 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Nav from '../../../components/Nav.astro';
+import Footer from '../../../components/Footer.astro';
+const lang = 'zh';
+const rows = [
+  { name: 'scripts/cb.bat', path: 'scripts/cb.bat' },
+  { name: 'scripts/deploy.bat', path: 'scripts/deploy.bat' },
+  { name: 'data/generate_benchmark_data.py', path: 'data/generate_benchmark_data.py' },
+  { name: 'data/huggingface_data_collector.py', path: 'data/huggingface_data_collector.py' },
+];
+const raw = (p) => `https://raw.githubusercontent.com/hongping-zh/circular-bias-detection/main/${p}`;
+const view = (p) => `https://github.com/hongping-zh/circular-bias-detection/blob/main/${p}`;
+---
+<Base title="脚本" description="CBD 脚本" lang={lang}>
+  <Fragment slot="nav"><Nav lang={lang} /></Fragment>
+  <h1 class="text-2xl font-semibold mb-4">脚本</h1>
+  <ul class="list-disc pl-5">
+    {rows.map(r => (
+      <li class="mb-2">
+        <span class="font-mono">{r.name}</span>
+        <span class="ml-2">
+          <a class="underline mr-3" href={view(r.path)} target="_blank" rel="noopener">查看</a>
+          <a class="underline" href={raw(r.path)} download>下载</a>
+        </span>
+      </li>
+    ))}
+  </ul>
+  <Fragment slot="footer"><Footer /></Fragment>
+</Base>
