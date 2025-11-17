@@ -2,7 +2,7 @@
 const CACHE_NAME = 'sleuth-cache-v1';
 const ASSETS = [
   '/',
-  '//circular-bias-detection/index.html',
+  '/circular-bias-detection/index.html',
 ];
 
 self.addEventListener('install', (event) => {
