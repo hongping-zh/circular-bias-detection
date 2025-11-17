@@ -1,7 +1,7 @@
 // Basic Service Worker for caching Pyodide and static assets
 const CACHE_NAME = 'sleuth-cache-v1';
 const ASSETS = [
-  '/',
+  '/circular-bias-detection/',
   '/circular-bias-detection/index.html',
 ];
 
