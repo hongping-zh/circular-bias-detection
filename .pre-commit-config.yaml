@@ -1,3 +1,5 @@
+default_language_version:
+  python: python3.11
 # Pre-commit hooks for code quality assurance
 # Install: pip install pre-commit && pre-commit install
 # Run manually: pre-commit run --all-files
@@ -23,7 +25,7 @@ repos:
     rev: 23.12.1
     hooks:
       - id: black
-        language_version: python3.8
+        language_version: python3.11
 
   # Import sorting with isort
   - repo: https://github.com/PyCQA/isort

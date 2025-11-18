@@ -13,6 +13,8 @@
 [![Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17201032.svg)](https://doi.org/10.5281/zenodo.17201032)
 [![Dataset DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17196639.svg)](https://doi.org/10.5281/zenodo.17196639)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
+[![CBD Dataset (All Versions)](https://zenodo.org/badge/DOI/10.5281/zenodo.17637302.svg)](https://doi.org/10.5281/zenodo.17637302)
+[![CBD Dataset v3/v3.1](https://img.shields.io/badge/CBD%20Dataset-v3%2Fv3.1-blue)](https://doi.org/10.5281/zenodo.17637303)
 
 ## Detect AI Evaluation Bias in 30 Seconds
 
@@ -645,6 +647,9 @@ circular-bias detect data/sample_data.csv
 # Use Zenodo dataset (automatic download & caching)
 circular-bias detect zenodo://17201032
 
+# Use CBD Dataset v3/v3.1 (auto-selects largest CSV)
+circular-bias detect zenodo://17637303
+
 # Specify algorithm and thresholds
 circular-bias detect data.csv --algorithm psi --psi-threshold 0.2
 
@@ -662,6 +667,7 @@ circular-bias detect <data-source> [options]
 # Data sources:
 #   - Local file: data/my_data.csv
 #   - Zenodo: zenodo://17201032
+#   - CBD Dataset v3/v3.1: zenodo://17637303
 #   - Zenodo specific file: zenodo://17201032/scenario_high_bias.csv
 
 # Options:
@@ -968,6 +974,21 @@ If you use Sleuth in your research or industry work, please cite:
 }
 ```
 
+
+### CBD Dataset (v3/v3.1) Citation
+
+Please cite the dataset alongside the software when you use the CBD data in research or products.
+
+- Concept DOI (all versions): https://doi.org/10.5281/zenodo.17637302
+- Version DOI (this release v3/v3.1): https://doi.org/10.5281/zenodo.17637303
+
+APA (Dataset, version DOI):
+
+Hongping Zhang, & CBD Project Team. (2025). Circular Bias Detection (CBD) dataset and evaluation protocols (v3 / v3.1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.17637303
+
+中文（数据集，版本 DOI）：
+
+Hongping Zhang，& CBD 项目组. (2025). 循环偏差检测（CBD）数据集与评测协议（v3 / v3.1）[数据集]. Zenodo. https://doi.org/10.5281/zenodo.17637303
 
 ### Acknowledgments
 

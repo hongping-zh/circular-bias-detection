@@ -53,6 +53,9 @@ Examples:
   # Detect bias in Zenodo dataset
   circular-bias detect zenodo://17201032
   
+  # Use CBD Dataset v3/v3.1 (auto-selects largest CSV)
+  circular-bias detect zenodo://17637303
+  
   # Use specific scenario
   circular-bias detect zenodo://17201032/scenario_high_bias.csv
   
