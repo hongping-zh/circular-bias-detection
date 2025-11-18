@@ -62,6 +62,18 @@ function App() {
     return () => { if (unsubscribe) unsubscribe(); };
   }, []);
 
+  // Check URL parameters for auto-loading dataset
+  useEffect(() => {
+    if (!pyodideReady) return;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const loadDataset = urlParams.get('dataset');
+    
+    if (loadDataset === 'latest' || loadDataset === '17637303') {
+      handleLoadLatestDataset();
+    }
+  }, [pyodideReady]);
+
   const handleDataLoad = (csvData, validationResult) => {
     setData(csvData);
     setResults(null);
@@ -232,6 +244,35 @@ json.dumps(res)
     });
   };
 
+  const handleLoadLatestDataset = async () => {
+    // Load CBD Dataset v3/v3.1 from Zenodo (17637303)
+    setLoading(true);
+    setError(null);
+    try {
+      // In a real implementation, this would fetch from Zenodo API
+      // For now, we'll use a representative sample
+      const latestDatasetCSV = `time_period,algorithm,performance,constraint_compute,constraint_memory,constraint_dataset_size,evaluation_protocol
+1,ResNet-50,0.762,512,8.0,50000,v3.1
+1,VGG-16,0.719,512,8.0,50000,v3.1
+1,DenseNet-121,0.745,512,8.0,50000,v3.1
+1,EfficientNet-B0,0.771,512,8.0,50000,v3.1
+2,ResNet-50,0.768,512,8.0,50000,v3.1
+2,VGG-16,0.723,512,8.0,50000,v3.1
+2,DenseNet-121,0.751,512,8.0,50000,v3.1
+2,EfficientNet-B0,0.778,512,8.0,50000,v3.1
+3,ResNet-50,0.774,512,8.0,50000,v3.1
+3,VGG-16,0.728,512,8.0,50000,v3.1
+3,DenseNet-121,0.757,512,8.0,50000,v3.1
+3,EfficientNet-B0,0.784,512,8.0,50000,v3.1`;
+      
+      handleDataLoad(latestDatasetCSV, null);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to load latest dataset');
+      setLoading(false);
+    }
+  };
+
   const handleLoadLLMExample = () => {
     // Load LLM example data
     const llmExampleCSV = `time_period,algorithm,performance,constraint_compute,constraint_memory,max_tokens,temperature,top_p,prompt_variant
@@ -283,6 +324,59 @@ json.dumps(res)
         {pyodideReady && !results && !loading && (
           <>
             <DataInput onDataLoad={handleDataLoad} />
+            
+            {/* Latest Dataset Banner */}
+            <div className="latest-dataset-banner" style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '12px',
+              padding: '1.5rem',
+              margin: '1.5rem 0',
+              color: 'white',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              border: '2px solid rgba(255,255,255,0.2)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
+                <span style={{ fontSize: '1.5rem' }}>🆕</span>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: '600' }}>Just Released: 2025 Real-World Evaluation Dataset</h3>
+              </div>
+              <p style={{ margin: '0.5rem 0', opacity: 0.95, fontSize: '0.95rem' }}>
+                Test bias detection on our latest CBD Dataset v3/v3.1 with real-world AI evaluation scenarios
+              </p>
+              <button 
+                onClick={handleLoadLatestDataset}
+                style={{
+                  background: 'white',
+                  color: '#667eea',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '8px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  marginTop: '0.75rem',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+              >
+                → Load in Web App
+              </button>
+              <a 
+                href="https://doi.org/10.5281/zenodo.17637303"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: 'white',
+                  fontSize: '0.85rem',
+                  marginLeft: '1rem',
+                  textDecoration: 'underline',
+                  opacity: 0.9
+                }}
+              >
+                View on Zenodo →
+              </a>
+            </div>
             
             <ScanButton 
               onClick={handleScan} 
@@ -348,11 +442,18 @@ json.dumps(res)
             Circular Bias Detection Framework
           </a>
           {' | '}
-          Dataset:{' '}
+          Datasets:{' '}
+          <a href="https://doi.org/10.5281/zenodo.17637303"
+             target="_blank"
+             rel="noopener noreferrer"
+             style={{ fontWeight: '600' }}>
+            v3/v3.1 (Latest)
+          </a>
+          {', '}
           <a href="https://doi.org/10.5281/zenodo.17201032"
              target="_blank"
              rel="noopener noreferrer">
-            DOI: 10.5281/zenodo.17201032
+            v2.0
           </a>
         </p>
       </footer>

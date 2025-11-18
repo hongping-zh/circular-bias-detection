@@ -3,6 +3,7 @@ Zenodo Dataset Loader with caching support.
 
 Supports URI formats:
 - zenodo://17201032                          # Latest version, all CSV files
+- zenodo://17637303                          # CBD Dataset v3/v3.1 (default: largest CSV)
 - zenodo://17201032/v2.0.0                   # Specific version
 - zenodo://17201032/scenario_high_bias.csv   # Specific file
 - file://path/to/data.csv                    # Local file
@@ -155,9 +156,9 @@ class ZenodoLoader:
                 available = [f['key'] for f in csv_files]
                 raise ValueError(f"File '{filename}' not found. Available: {available}")
         else:
-            # Default to first CSV file
-            target_file = csv_files[0]
-            self.logger.info(f"No filename specified, using: {target_file['key']}")
+            # Default to the largest CSV file for generic records (e.g., 17637303)
+            target_file = max(csv_files, key=lambda f: f.get('size', 0))
+            self.logger.info(f"No filename specified, using largest CSV: {target_file['key']} ({target_file.get('size', 0)} bytes)")
         
         # Download file
         file_url = target_file['links']['self']

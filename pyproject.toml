@@ -96,8 +96,8 @@ circular-bias = "circular_bias_cli.main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["circular_bias_detector*", "circular_bias_cli*"]
-exclude = ["tests*", "docs*", "examples*"]
+include = ["circular_bias_detector*", "circular_bias_cli*", "cbd*"]
+exclude = ["tests*", "docs*"]
 
 # Black configuration
 [tool.black]
