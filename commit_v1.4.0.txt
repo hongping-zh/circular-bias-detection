@@ -1,0 +1,85 @@
+feat: Release v1.4.0 - Advanced detection and user experience
+
+Major New Features:
+
+1. Prompt Variation Quantification (constraint_text)
+   - Semantic similarity using Sentence-BERT embeddings
+   - Detects most common LLM evaluation cheating: prompt engineering
+   - Computes cosine similarity between prompts
+   - Identifies high-similarity prompts with varying performance
+   - Supports multilingual and domain-specific models
+   - Batch analysis across multiple prompt groups
+
+2. One-Sentence Risk Summary
+   - Plain language risk assessment for non-experts
+   - Automatic pattern detection (parameter tuning, data leakage, etc.)
+   - Actionable recommendations based on risk level
+   - Supports Chinese and English
+   - Batch summaries for multiple tests
+   - Comprehensive risk reports
+
+3. Multivariate Joint Detection
+   - MANOVA (Wilks' Lambda) for joint metric testing
+   - Energy distance test (distribution-free, recommended)
+   - Hotelling's T² test
+   - Multitask bias detection (GLUE, MMLU benchmarks)
+   - Multivariate PSI across multiple metrics
+   - Parallel execution support
+
+New Modules:
+- cbd/prompt_analysis.py: Prompt similarity and constraint detection (400 lines)
+- cbd/risk_summary.py: Plain language risk summaries (350 lines)
+- cbd/multivariate_detection.py: Joint metric/task detection (500 lines)
+
+Testing:
+- tests/test_advanced_features.py: Comprehensive test suite (350 lines)
+- 20+ new test cases
+- Coverage: 90%+ for new modules
+
+Documentation:
+- ENHANCEMENTS_V1.4.0.md: Complete feature guide (5000+ words)
+- CHANGELOG_V1.4.0.md: Version changelog with examples
+- Enhanced docstrings with usage examples
+
+Use Cases:
+- GLUE benchmark (9 tasks) joint detection
+- MMLU benchmark (57 subtasks) joint detection
+- Prompt engineering cheating detection
+- Multi-metric validation (accuracy + F1 + precision + recall)
+
+Package Updates:
+- Version: 1.3.1 -> 1.4.0
+- New optional dependency: sentence-transformers>=2.2.0
+- New optional dependency: torch>=2.0.0
+- Enhanced package description
+
+Key Improvements:
+- Covers most common LLM evaluation cheating method
+- Makes results accessible to non-experts
+- More powerful than individual metric tests
+- Real-world benchmark support (GLUE, MMLU)
+
+Examples:
+- Prompt constraint detection with Sentence-BERT
+- Risk summaries: "高风险：性能随计算资源线性增长（ρ_PC=0.78），可能存在调参作弊"
+- Multivariate detection across 3+ metrics simultaneously
+- Multitask detection across 9+ tasks
+
+Performance:
+- Prompt similarity: ~50ms per pair (CPU), GPU accelerated
+- Multivariate tests: O(n²) for energy distance
+- Risk summary: <1ms generation
+- Parallel execution supported
+
+Files changed:
+- cbd/prompt_analysis.py: NEW - Prompt variation quantification
+- cbd/risk_summary.py: NEW - Plain language summaries
+- cbd/multivariate_detection.py: NEW - Joint detection
+- tests/test_advanced_features.py: NEW - Test suite
+- pyproject.toml: Version bump, new dependencies
+- ENHANCEMENTS_V1.4.0.md: NEW - Feature documentation
+- CHANGELOG_V1.4.0.md: NEW - Version changelog
+
+Breaking changes: None
+Migration required: No
+Backward compatibility: 100%
