@@ -26,10 +26,19 @@ jobs:
           pip install pytest pytest-cov
       - name: Run tests with coverage
         run: |
-          python -m pytest -q
+          python -m pytest --cov=circular_bias_detector --cov=cbd --cov-report=xml --cov-report=html --cov-report=term-missing
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-${{ matrix.python-version }}
+          fail_ci_if_error: false
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.python-version }}
-          path: coverage.xml
+          path: |
+            coverage.xml
+            htmlcov/
