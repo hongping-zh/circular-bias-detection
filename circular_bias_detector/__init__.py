@@ -4,6 +4,13 @@ Circular Reasoning Bias Detection Framework
 A comprehensive statistical framework for detecting circular reasoning bias 
 in AI algorithm evaluation.
 
+New in v1.5.0:
+- Enhanced permutation testing with parallel processing (threads/processes)
+- Retrain-null permutation testing for conservative hypothesis testing
+- Automatic probability-based metric support (AUC, log loss)
+- Adaptive permutation testing with early stopping
+- Comprehensive visualization tools and model card generation
+
 New in v1.2:
 - Unified configuration management (config.py)
 - Centralized logging system (logging.py)
@@ -18,7 +25,7 @@ Previous (v1.1):
 - Real-time bias detection during generation
 """
 
-__version__ = "1.2.0"
+__version__ = "1.5.0"
 __author__ = "Hongping Zhang"
 __email__ = "yujjam@uest.edu.gr"
 
@@ -42,6 +49,23 @@ from .core.bootstrap import (
     bootstrap_ccs,
     bootstrap_rho_pc,
     compute_adaptive_thresholds
+)
+
+# Enhanced permutation testing (v1.5.0+)
+from .core.permutation import (
+    permutation_test,
+    retrain_null_test,
+    adaptive_permutation_test
+)
+
+# Metric utilities (v1.5.0+)
+from .metrics_utils import (
+    MetricWrapper,
+    create_metric_wrapper,
+    get_metric_by_name,
+    validate_metric_compatibility,
+    safe_metric_call,
+    get_common_metrics
 )
 
 # Matrix operations
@@ -96,6 +120,19 @@ __all__ = [
     'bootstrap_ccs',
     'bootstrap_rho_pc',
     'compute_adaptive_thresholds',
+    
+    # Enhanced permutation testing (v1.5.0+)
+    'permutation_test',
+    'retrain_null_test',
+    'adaptive_permutation_test',
+    
+    # Metric utilities (v1.5.0+)
+    'MetricWrapper',
+    'create_metric_wrapper',
+    'get_metric_by_name',
+    'validate_metric_compatibility',
+    'safe_metric_call',
+    'get_common_metrics',
     
     # Matrix operations
     'validate_matrices',
