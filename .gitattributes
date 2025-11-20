@@ -11,3 +11,5 @@ codemeta.json linguist-generated=true
 # Mark documentation as linguist-documentation (collapsed by default)
 FAQ.md linguist-documentation=true
 GLOSSARY.md linguist-documentation=true
+docs/releases/** linguist-documentation=true
+*.md linguist-documentation=true
